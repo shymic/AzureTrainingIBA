@@ -1,0 +1,16 @@
+{
+	"name": "MySqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DemoDB_MySQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`Bank`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

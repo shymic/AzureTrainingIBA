@@ -1,0 +1,16 @@
+{
+	"name": "Write_MySql",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "MySql",
+		"typeProperties": {
+			"connectionString": "server=database-1.cbt73bcwgzm9.us-east-1.rds.amazonaws.com;port=3306;database=IBATRAIN;user=ibatrain;sslmode=1;usesystemtruststore=0",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI4ZWZiYTYwZC1jMWUwLTQzZTctOGJkZC1hYWQ2OWNhYzFkODIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-iba-training",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

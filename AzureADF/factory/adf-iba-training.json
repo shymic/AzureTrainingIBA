@@ -1,0 +1,9 @@
+{
+	"name": "adf-iba-training",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "10d61787-7f23-4d67-8df0-f0111127a2b6",
+		"tenantId": "d25663dd-5571-4e81-8c0a-1e5be1b1a89e"
+	}
+}
