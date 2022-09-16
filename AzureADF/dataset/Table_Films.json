@@ -1,0 +1,18 @@
+{
+	"name": "Table_Films",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Write_MySql",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`films`"
+		}
+	}
+}
