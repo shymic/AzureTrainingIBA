@@ -41,13 +41,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "MySqlTable1",
+						"referenceName": "MySql_bank_table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "banks_csv",
 						"type": "DatasetReference"
 					}
 				]

@@ -1,5 +1,5 @@
 {
-	"name": "MySqlTable1",
+	"name": "MySql_bank_table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DemoDB_MySQL",
