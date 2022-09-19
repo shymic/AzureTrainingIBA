@@ -5,6 +5,11 @@
 			"referenceName": "Write_MySql",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "obachilo"
 		},
@@ -12,7 +17,10 @@
 		"type": "MySqlTable",
 		"schema": [],
 		"typeProperties": {
-			"tableName": "`films`"
+			"tableName": {
+				"value": "@dataset().tablename",
+				"type": "Expression"
+			}
 		}
 	}
 }
