@@ -1,9 +1,9 @@
 {
-	"name": "copy_from_mysql",
+	"name": "copy_from_sqlserver",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_from_mysql",
+				"name": "copy_from_sqlserver",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,18 +16,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "MySqlSource"
+						"type": "SqlServerSource",
+						"queryTimeout": "00:10:00",
+						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"dataIntegrationUnits": 2,
@@ -37,100 +33,109 @@
 							{
 								"source": {
 									"name": "id",
-									"type": "Int32"
+									"type": "Int32",
+									"physicalType": "int"
 								},
 								"sink": {
 									"name": "id",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
 								"source": {
 									"name": "title",
-									"type": "String"
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
 									"name": "title",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
 									"name": "release_year",
-									"type": "Int32"
+									"type": "Int32",
+									"physicalType": "int"
 								},
 								"sink": {
 									"name": "release_year",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
 								"source": {
 									"name": "country",
-									"type": "String"
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
 									"name": "country",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
 									"name": "duration",
-									"type": "Int32"
+									"type": "Int32",
+									"physicalType": "int"
 								},
 								"sink": {
 									"name": "duration",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
 								"source": {
 									"name": "language",
-									"type": "String"
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
 									"name": "language",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
 									"name": "certification",
-									"type": "String"
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
 									"name": "certification",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
 									"name": "gross",
-									"type": "Int64"
+									"type": "Int64",
+									"physicalType": "bigint"
 								},
 								"sink": {
 									"name": "gross",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int64",
+									"physicalType": "bigint"
 								}
 							},
 							{
 								"source": {
 									"name": "budget",
-									"type": "Int64"
+									"type": "Int64",
+									"physicalType": "bigint"
 								},
 								"sink": {
 									"name": "budget",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Int64",
+									"physicalType": "bigint"
 								}
 							}
 						],
@@ -143,20 +148,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Table_Films",
-						"type": "DatasetReference",
-						"parameters": {
-							"tablename": "films"
-						}
+						"referenceName": "Local_Films",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_Films",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "films.csv"
-						}
+						"referenceName": "Local_CopyFilms",
+						"type": "DatasetReference"
 					}
 				]
 			}

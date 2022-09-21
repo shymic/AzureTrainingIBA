@@ -1,0 +1,61 @@
+{
+	"name": "Local_Films",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Local_SqlServer",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "title",
+				"type": "varchar"
+			},
+			{
+				"name": "release_year",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "country",
+				"type": "varchar"
+			},
+			{
+				"name": "duration",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "language",
+				"type": "varchar"
+			},
+			{
+				"name": "certification",
+				"type": "varchar"
+			},
+			{
+				"name": "gross",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "budget",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "films"
+		}
+	}
+}
