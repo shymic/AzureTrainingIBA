@@ -22,7 +22,13 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"id"
+							]
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
@@ -38,8 +44,8 @@
 								},
 								"sink": {
 									"name": "id",
-									"type": "Int32",
-									"physicalType": "int"
+									"type": "String",
+									"physicalType": "String"
 								}
 							},
 							{
@@ -51,7 +57,7 @@
 								"sink": {
 									"name": "title",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -62,8 +68,8 @@
 								},
 								"sink": {
 									"name": "release_year",
-									"type": "Int32",
-									"physicalType": "int"
+									"type": "String",
+									"physicalType": "String"
 								}
 							},
 							{
@@ -75,7 +81,7 @@
 								"sink": {
 									"name": "country",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -86,8 +92,8 @@
 								},
 								"sink": {
 									"name": "duration",
-									"type": "Int32",
-									"physicalType": "int"
+									"type": "String",
+									"physicalType": "String"
 								}
 							},
 							{
@@ -99,7 +105,7 @@
 								"sink": {
 									"name": "language",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -111,7 +117,7 @@
 								"sink": {
 									"name": "certification",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -122,8 +128,8 @@
 								},
 								"sink": {
 									"name": "gross",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "String",
+									"physicalType": "String"
 								}
 							},
 							{
@@ -134,8 +140,8 @@
 								},
 								"sink": {
 									"name": "budget",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "String",
+									"physicalType": "String"
 								}
 							}
 						],

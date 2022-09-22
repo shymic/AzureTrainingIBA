@@ -1,0 +1,26 @@
+{
+	"name": "TrackingInfo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Local_SqlServer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "tabname",
+				"type": "varchar"
+			},
+			{
+				"name": "sys_change_version",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tracking_info"
+		}
+	}
+}
