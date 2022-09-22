@@ -153,10 +153,7 @@
 				"outputs": [
 					{
 						"referenceName": "CSV_Films",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "films.csv"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}

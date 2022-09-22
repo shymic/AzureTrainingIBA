@@ -2,13 +2,8 @@
 	"name": "CSV_Films",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "Local_AzureBlobStorage",
 			"type": "LinkedServiceReference"
-		},
-		"parameters": {
-			"filename": {
-				"type": "string"
-			}
 		},
 		"folder": {
 			"name": "obachilo"
@@ -18,15 +13,13 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().filename",
-					"type": "Expression"
-				},
+				"fileName": "films.csv",
 				"container": "obachilo"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
+			"nullValue": "NULL",
 			"quoteChar": "\""
 		},
 		"schema": [
