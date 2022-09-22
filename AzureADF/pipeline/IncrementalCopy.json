@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "IncrementalCopy",
 	"properties": {
 		"activities": [
 			{
@@ -79,7 +79,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select films.id,films.title,films.release_year,films.country,films.duration,films.language,films.certification,films.gross,films.budget, CT.sys_change_version, SYS_CHANGE_OPERATION from films RIGHT OUTER JOIN CHANGETABLE(CHANGES films, @{activity('LookupLastVersion').output.firstRow.sys_change_version}) as CT on films.id = CT.id where CT.sys_change_version <= @{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
+						"sqlReaderQuery": "select films.id,films.title,films.release_year,films.country,films.duration,films.language,films.certification,films.gross,films.budget, CT.SYS_CHANGE_VERSION, SYS_CHANGE_OPERATION from films RIGHT OUTER JOIN CHANGETABLE(CHANGES films, @{activity('LookupLastVersion').output.firstRow.sys_change_version}) as CT on films.id = CT.id where CT.SYS_CHANGE_VERSION<= @{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
