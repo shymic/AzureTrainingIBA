@@ -79,7 +79,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select films.id,films.title,films.release_year,films.country,films.duration,films.language,films.certification,films.gross,films.budget, CT.SYS_CHANGE_VERSION, SYS_CHANGE_OPERATION from films RIGHT OUTER JOIN CHANGETABLE(CHANGES films, @{activity('LookupLastVersion').output.firstRow.sys_change_version}) as CT on films.id = CT.id where CT.SYS_CHANGE_VERSION<= @{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
+						"sqlReaderQuery": {
+							"value": "select films.id,films.title,films.release_year,films.country,films.duration,films.language,films.certification,films.gross,films.budget, CT.SYS_CHANGE_VERSION, SYS_CHANGE_OPERATION from films RIGHT OUTER JOIN CHANGETABLE(CHANGES films, @{activity('LookupLastVersion').output.firstRow.sys_change_version}) as CT on films.id = CT.id where CT.SYS_CHANGE_VERSION<= @{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -141,11 +144,17 @@
 					"storedProcedureName": "[dbo].[Update_ChangeTracking_Version]",
 					"storedProcedureParameters": {
 						"CurrentTrackingVersion": {
-							"value": "@{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
+							"value": {
+								"value": "@{activity('LookupCurrentVersion').output.firstRow.CurrentChangeTrackingVersion}",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"TableName": {
-							"value": "@{activity('LookupLastVersion').output.firstRow.tabname}",
+							"value": {
+								"value": "@{activity('LookupLastVersion').output.firstRow.tabname}",
+								"type": "Expression"
+							},
 							"type": "String"
 						}
 					}

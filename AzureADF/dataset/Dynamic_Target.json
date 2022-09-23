@@ -1,0 +1,37 @@
+{
+	"name": "Dynamic_Target",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Local_SqlServer",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DB": {
+				"type": "string",
+				"defaultValue": "TESTDB"
+			},
+			"Schema": {
+				"type": "string"
+			},
+			"Table": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	}
+}
