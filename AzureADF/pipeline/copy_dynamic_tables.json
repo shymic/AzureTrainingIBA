@@ -90,7 +90,6 @@
 									"referenceName": "Dynamic_Tables",
 									"type": "DatasetReference",
 									"parameters": {
-										"DB": "TESTDB",
 										"Schema": "@item().source_schema_name",
 										"Table": "@item().source_table_name"
 									}
@@ -101,7 +100,6 @@
 									"referenceName": "Dynamic_Target",
 									"type": "DatasetReference",
 									"parameters": {
-										"DB": "TESTDB",
 										"Schema": "@item().target_schema_name",
 										"Table": "@item().target_table_name"
 									}
