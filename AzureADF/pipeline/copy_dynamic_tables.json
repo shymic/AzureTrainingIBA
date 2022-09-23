@@ -24,7 +24,6 @@
 						"referenceName": "Dynamic_Target",
 						"type": "DatasetReference",
 						"parameters": {
-							"DB": "TESTDB",
 							"Schema": "dbo",
 							"Table": "adf_config"
 						}
