@@ -102,8 +102,8 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"DB": "TESTDB",
-										"Schema": "@item().source_schema_name",
-										"Table": "@item().source_table_name"
+										"Schema": "@item().target_schema_name",
+										"Table": "@item().target_table_name"
 									}
 								}
 							]
