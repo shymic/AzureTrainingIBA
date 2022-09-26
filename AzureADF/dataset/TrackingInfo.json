@@ -5,6 +5,9 @@
 			"referenceName": "Local_SqlServer",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "obachilo"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [
