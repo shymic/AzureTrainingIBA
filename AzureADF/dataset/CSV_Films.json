@@ -58,62 +58,6 @@
 			{
 				"name": "budget",
 				"type": "String"
-			},
-			{
-				"name": "Prop_9",
-				"type": "String"
-			},
-			{
-				"name": "Prop_10",
-				"type": "String"
-			},
-			{
-				"name": "Prop_11",
-				"type": "String"
-			},
-			{
-				"name": "Prop_12",
-				"type": "String"
-			},
-			{
-				"name": "Prop_13",
-				"type": "String"
-			},
-			{
-				"name": "Prop_14",
-				"type": "String"
-			},
-			{
-				"name": "Prop_15",
-				"type": "String"
-			},
-			{
-				"name": "Prop_16",
-				"type": "String"
-			},
-			{
-				"name": "Prop_17",
-				"type": "String"
-			},
-			{
-				"name": "Prop_18",
-				"type": "String"
-			},
-			{
-				"name": "Prop_19",
-				"type": "String"
-			},
-			{
-				"name": "Prop_20",
-				"type": "String"
-			},
-			{
-				"name": "Prop_21",
-				"type": "String"
-			},
-			{
-				"name": "Prop_22",
-				"type": "String"
 			}
 		]
 	}
