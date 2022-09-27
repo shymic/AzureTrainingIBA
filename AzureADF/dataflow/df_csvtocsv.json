@@ -21,7 +21,17 @@
 					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "cast1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          {WBS ID} as string,",
@@ -136,7 +146,16 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"cast1 keyGenerate(output(SK as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"source1 filter(Geo=='AM') ~> filter1",
+				"filter1 cast(output(",
+				"          {CPM Exception date} as date,",
+				"          {TCV (Plan Rate USD)} as double",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
