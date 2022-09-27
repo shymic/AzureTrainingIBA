@@ -21,11 +21,7 @@
 					"name": "sink1"
 				}
 			],
-			"transformations": [
-				{
-					"name": "filter1"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
 				"source(output(",
 				"          {WBS ID} as string,",
@@ -138,11 +134,9 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 1000,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> source1",
-				"source1 filter(Brand=='GBS') ~> filter1",
-				"filter1 sink(allowSchemaDrift: true,",
+				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
