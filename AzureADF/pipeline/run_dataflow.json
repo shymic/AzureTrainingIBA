@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_csvtocsv",
+						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
