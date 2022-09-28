@@ -25,14 +25,14 @@
 						"referenceName": "Output",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "UpdFile"
 				},
 				{
 					"dataset": {
 						"referenceName": "Output",
 						"type": "DatasetReference"
 					},
-					"name": "sink2"
+					"name": "NewFile"
 				}
 			],
 			"transformations": [
@@ -293,13 +293,13 @@
 				"     partitionFileNames:['UpdRows.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1",
+				"     partitionBy('hash', 1)) ~> UpdFile",
 				"Split@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['NewRows.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink2"
+				"     partitionBy('hash', 1)) ~> NewFile"
 			]
 		}
 	}
