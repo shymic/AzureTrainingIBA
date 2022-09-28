@@ -44,6 +44,12 @@
 				},
 				{
 					"name": "Split"
+				},
+				{
+					"name": "SourceHash"
+				},
+				{
+					"name": "CurrHash"
 				}
 			],
 			"scriptLines": [
@@ -271,16 +277,18 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Existing",
-				"New, Existing exists(New@{WBS ID} == Existing@{WBS ID},",
+				"SourceHash, CurrHash exists(New@{WBS ID} == Existing@{WBS ID},",
 				"     negate:true,",
 				"     broadcast: 'auto')~> Compare",
-				"Compare, Existing lookup(New@{WBS ID} == Existing@{WBS ID}",
+				"Compare, CurrHash lookup(New@{WBS ID} == Existing@{WBS ID}",
 				"     && New@{Entity type} == Existing@{Entity type},",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
 				"lookup1 split(isNull(Existing@{WBS ID}) && isNull(Existing@{Entity type}),",
 				"     disjoint: false) ~> Split@(NewRows, UpdRows)",
+				"New derive(SourceHash = sha2(256,{WBS ID},{Entity type})) ~> SourceHash",
+				"Existing derive(CurrHash = sha2(256,{WBS ID},{Entity type})) ~> CurrHash",
 				"Split@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['NewRows.csv'],",
