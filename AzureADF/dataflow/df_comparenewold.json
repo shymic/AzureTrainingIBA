@@ -277,7 +277,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Existing",
-				"SourceHash, CurrHash exists(New@{WBS ID} == Existing@{WBS ID},",
+				"SourceHash, CurrHash exists(SourceHash == CurrHash,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> Compare",
 				"Compare, CurrHash lookup(New@{WBS ID} == Existing@{WBS ID}",
