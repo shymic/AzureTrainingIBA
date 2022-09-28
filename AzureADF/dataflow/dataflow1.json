@@ -19,7 +19,22 @@
 					"name": "Existing"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "Compare"
@@ -264,7 +279,19 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
 				"lookup1 split(isNull(Existing@{WBS ID}),",
-				"     disjoint: true) ~> Split@(NewRows, UpdRows)"
+				"     disjoint: true) ~> Split@(NewRows, UpdRows)",
+				"Split@NewRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['NewRows'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"Split@UpdRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['UpdRows'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2"
 			]
 		}
 	}
