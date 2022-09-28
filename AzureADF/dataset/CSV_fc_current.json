@@ -1,0 +1,455 @@
+{
+	"name": "CSV_fc_current",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "oba-fc-current.csv",
+				"container": "obachilo"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "WBS ID",
+				"type": "String"
+			},
+			{
+				"name": "Entity type",
+				"type": "String"
+			},
+			{
+				"name": "Country",
+				"type": "String"
+			},
+			{
+				"name": "Brand",
+				"type": "String"
+			},
+			{
+				"name": "Profit center description",
+				"type": "String"
+			},
+			{
+				"name": "IPPF sector (brand)",
+				"type": "String"
+			},
+			{
+				"name": "IPPF sector (S&D)",
+				"type": "String"
+			},
+			{
+				"name": "IPPF sector (local)",
+				"type": "String"
+			},
+			{
+				"name": "IPPF sector (GB overlay) code",
+				"type": "String"
+			},
+			{
+				"name": "IPPF sector (GB overlay)",
+				"type": "String"
+			},
+			{
+				"name": "IPPF industry S&D",
+				"type": "String"
+			},
+			{
+				"name": "IPPF industry local",
+				"type": "String"
+			},
+			{
+				"name": "Service line",
+				"type": "String"
+			},
+			{
+				"name": "Practice",
+				"type": "String"
+			},
+			{
+				"name": "LOB",
+				"type": "String"
+			},
+			{
+				"name": "GBS Growth platform",
+				"type": "String"
+			},
+			{
+				"name": "CPM Exception date",
+				"type": "String"
+			},
+			{
+				"name": "CPM Exception reason",
+				"type": "String"
+			},
+			{
+				"name": "GBS Solution handover required",
+				"type": "String"
+			},
+			{
+				"name": "GBS CPM required",
+				"type": "String"
+			},
+			{
+				"name": "GBS Quality partner reviews",
+				"type": "String"
+			},
+			{
+				"name": "GBS Global quality SQUAD intervention",
+				"type": "String"
+			},
+			{
+				"name": "GBS Harvest estimates",
+				"type": "String"
+			},
+			{
+				"name": "Geo",
+				"type": "String"
+			},
+			{
+				"name": "Market",
+				"type": "String"
+			},
+			{
+				"name": "Sub market",
+				"type": "String"
+			},
+			{
+				"name": "WBS short description",
+				"type": "String"
+			},
+			{
+				"name": "WBS start date",
+				"type": "String"
+			},
+			{
+				"name": "WBS end date",
+				"type": "String"
+			},
+			{
+				"name": "WBS created date",
+				"type": "String"
+			},
+			{
+				"name": "PCW conversion date",
+				"type": "String"
+			},
+			{
+				"name": "RA key",
+				"type": "String"
+			},
+			{
+				"name": "Forecast draft status",
+				"type": "String"
+			},
+			{
+				"name": "Forecast workflow status",
+				"type": "String"
+			},
+			{
+				"name": "Forecast processing status",
+				"type": "String"
+			},
+			{
+				"name": "Forecast override status",
+				"type": "String"
+			},
+			{
+				"name": "Forecast submitter Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "Forecast submission timestamp",
+				"type": "String"
+			},
+			{
+				"name": "Forecast method",
+				"type": "String"
+			},
+			{
+				"name": "Last SCMgrtimestamp",
+				"type": "String"
+			},
+			{
+				"name": "Reconcilliation eligibility",
+				"type": "String"
+			},
+			{
+				"name": "Reconcilliation status",
+				"type": "String"
+			},
+			{
+				"name": "Reconcilliation Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "Reconcilliation timestamp",
+				"type": "String"
+			},
+			{
+				"name": "Forecast last approved timestamp",
+				"type": "String"
+			},
+			{
+				"name": "Process indicator",
+				"type": "String"
+			},
+			{
+				"name": "IPPF customer",
+				"type": "String"
+			},
+			{
+				"name": "IPPF customer number",
+				"type": "String"
+			},
+			{
+				"name": "Global buying group",
+				"type": "String"
+			},
+			{
+				"name": "Cluster",
+				"type": "String"
+			},
+			{
+				"name": "Cluster leader Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "Account classification",
+				"type": "String"
+			},
+			{
+				"name": "Local named account",
+				"type": "String"
+			},
+			{
+				"name": "System contract number",
+				"type": "String"
+			},
+			{
+				"name": "Legal contract number",
+				"type": "String"
+			},
+			{
+				"name": "Account brand",
+				"type": "String"
+			},
+			{
+				"name": "Account brand description",
+				"type": "String"
+			},
+			{
+				"name": "Account brand system status",
+				"type": "String"
+			},
+			{
+				"name": "Sub cluster",
+				"type": "String"
+			},
+			{
+				"name": "Dilutive account",
+				"type": "String"
+			},
+			{
+				"name": "I-deal",
+				"type": "String"
+			},
+			{
+				"name": "Portfolio account",
+				"type": "String"
+			},
+			{
+				"name": "T&T focus account",
+				"type": "String"
+			},
+			{
+				"name": "Tail account",
+				"type": "String"
+			},
+			{
+				"name": "Account focus description",
+				"type": "String"
+			},
+			{
+				"name": "Account focus value",
+				"type": "String"
+			},
+			{
+				"name": "Account project executive",
+				"type": "String"
+			},
+			{
+				"name": "Account delivery project executive",
+				"type": "String"
+			},
+			{
+				"name": "Account financial analyst",
+				"type": "String"
+			},
+			{
+				"name": "WBS IPPF status",
+				"type": "String"
+			},
+			{
+				"name": "PE Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "Brand PE Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "Brand PE delegate(s) Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "PM Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "PM delegate(s) Notes ID",
+				"type": "String"
+			},
+			{
+				"name": "IPPF AP51 indicator",
+				"type": "String"
+			},
+			{
+				"name": "POC assist availability",
+				"type": "String"
+			},
+			{
+				"name": "Revenue update method",
+				"type": "String"
+			},
+			{
+				"name": "IPPF POC indicator",
+				"type": "String"
+			},
+			{
+				"name": "Forecast currency",
+				"type": "String"
+			},
+			{
+				"name": "Billing currency",
+				"type": "String"
+			},
+			{
+				"name": "TCV (Plan Rate USD)",
+				"type": "String"
+			},
+			{
+				"name": "Plan type",
+				"type": "String"
+			},
+			{
+				"name": "Plan revenue",
+				"type": "String"
+			},
+			{
+				"name": "Plan cost",
+				"type": "String"
+			},
+			{
+				"name": "Plan GP",
+				"type": "String"
+			},
+			{
+				"name": "Plan GP %",
+				"type": "String"
+			},
+			{
+				"name": "ITD revenue",
+				"type": "String"
+			},
+			{
+				"name": "ITD cost",
+				"type": "String"
+			},
+			{
+				"name": "ITD GP",
+				"type": "String"
+			},
+			{
+				"name": "ITD GP%",
+				"type": "String"
+			},
+			{
+				"name": "EaC revenue",
+				"type": "String"
+			},
+			{
+				"name": "EaC cost",
+				"type": "String"
+			},
+			{
+				"name": "EaC GP",
+				"type": "String"
+			},
+			{
+				"name": "EaC GP %",
+				"type": "String"
+			},
+			{
+				"name": "Variance EaC to plan revenue",
+				"type": "String"
+			},
+			{
+				"name": "Variance EaC to plan cost",
+				"type": "String"
+			},
+			{
+				"name": "Override justification",
+				"type": "String"
+			},
+			{
+				"name": "Consolidation level",
+				"type": "String"
+			},
+			{
+				"name": "Consolidation level description",
+				"type": "String"
+			},
+			{
+				"name": "Contract phase",
+				"type": "String"
+			},
+			{
+				"name": "Forecast eligibility status",
+				"type": "String"
+			},
+			{
+				"name": "PM forecast comments",
+				"type": "String"
+			},
+			{
+				"name": "IPPF Geography business organization",
+				"type": "String"
+			},
+			{
+				"name": "WBS short ID",
+				"type": "String"
+			},
+			{
+				"name": "Certified backlog (Plan USD)",
+				"type": "String"
+			},
+			{
+				"name": "IPPF T&M indicator",
+				"type": "String"
+			}
+		]
+	}
+}
