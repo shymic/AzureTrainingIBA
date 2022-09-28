@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "df_comparenewold",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -279,19 +279,17 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
-				"lookup1 split(isNull(Existing@{WBS ID}),",
+				"lookup1 split(isNull(Existing@{WBS ID}) && isNull(Existing@{Entity type}),",
 				"     disjoint: false) ~> Split@(NewRows, UpdRows)",
 				"Split@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['NewRows.csv'],",
-				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1",
 				"Split@UpdRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['UpdRows.csv'],",
-				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink2"
