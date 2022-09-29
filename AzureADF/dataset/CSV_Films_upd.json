@@ -2,7 +2,7 @@
 	"name": "CSV_Films_upd",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "Local_AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {

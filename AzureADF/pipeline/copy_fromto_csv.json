@@ -49,7 +49,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "CSV_fc",
+						"referenceName": "CSV_Films",
 						"type": "DatasetReference"
 					}
 				],
