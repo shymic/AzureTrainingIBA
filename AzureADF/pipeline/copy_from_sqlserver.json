@@ -21,10 +21,15 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"preCopyScript": "TRUNCATE copy_films",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"dataIntegrationUnits": 2,
@@ -149,22 +154,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Dynamic_Tables",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema": "TESTDB",
-							"Table": "films"
-						}
+						"referenceName": "Local_Films",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Dynamic_Target",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema": "TESTDB",
-							"Table": "copy_films"
-						}
+						"referenceName": "CSV_Films",
+						"type": "DatasetReference"
 					}
 				]
 			}

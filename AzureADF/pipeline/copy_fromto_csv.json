@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy to csv",
+				"name": "Copy from csv",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -27,15 +27,15 @@
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"id"
+							]
 						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -55,7 +55,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_fc",
+						"referenceName": "Local_Films",
 						"type": "DatasetReference"
 					}
 				]
