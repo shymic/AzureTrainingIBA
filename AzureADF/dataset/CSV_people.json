@@ -1,5 +1,5 @@
 {
-	"name": "CSV_Films",
+	"name": "CSV_people",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -13,13 +13,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "films.csv",
+				"fileName": "people.csv",
 				"container": "obachilo"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
-			"nullValue": "NULL",
 			"quoteChar": "\""
 		},
 		"schema": [
@@ -28,35 +27,15 @@
 				"type": "String"
 			},
 			{
-				"name": "title",
+				"name": "name",
 				"type": "String"
 			},
 			{
-				"name": "release_year",
+				"name": "birthdate",
 				"type": "String"
 			},
 			{
-				"name": "country",
-				"type": "String"
-			},
-			{
-				"name": "duration",
-				"type": "String"
-			},
-			{
-				"name": "language",
-				"type": "String"
-			},
-			{
-				"name": "certification",
-				"type": "String"
-			},
-			{
-				"name": "gross",
-				"type": "String"
-			},
-			{
-				"name": "budget",
+				"name": "deathdate",
 				"type": "String"
 			}
 		]

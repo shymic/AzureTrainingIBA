@@ -1,0 +1,130 @@
+{
+	"name": "df_join",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Films",
+						"type": "DatasetReference"
+					},
+					"name": "Films"
+				},
+				{
+					"dataset": {
+						"referenceName": "CSV_roles",
+						"type": "DatasetReference"
+					},
+					"name": "Roles"
+				},
+				{
+					"dataset": {
+						"referenceName": "CSV_people",
+						"type": "DatasetReference"
+					},
+					"name": "People"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinFilmsRoles"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "Peoplee"
+				},
+				{
+					"name": "JoinFilmsPeople",
+					"description": "Inner join on 'JoinFilmsRoles' and 'Peoplee'"
+				},
+				{
+					"name": "Result"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as string,",
+				"          title as string,",
+				"          release_year as string,",
+				"          country as string,",
+				"          duration as string,",
+				"          language as string,",
+				"          certification as string,",
+				"          gross as string,",
+				"          budget as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Films",
+				"source(output(",
+				"          id as string,",
+				"          film_id as string,",
+				"          person_id as string,",
+				"          role as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Roles",
+				"source(output(",
+				"          id as string,",
+				"          name as string,",
+				"          birthdate as string,",
+				"          deathdate as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> People",
+				"select1, Roles join({Film id} == film_id,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinFilmsRoles",
+				"Films select(mapColumn(",
+				"          {Film id} = id,",
+				"          title",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"People select(mapColumn(",
+				"          {Person id} = id,",
+				"          {Person name} = name",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Peoplee",
+				"JoinFilmsRoles, Peoplee join(id == {Person id},",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinFilmsPeople",
+				"JoinFilmsPeople select(mapColumn(",
+				"          {Person name},",
+				"          Film = title,",
+				"          role",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Result",
+				"Result sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          {Person name},",
+				"          Film,",
+				"          Role = role",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

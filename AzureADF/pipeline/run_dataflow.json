@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_comparenewold",
+						"referenceName": "df_join",
 						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
