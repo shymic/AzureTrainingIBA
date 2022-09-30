@@ -13,15 +13,7 @@
 					"description": "Import data from CSV_Films_upd"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "Local_CopyFilms",
-						"type": "DatasetReference"
-					},
-					"name": "LoadToTable"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "FilterOutDeletes"
@@ -53,54 +45,12 @@
 				"     maxColumns: 15) ~> NewData",
 				"NewData filter(SYS_CHANGE_OPERATION !='D') ~> FilterOutDeletes",
 				"FilterOutDeletes cast(output(",
-				"          id as integer,",
-				"          title as string,",
-				"          release_year as integer,",
-				"          country as string,",
-				"          duration as integer,",
-				"          language as string,",
-				"          certification as string,",
-				"          gross as long,",
-				"          budget as long,",
-				"          SYS_CHANGE_VERSION as string,",
-				"          SYS_CHANGE_OPERATION as string",
+				"          Column_1 as string",
 				"     ),",
 				"     errors: true) ~> CastColumns",
 				"CastColumns alterRow(insertIf(SYS_CHANGE_OPERATION=='I'),",
 				"     deleteIf(SYS_CHANGE_OPERATION=='D'),",
-				"     updateIf(SYS_CHANGE_OPERATION=='U')) ~> AlterRowRules",
-				"AlterRowRules sink(allowSchemaDrift: false,",
-				"     validateSchema: false,",
-				"     input(",
-				"          id as integer,",
-				"          title as string,",
-				"          release_year as integer,",
-				"          country as string,",
-				"          duration as integer,",
-				"          language as string,",
-				"          certification as string,",
-				"          gross as long,",
-				"          budget as long",
-				"     ),",
-				"     deletable:true,",
-				"     insertable:true,",
-				"     updateable:true,",
-				"     upsertable:true,",
-				"     keys:['id'],",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          id,",
-				"          title,",
-				"          release_year,",
-				"          country,",
-				"          duration,",
-				"          language,",
-				"          certification,",
-				"          gross,",
-				"          budget",
-				"     )) ~> LoadToTable"
+				"     updateIf(SYS_CHANGE_OPERATION=='U')) ~> AlterRowRules"
 			]
 		}
 	}
