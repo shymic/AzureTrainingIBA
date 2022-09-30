@@ -21,7 +21,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "Dynamic_Target",
+						"referenceName": "Dynamic_Tables",
 						"type": "DatasetReference",
 						"parameters": {
 							"Schema": "dbo",
@@ -102,11 +102,11 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "Dynamic_Target",
+									"referenceName": "Dynamic_Tables",
 									"type": "DatasetReference",
 									"parameters": {
 										"Schema": "@item().target_schema_name",
-										"Table": "@item().target_table_name"
+										"Table": "@item().source_table_name"
 									}
 								}
 							]
