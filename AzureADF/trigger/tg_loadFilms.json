@@ -1,0 +1,24 @@
+{
+	"name": "tg_loadFilms",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "copy_fromto_csv",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/obachilo/blobs/films.csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/4b0c27cc-24c7-45ee-bc67-86498ce2d1a7/resourceGroups/IBA_Azure_training/providers/Microsoft.Storage/storageAccounts/ibatraining01",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
