@@ -25,14 +25,14 @@
 						"referenceName": "Output",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "insertList"
 				},
 				{
 					"dataset": {
 						"referenceName": "Output",
 						"type": "DatasetReference"
 					},
-					"name": "sink2"
+					"name": "UpdateList"
 				}
 			],
 			"transformations": [
@@ -271,18 +271,18 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> Existing",
-				"Existing derive(CurrHash = sha256({WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> ExistingHash",
-				"New derive(SourceHash = sha256({WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> NewHash",
+				"Existing derive(CurrHash = sha2(256,{WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF industry local})) ~> ExistingHash",
+				"New derive(SourceHash = sha2(256,{WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF industry local})) ~> NewHash",
 				"NewHash, ExistingHash exists(SourceHash == CurrHash,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> Exists",
-				"Exists, ExistingHash lookup($$ == $$",
+				"Exists, ExistingHash lookup(New@{Entity type} == Existing@{Entity type}",
 				"     && New@Country == Existing@Country",
 				"     && New@Brand == Existing@Brand",
 				"     && New@{Profit center description} == Existing@{Profit center description}",
 				"     && New@{IPPF sector (brand)} == Existing@{IPPF sector (brand)}",
 				"     && New@{IPPF sector (S&D)} == Existing@{IPPF sector (S&D)}",
-				"     && New@{IPPF sector (local)} == Existing@{IPPF sector (local)},",
+				"     && New@{IPPF industry local} == Existing@{IPPF industry local},",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> Compare",
@@ -290,15 +290,17 @@
 				"     disjoint: false) ~> split1@(NewRows, UpdRows)",
 				"split1@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['NewRows'],",
+				"     partitionFileNames:['NewRows.csv'],",
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> insertList",
 				"split1@UpdRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['UpdRows'],",
+				"     partitionFileNames:['UpdRows.csv'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink2"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> UpdateList"
 			]
 		}
 	}
