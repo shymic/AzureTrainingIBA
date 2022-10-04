@@ -19,37 +19,16 @@
 					"name": "Existing"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "Output",
-						"type": "DatasetReference"
-					},
-					"name": "UpdFile"
-				},
-				{
-					"dataset": {
-						"referenceName": "Output",
-						"type": "DatasetReference"
-					},
-					"name": "NewFile"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
-					"name": "Compare"
+					"name": "ExistingHash"
 				},
 				{
-					"name": "lookup1"
+					"name": "NewHash"
 				},
 				{
-					"name": "Split"
-				},
-				{
-					"name": "SourceHash"
-				},
-				{
-					"name": "CurrHash"
+					"name": "exists1"
 				}
 			],
 			"scriptLines": [
@@ -164,7 +143,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> New",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> New",
 				"source(output(",
 				"          {WBS ID} as string,",
 				"          {Entity type} as string,",
@@ -276,35 +256,13 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> Existing",
-				"SourceHash, CurrHash exists(SourceHash == CurrHash,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> Existing",
+				"Existing derive(CurrHash = sha256({WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> ExistingHash",
+				"New derive(SourceHash = sha256({WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> NewHash",
+				"NewHash, ExistingHash exists(SourceHash == CurrHash,",
 				"     negate:true,",
-				"     broadcast: 'auto')~> Compare",
-				"Compare, CurrHash lookup(select1@Entity type == Existing@{Entity type}",
-				"     && select1@Country == Existing@Country",
-				"     && select1@Brand == Existing@Brand",
-				"     && select1@Profit center description == Existing@{Profit center description}",
-				"     && select1@IPPF sector (brand) == Existing@{IPPF sector (brand)}",
-				"     && select1@IPPF sector (S&D) == Existing@{IPPF sector (S&D)},",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
-				"lookup1 split(isNull(Existing@{WBS ID}),",
-				"     disjoint: false) ~> Split@(NewRows, UpdRows)",
-				"New derive(SourceHash = sha2(256,{WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> SourceHash",
-				"Existing derive(CurrHash = sha2(256,{WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> CurrHash",
-				"Split@NewRows sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     partitionFileNames:['UpdRows.csv'],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> UpdFile",
-				"Split@UpdRows sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     partitionFileNames:['NewRows.csv'],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> NewFile"
+				"     broadcast: 'auto')~> exists1"
 			]
 		}
 	}
