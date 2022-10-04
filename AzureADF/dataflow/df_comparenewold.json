@@ -46,7 +46,7 @@
 					"name": "Exists"
 				},
 				{
-					"name": "lookup1"
+					"name": "Compare"
 				},
 				{
 					"name": "split1"
@@ -285,11 +285,13 @@
 				"     negate:true,",
 				"     broadcast: 'auto')~> Exists",
 				"Exists, ExistingHash lookup(New@{Entity type} == Existing@{Entity type}",
-				"     && New@Country == Existing@Country,",
+				"     && New@Country == Existing@Country",
+				"     && New@Brand == Existing@Brand",
+				"     && New@{Profit center description} == Existing@{Profit center description},",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
-				"lookup1 split(ERROR_FUNCTION(''),",
+				"     broadcast: 'auto')~> Compare",
+				"Compare split(ERROR_FUNCTION(''),",
 				"     disjoint: false) ~> split1@(NewRows, UpdRows)",
 				"split1@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
