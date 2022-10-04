@@ -291,7 +291,7 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> Compare",
-				"Compare split(isNull(New@{WBS ID}),",
+				"Compare split(isNull(Existing@{WBS ID}),",
 				"     disjoint: false) ~> split1@(NewRows, UpdRows)",
 				"split1@NewRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
