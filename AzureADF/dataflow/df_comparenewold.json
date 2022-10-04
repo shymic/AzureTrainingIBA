@@ -19,7 +19,22 @@
 					"name": "Existing"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "ExistingHash"
@@ -28,7 +43,13 @@
 					"name": "NewHash"
 				},
 				{
-					"name": "exists1"
+					"name": "Exists"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -262,7 +283,25 @@
 				"New derive(SourceHash = sha256({WBS ID},{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF sector (local)})) ~> NewHash",
 				"NewHash, ExistingHash exists(SourceHash == CurrHash,",
 				"     negate:true,",
-				"     broadcast: 'auto')~> exists1"
+				"     broadcast: 'auto')~> Exists",
+				"Exists, ExistingHash lookup(New@{Entity type} == Existing@{Entity type}",
+				"     && New@Country == Existing@Country,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 split(ERROR_FUNCTION(''),",
+				"     disjoint: false) ~> split1@(NewRows, UpdRows)",
+				"split1@NewRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['NewRows'],",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"split1@UpdRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['UpdRows'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
