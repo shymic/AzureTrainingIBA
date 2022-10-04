@@ -51,22 +51,6 @@
 				"type": "String"
 			},
 			{
-				"name": "IPPF sector (local)",
-				"type": "String"
-			},
-			{
-				"name": "IPPF sector (GB overlay) code",
-				"type": "String"
-			},
-			{
-				"name": "IPPF sector (GB overlay)",
-				"type": "String"
-			},
-			{
-				"name": "IPPF industry S&D",
-				"type": "String"
-			},
-			{
 				"name": "IPPF industry local",
 				"type": "String"
 			},
