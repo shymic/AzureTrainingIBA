@@ -58,6 +58,7 @@
 				"          Column_10 as string,",
 				"          Column_11 as string",
 				"     ),",
+				"     partitionFileNames:['films_upd.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"
