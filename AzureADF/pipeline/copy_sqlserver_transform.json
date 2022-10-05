@@ -166,7 +166,7 @@
 				]
 			},
 			{
-				"name": "Data flow2",
+				"name": "Transform",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -200,11 +200,11 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "copy_to_localdb",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Data flow2",
+						"activity": "Transform",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -236,7 +236,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								""
+								"id"
 							]
 						},
 						"sqlWriterUseTableLock": false
