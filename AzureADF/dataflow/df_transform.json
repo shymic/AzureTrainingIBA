@@ -1,5 +1,5 @@
 {
-	"name": "df_transformlocal",
+	"name": "df_transform",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -40,8 +40,9 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(Hash = sha2(256,title,release_year)) ~> addHash",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source1 derive(language = sha2(256,title,release_year)) ~> addHash",
 				"addHash sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -58,7 +59,8 @@
 				"          Column_11 as string",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
