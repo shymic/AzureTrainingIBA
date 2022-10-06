@@ -62,6 +62,7 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
+						"preCopyScript": "DELETE from FORECAST_LOAD",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
