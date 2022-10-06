@@ -9,7 +9,7 @@
 						"referenceName": "CSV_wbs_element",
 						"type": "DatasetReference"
 					},
-					"name": "ReadCSVwbsElement"
+					"name": "wbsElement"
 				},
 				{
 					"dataset": {
@@ -33,15 +33,11 @@
 					"name": "InnerJoin"
 				},
 				{
-					"name": "Transformer54",
-					"description": "Select columns"
-				},
-				{
 					"name": "Transformer63",
 					"description": "select columns"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "AddColumns"
 				}
 			],
 			"scriptLines": [
@@ -61,7 +57,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200,",
-				"     partitionBy('hash', 1)) ~> ReadCSVwbsElement",
+				"     partitionBy('hash', 1)) ~> wbsElement",
 				"source(output(",
 				"          COST_ELEM_CD as string,",
 				"          VAL_CAT_CD as string,",
@@ -70,41 +66,29 @@
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> CostElement",
-				"Transformer54, CostElement join(Transformer54@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
+				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> InnerJoin",
-				"ReadCSVwbsElement select(mapColumn(",
+				"AddColumns select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD,",
+				"          COST_ELEM_CD = wbsElement@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
 				"          OBJ_CRNCY_CD,",
 				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
-				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
-				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Transformer54",
-				"derivedColumn1 select(mapColumn(",
-				"          WBS_ID,",
-				"          COST_ELEM_CD = Transformer54@COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT,",
 				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
+				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD,",
 				"          TXN_AMT,",
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer63",
-				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT),",
+				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
-				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT)) ~> derivedColumn1",
+				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT)) ~> AddColumns",
 				"Transformer63 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['outputdata.csv'],",
