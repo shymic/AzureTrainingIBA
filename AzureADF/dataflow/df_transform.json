@@ -94,7 +94,8 @@
 				"     partitionFileNames:['outputdata.csv'],",
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> OutputFile"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> OutputFile"
 			]
 		}
 	}
