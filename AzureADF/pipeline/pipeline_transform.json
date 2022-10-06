@@ -77,7 +77,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_transform_films",
+						"referenceName": "df_transform",
 						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
