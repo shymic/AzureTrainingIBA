@@ -19,7 +19,15 @@
 					"name": "CostElement"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "OutputFile"
+				}
+			],
 			"transformations": [
 				{
 					"name": "InnerJoin"
@@ -96,7 +104,13 @@
 				"     skipDuplicateMapOutputs: true) ~> Transformer63",
 				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
-				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT)) ~> derivedColumn1"
+				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT)) ~> derivedColumn1",
+				"Transformer63 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['outputdata.csv'],",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> OutputFile"
 			]
 		}
 	}
