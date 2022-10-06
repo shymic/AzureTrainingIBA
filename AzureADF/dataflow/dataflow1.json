@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_source_table",
+						"referenceName": "CSV_wbs_element",
 						"type": "DatasetReference"
 					},
 					"name": "ReadCSV"
@@ -27,7 +27,19 @@
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: false,",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          COST_ELEM_CD as string,",
+				"          WBS_ELEM_OC_AMT as string,",
+				"          WBS_ELEM_CC_AMT as string,",
+				"          OBJ_CRNCY_CD as string,",
+				"          CNTRL_CRNCY_CD as string,",
+				"          MONTH_NUM as string,",
+				"          YEAR_NUM as string,",
+				"          TXN_CRNCY_CD as string,",
+				"          WBS_LVL_NUM as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200,",
