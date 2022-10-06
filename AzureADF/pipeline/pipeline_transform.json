@@ -30,7 +30,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "Load STAG",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -62,11 +62,11 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"preCopyScript": "DELETE FROM FORECAST_LOAD",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
+					"dataIntegrationUnits": 2,
 					"translator": {
 						"type": "TabularTranslator",
 						"typeConversion": true,
