@@ -91,6 +91,7 @@
 				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT)) ~> AddColumns",
 				"Transformer63 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:['outputdata.csv'],",
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
