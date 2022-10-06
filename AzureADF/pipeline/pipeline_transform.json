@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy_from_localdb",
+				"name": "copy_from_sorce_db",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -45,7 +45,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Local_Films",
+						"referenceName": "Source_table",
 						"type": "DatasetReference"
 					}
 				],
@@ -61,7 +61,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "copy_from_localdb",
+						"activity": "copy_from_sorce_db",
 						"dependencyConditions": [
 							"Succeeded"
 						]
