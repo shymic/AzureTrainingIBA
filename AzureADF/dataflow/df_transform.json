@@ -94,7 +94,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer63",
 				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT),",
-				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> derivedColumn1"
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
+				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT)) ~> derivedColumn1"
 			]
 		}
 	}
