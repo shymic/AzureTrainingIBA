@@ -90,11 +90,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"geoparam": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "obachilo"
 		},
