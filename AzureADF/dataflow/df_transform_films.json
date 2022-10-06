@@ -1,5 +1,5 @@
 {
-	"name": "df_transform",
+	"name": "df_transform_films",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

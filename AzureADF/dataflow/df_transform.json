@@ -1,0 +1,49 @@
+{
+	"name": "df_transform",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CSV_source_table",
+						"type": "DatasetReference"
+					},
+					"name": "ReadCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Target_table",
+						"type": "DatasetReference"
+					},
+					"name": "Target"
+				}
+			],
+			"transformations": [
+				{
+					"name": "addHash"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200,",
+				"     partitionBy('hash', 1)) ~> ReadCSV",
+				"ReadCSV derive(hash = sha1(columns())) ~> addHash",
+				"addHash sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Target"
+			]
+		}
+	}
+}

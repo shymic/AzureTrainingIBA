@@ -36,116 +36,6 @@
 					"dataIntegrationUnits": 2,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "id",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "id",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "title",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "title",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "release_year",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "release_year",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "country",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "country",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "duration",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "duration",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "language",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "language",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "certification",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "certification",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "gross",
-									"type": "Int64",
-									"physicalType": "bigint"
-								},
-								"sink": {
-									"name": "gross",
-									"type": "String",
-									"physicalType": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "budget",
-									"type": "Int64",
-									"physicalType": "bigint"
-								},
-								"sink": {
-									"name": "budget",
-									"type": "String",
-									"physicalType": "String"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -161,7 +51,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_Films",
+						"referenceName": "CSV_source_table",
 						"type": "DatasetReference"
 					}
 				]
@@ -187,7 +77,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_transform",
+						"referenceName": "df_transform_films",
 						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {

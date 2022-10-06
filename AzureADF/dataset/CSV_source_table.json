@@ -1,5 +1,5 @@
 {
-	"name": "CSV_load_table",
+	"name": "CSV_source_table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

@@ -1,5 +1,5 @@
 {
-	"name": "Source_table",
+	"name": "Target_table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Local_SqlServer",
