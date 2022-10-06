@@ -16,28 +16,24 @@
 						"referenceName": "CSV_cost_element",
 						"type": "DatasetReference"
 					},
-					"name": "ReadCOSTelement"
+					"name": "CostElement"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "Target_table",
-						"type": "DatasetReference"
-					},
-					"name": "TargetAzure"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
-					"name": "addHash",
-					"description": "Creating/updating the columns"
+					"name": "InnerJoin"
 				},
 				{
-					"name": "join1"
+					"name": "Transformer54",
+					"description": "Select columns"
 				},
 				{
-					"name": "select1"
+					"name": "Transformer63",
+					"description": "select columns"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -65,13 +61,12 @@
 				"     ),",
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> ReadCOSTelement",
-				"select1 derive(hash = sha1(columns())) ~> addHash",
-				"addHash, ReadCOSTelement join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     ignoreNoFilesFound: false) ~> CostElement",
+				"Transformer54, CostElement join(Transformer54@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
+				"     broadcast: 'auto')~> InnerJoin",
 				"ReadCSVwbsElement select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD,",
@@ -83,17 +78,23 @@
 				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"join1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
+				"     skipDuplicateMapOutputs: true) ~> Transformer54",
+				"derivedColumn1 select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD = Transformer54@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          REV_IND",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> TargetAzure"
+				"     skipDuplicateMapOutputs: true) ~> Transformer63",
+				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(OBJ_AMT)*-1),OBJ_AMT),",
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> derivedColumn1"
 			]
 		}
 	}
