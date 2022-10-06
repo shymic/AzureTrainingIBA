@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy_from_sorce_db",
+				"name": "table_from_source",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -61,7 +61,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "copy_from_sorce_db",
+						"activity": "table_from_source",
 						"dependencyConditions": [
 							"Succeeded"
 						]
