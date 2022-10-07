@@ -1,0 +1,39 @@
+{
+	"name": "CSV_cost_element1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "cnmn_cost_element.csv",
+				"container": "obachilo"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "COST_ELEM_CD",
+				"type": "String"
+			},
+			{
+				"name": "VAL_CAT_CD",
+				"type": "String"
+			},
+			{
+				"name": "REV_IND",
+				"type": "String"
+			}
+		]
+	}
+}

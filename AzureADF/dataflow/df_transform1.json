@@ -1,0 +1,102 @@
+{
+	"name": "df_transform1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CSV_wbs_element1",
+						"type": "DatasetReference"
+					},
+					"name": "wbsElement"
+				},
+				{
+					"dataset": {
+						"referenceName": "CSV_cost_element1",
+						"type": "DatasetReference"
+					},
+					"name": "CostElement"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output1",
+						"type": "DatasetReference"
+					},
+					"name": "OutputFile"
+				}
+			],
+			"transformations": [
+				{
+					"name": "InnerJoin"
+				},
+				{
+					"name": "Transformer63",
+					"description": "select columns"
+				},
+				{
+					"name": "AddColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          WBS_ID as string,",
+				"          COST_ELEM_CD as string,",
+				"          WBS_ELEM_OC_AMT as string,",
+				"          WBS_ELEM_CC_AMT as string,",
+				"          OBJ_CRNCY_CD as string,",
+				"          CNTRL_CRNCY_CD as string,",
+				"          MONTH_NUM as string,",
+				"          YEAR_NUM as string,",
+				"          TXN_CRNCY_CD as string,",
+				"          WBS_LVL_NUM as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200,",
+				"     partitionBy('hash', 1)) ~> wbsElement",
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CostElement",
+				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnerJoin",
+				"AddColumns select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD = wbsElement@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO = MONTH_NUM,",
+				"          FRCST_FINL_YR = YEAR_NUM,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD,",
+				"          TXN_AMT,",
+				"          TXN_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Transformer63",
+				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT),",
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
+				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT)) ~> AddColumns",
+				"Transformer63 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['outputdata.csv'],",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> OutputFile"
+			]
+		}
+	}
+}
