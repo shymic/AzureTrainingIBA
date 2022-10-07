@@ -2,7 +2,7 @@
 	"name": "CSV_input_files",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "Local_AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {

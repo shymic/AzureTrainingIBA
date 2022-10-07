@@ -107,6 +107,124 @@
 									"type": "DelimitedTextReadSettings"
 								}
 							}
+						},
+						{
+							"name": "If Condition_CheckSize",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "GetFileSize",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greaterOrEquals(activity('GetFileSize').output.size,1024)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "DeleteSmallFiles",
+										"type": "Delete",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"dataset": {
+												"referenceName": "CSV_input_files_param",
+												"type": "DatasetReference",
+												"parameters": {
+													"filename": {
+														"value": "@item().itemName",
+														"type": "Expression"
+													}
+												}
+											},
+											"logStorageSettings": {
+												"linkedServiceName": {
+													"referenceName": "Local_AzureBlobStorage",
+													"type": "LinkedServiceReference"
+												}
+											},
+											"enableLogging": true,
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "CopyToDB",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"storeSettings": {
+													"type": "AzureBlobStorageReadSettings",
+													"recursive": true,
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings"
+												}
+											},
+											"sink": {
+												"type": "SqlServerSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "CSV_input_files_param",
+												"type": "DatasetReference",
+												"parameters": {
+													"filename": {
+														"value": "@item().itemName",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "Local_CopyFilms",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
 						}
 					]
 				}
