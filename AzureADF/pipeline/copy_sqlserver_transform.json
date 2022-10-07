@@ -17,6 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select* from ',pipeline().parameters.param1)",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -266,6 +270,12 @@
 				]
 			}
 		],
+		"parameters": {
+			"param1": {
+				"type": "string",
+				"defaultValue": "films"
+			}
+		},
 		"folder": {
 			"name": "obachilo"
 		},
