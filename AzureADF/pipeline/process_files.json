@@ -45,13 +45,70 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity().output.childItems",
+						"value": "@activity('GetListOfFiles').output.childItems",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@endswith(item().name,’csv’)",
+						"value": "@endswith(activity('GetListOfFiles').output.itemName,'csv')",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "ForEachCSV",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FilterFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FilterFiles').output.Value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "GetFileSize",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "CSV_input_files_param",
+									"type": "DatasetReference",
+									"parameters": {
+										"filename": {
+											"value": "@item().itemName",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"size"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
