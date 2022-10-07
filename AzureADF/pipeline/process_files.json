@@ -109,7 +109,7 @@
 							}
 						},
 						{
-							"name": "If Condition_CheckSize",
+							"name": "If_Condition_CheckSize",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
