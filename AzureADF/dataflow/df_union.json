@@ -114,7 +114,8 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
 				"SelectColumns sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['unionoutput.csv'],",
+				"     partitionFileNames:['outputdata.csv'],",
+				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> Output"
