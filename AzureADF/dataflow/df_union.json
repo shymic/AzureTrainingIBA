@@ -26,7 +26,15 @@
 					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "Output"
+				}
+			],
 			"transformations": [
 				{
 					"name": "unionSources"
@@ -38,7 +46,7 @@
 					"name": "AddColumns"
 				},
 				{
-					"name": "Transformer63"
+					"name": "SelectColumns"
 				}
 			],
 			"scriptLines": [
@@ -103,7 +111,13 @@
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Transformer63"
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"SelectColumns sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['unionoutput.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Output"
 			]
 		}
 	}
