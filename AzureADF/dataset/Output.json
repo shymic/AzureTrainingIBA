@@ -13,6 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "outputdata.csv",
 				"folderPath": "output",
 				"container": "obachilo"
 			},
