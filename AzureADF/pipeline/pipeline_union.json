@@ -71,10 +71,7 @@
 					"sink": {
 						"type": "SqlServerSink",
 						"preCopyScript": "DELETE from FORECAST_LOAD",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true
-						},
+						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
