@@ -17,7 +17,25 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_transform",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"wbsElement": {
+								"filenumber": "_1"
+							},
+							"CostElement": {
+								"schema": "dbo"
+							},
+							"SinkTable": {
+								"schema": "dbo"
+							}
+						},
+						"linkedServiceParameters": {
+							"SinkTable": {
+								"schemaLinkedService": {
+									"schema": "dbo"
+								}
+							}
+						}
 					},
 					"integrationRuntime": {
 						"referenceName": "ir-azure-DataFlow",
@@ -28,67 +46,6 @@
 						"firstRowOnly": true
 					}
 				}
-			},
-			{
-				"name": "Load STAG",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Transform",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": false,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "SqlServerSink",
-						"preCopyScript": "DELETE from FORECAST_LOAD",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
-					},
-					"enableStaging": false,
-					"dataIntegrationUnits": 2,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "Output",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "Target_table",
-						"type": "DatasetReference"
-					}
-				]
 			}
 		],
 		"folder": {

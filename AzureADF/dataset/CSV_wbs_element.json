@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"filenumber": {
-				"type": "string",
-				"defaultValue": "_1"
+				"type": "string"
 			}
 		},
 		"folder": {
