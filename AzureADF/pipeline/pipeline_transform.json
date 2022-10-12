@@ -23,17 +23,12 @@
 								"filenumber": "_1"
 							},
 							"CostElement": {
-								"schema": "dbo"
+								"schema": "dbo",
+								"table": "COST_ELEMENT"
 							},
 							"SinkTable": {
-								"schema": "dbo"
-							}
-						},
-						"linkedServiceParameters": {
-							"SinkTable": {
-								"schemaLinkedService": {
-									"schema": "dbo"
-								}
+								"schema": "dbo",
+								"table": "FORECAST_LOAD"
 							}
 						}
 					},

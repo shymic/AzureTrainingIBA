@@ -13,7 +13,7 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_AzureDB",
+						"referenceName": "CSV_cost_element",
 						"type": "DatasetReference"
 					},
 					"name": "CostElement"
@@ -56,17 +56,15 @@
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200,",
-				"     partitionBy('hash', 1)) ~> wbsElement",
+				"     maxColumns: 200) ~> wbsElement",
 				"source(output(",
 				"          COST_ELEM_CD as string,",
 				"          VAL_CAT_CD as string,",
-				"          REV_IND as integer",
+				"          REV_IND as string",
 				"     ),",
-				"     allowSchemaDrift: true,",
+				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> CostElement",
+				"     ignoreNoFilesFound: false) ~> CostElement",
 				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
@@ -87,9 +85,9 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer63",
-				"InnerJoin derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT),",
+				"InnerJoin derive(TXN_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
-				"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT)) ~> AddColumns",
+				"          CONTRL_AMT = case(REV_IND=='1',toString(toDecimal(WBS_ELEM_OC_AMT)*-1),WBS_ELEM_OC_AMT)) ~> AddColumns",
 				"Transformer63 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -104,8 +102,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     partitionBy('hash', 1)) ~> SinkTable"
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
 			]
 		}
 	}
