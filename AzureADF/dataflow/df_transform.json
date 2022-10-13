@@ -33,7 +33,7 @@
 					"name": "InnerJoin"
 				},
 				{
-					"name": "Transformer63",
+					"name": "Transformer",
 					"description": "select columns"
 				},
 				{
@@ -88,11 +88,11 @@
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Transformer63",
+				"     skipDuplicateMapOutputs: true) ~> Transformer",
 				"InnerJoin derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT)),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
 				"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT))) ~> AddColumns",
-				"Transformer63 sink(allowSchemaDrift: true,",
+				"Transformer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
