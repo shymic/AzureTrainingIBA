@@ -69,7 +69,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> CostElement",
-				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == trim(CostElement@COST_ELEM_CD),",
+				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -99,7 +99,7 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     preSQLs:[(concat('DELETE FROM ',$p_sinkTable))],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
