@@ -9,14 +9,14 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "wbsElement"
+					"name": "sourceTable"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_refTable",
 						"type": "DatasetReference"
 					},
-					"name": "CostElement"
+					"name": "refTable"
 				}
 			],
 			"sinks": [
@@ -59,7 +59,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> wbsElement",
+				"     maxColumns: 200) ~> sourceTable",
 				"source(output(",
 				"          COST_ELEM_CD as string,",
 				"          VAL_CAT_CD as string,",
@@ -68,15 +68,15 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> CostElement",
-				"wbsElement, CostElement join(wbsElement@COST_ELEM_CD == CostElement@COST_ELEM_CD,",
+				"     format: 'table') ~> refTable",
+				"sourceTable, refTable join(sourceTable@COST_ELEM_CD == refTable@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> InnerJoin",
 				"AddColumns select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD = wbsElement@COST_ELEM_CD,",
+				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
