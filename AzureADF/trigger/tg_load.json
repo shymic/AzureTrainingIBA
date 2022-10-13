@@ -1,5 +1,5 @@
 {
-	"name": "tg_loadFilms",
+	"name": "tg_load",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
