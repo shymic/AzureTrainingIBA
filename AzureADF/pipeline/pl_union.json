@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_union",
+	"name": "pl_union",
 	"properties": {
 		"activities": [
 			{

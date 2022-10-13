@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_transform",
+	"name": "pl_transform",
 	"properties": {
 		"activities": [
 			{
