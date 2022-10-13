@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"sourceName": {
-				"type": "string",
-				"defaultValue": "wbs_element_cost.csv"
+				"type": "string"
 			}
 		},
 		"folder": {

@@ -42,7 +42,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     sinkTable as string",
+				"     p_sinkTable as string",
 				"}",
 				"source(output(",
 				"          WBS_ID as string,",
