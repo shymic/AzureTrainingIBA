@@ -29,7 +29,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_AzureDB",
+						"referenceName": "ds_refTable",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -114,11 +114,6 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
 				"SelectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as integer",
-				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",

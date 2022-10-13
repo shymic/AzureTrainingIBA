@@ -1,9 +1,14 @@
 {
-	"name": "CSV_wbs_element",
+	"name": "ds_sourceCSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourceName": {
+				"type": "string"
+			}
 		},
 		"folder": {
 			"name": "obachilo"
@@ -13,7 +18,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "wbs_element_cost.csv",
+				"fileName": {
+					"value": "concat(dataset().sourceName,'.csv')",
+					"type": "Expression"
+				},
 				"container": "obachilo"
 			},
 			"columnDelimiter": ",",

@@ -13,7 +13,7 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_AzureDB",
+						"referenceName": "ds_refTable",
 						"type": "DatasetReference"
 					},
 					"name": "CostElement"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_AzureDB",
+						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -44,25 +44,20 @@
 				"source(output(",
 				"          WBS_ID as string,",
 				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as integer,",
-				"          WBS_ELEM_CC_AMT as integer,",
+				"          WBS_ELEM_OC_AMT as string,",
+				"          WBS_ELEM_CC_AMT as string,",
 				"          OBJ_CRNCY_CD as string,",
 				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as short,",
-				"          YEAR_NUM as short,",
+				"          MONTH_NUM as string,",
+				"          YEAR_NUM as string,",
 				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as short",
+				"          WBS_LVL_NUM as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> wbsElement",
-				"source(output(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as integer",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> CostElement",
@@ -73,7 +68,7 @@
 				"     broadcast: 'auto')~> InnerJoin",
 				"AddColumns select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD = wbsElement@COST_ELEM_CD,",
+				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
@@ -91,11 +86,6 @@
 				"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT))) ~> AddColumns",
 				"Transformer63 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as integer",
-				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",

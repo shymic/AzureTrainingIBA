@@ -19,9 +19,6 @@
 						"referenceName": "df_transform",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"wbsElement": {
-								"filenumber": "_1"
-							},
 							"CostElement": {
 								"schema": "dbo",
 								"table": "COST_ELEMENT"
