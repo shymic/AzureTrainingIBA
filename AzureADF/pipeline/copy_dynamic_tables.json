@@ -106,7 +106,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Schema": "@item().target_schema_name",
-										"Table": "@item().source_table_name"
+										"Table": "@item().target_table_name"
 									}
 								}
 							]
