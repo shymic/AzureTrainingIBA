@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_transform",
+	"name": "pipeline_transform2",
 	"properties": {
 		"activities": [
 			{
@@ -16,9 +16,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_transform",
+						"referenceName": "df_transform1",
 						"type": "DataFlowReference",
 						"datasetParameters": {
+							"sourceTable": {
+								"p_sourceName": "wbs_element_cost.csv"
+							},
 							"refTable": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT"

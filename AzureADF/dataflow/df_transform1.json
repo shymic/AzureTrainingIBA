@@ -1,19 +1,19 @@
 {
-	"name": "df_transform",
+	"name": "df_transform1",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceCSV1",
 						"type": "DatasetReference"
 					},
 					"name": "sourceTable"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_refTable",
+						"referenceName": "ds_refTable1",
 						"type": "DatasetReference"
 					},
 					"name": "refTable"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sinkTable",
+						"referenceName": "ds_sinkTable1",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -30,7 +30,7 @@
 			],
 			"transformations": [
 				{
-					"name": "InnerJoin"
+					"name": "Join"
 				},
 				{
 					"name": "Transformer",
@@ -65,13 +65,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'select * from COST_ELEMENT',",
-				"     format: 'query') ~> refTable",
+				"     format: 'table') ~> refTable",
 				"sourceTable, refTable join(sourceTable@COST_ELEM_CD == trim(refTable@COST_ELEM_CD),",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> InnerJoin",
+				"     broadcast: 'auto')~> Join",
 				"AddColumns select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
@@ -87,7 +86,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer",
-				"InnerJoin derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT)),",
+				"Join derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT)),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
 				"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT))) ~> AddColumns",
 				"Transformer sink(allowSchemaDrift: true,",
@@ -97,11 +96,22 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
-				"     postSQLs:['DELETE FROM '],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          TXN_AMT,",
+				"          TXN_CRNCY_CD",
+				"     )) ~> SinkTable"
 			]
 		}
 	}
