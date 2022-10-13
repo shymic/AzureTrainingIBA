@@ -26,8 +26,8 @@
 								"filenumber": "_2"
 							},
 							"SinkTable": {
-								"schema": "dbo",
-								"table": "FORECAST_LOAD"
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD"
 							}
 						}
 					},

@@ -20,12 +20,12 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"CostElement": {
-								"schema": "dbo",
-								"table": "COST_ELEMENT"
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT"
 							},
 							"SinkTable": {
-								"schema": "dbo",
-								"table": "FORECAST_LOAD"
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD"
 							}
 						}
 					},

@@ -6,11 +6,11 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"schema": {
+			"p_schema": {
 				"type": "string",
 				"defaultValue": "dbo"
 			},
-			"table": {
+			"p_table": {
 				"type": "string"
 			}
 		},
