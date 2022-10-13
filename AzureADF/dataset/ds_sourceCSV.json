@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"p_sourceName": {
+			"p_sourceTable": {
 				"type": "string"
 			}
 		},
