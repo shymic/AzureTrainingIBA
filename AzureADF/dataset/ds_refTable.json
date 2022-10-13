@@ -36,11 +36,11 @@
 		],
 		"typeProperties": {
 			"schema": {
-				"value": "@dataset().schema",
+				"value": "@dataset().p_schema",
 				"type": "Expression"
 			},
 			"table": {
-				"value": "@dataset().table",
+				"value": "@dataset().p_table",
 				"type": "Expression"
 			}
 		}
