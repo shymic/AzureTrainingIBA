@@ -19,7 +19,21 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "COST_ELEM_CD",
+				"type": "char"
+			},
+			{
+				"name": "VAL_CAT_CD",
+				"type": "char"
+			},
+			{
+				"name": "REV_IND",
+				"type": "int",
+				"precision": 10
+			}
+		],
 		"typeProperties": {
 			"schema": {
 				"value": "@dataset().schema",

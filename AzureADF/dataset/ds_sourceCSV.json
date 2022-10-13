@@ -7,7 +7,8 @@
 		},
 		"parameters": {
 			"sourceName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "wbs_element_cost.csv"
 			}
 		},
 		"folder": {
@@ -19,7 +20,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "concat(dataset().sourceName,'.csv')",
+					"value": "@dataset().sourceName",
 					"type": "Expression"
 				},
 				"container": "obachilo"

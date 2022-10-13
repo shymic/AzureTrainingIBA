@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_wbs_element",
+						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
 					"name": "wbsElement"
@@ -57,7 +57,12 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> wbsElement",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> CostElement",
@@ -68,7 +73,7 @@
 				"     broadcast: 'auto')~> InnerJoin",
 				"AddColumns select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD,",
+				"          COST_ELEM_CD = wbsElement@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
