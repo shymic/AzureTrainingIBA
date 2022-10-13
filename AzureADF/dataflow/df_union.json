@@ -29,10 +29,10 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Output",
+						"referenceName": "ds_AzureDB",
 						"type": "DatasetReference"
 					},
-					"name": "Output"
+					"name": "SinkTable"
 				}
 			],
 			"transformations": [
@@ -114,10 +114,20 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
 				"SelectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['outputdata.csv'],",
+				"     input(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> Output"
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
 			]
 		}
 	}
