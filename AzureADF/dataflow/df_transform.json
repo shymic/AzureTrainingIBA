@@ -98,7 +98,6 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
-				"     postSQLs:['DELETE FROM '],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
