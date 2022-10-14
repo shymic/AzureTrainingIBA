@@ -24,6 +24,9 @@
 			"transformations": [
 				{
 					"name": "addHash"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -43,7 +46,22 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(hash_cd = md5(columns())) ~> addHash",
-				"addHash sink(allowSchemaDrift: true,",
+				"addHash select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          WBS_ELEM_OC_AMT,",
+				"          WBS_ELEM_CC_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CNTRL_CRNCY_CD,",
+				"          MONTH_NUM,",
+				"          YEAR_NUM,",
+				"          TXN_CRNCY_CD,",
+				"          WBS_LVL_NUM,",
+				"          hash_cd",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -53,7 +71,20 @@
 				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          WBS_ELEM_OC_AMT,",
+				"          WBS_ELEM_CC_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CNTRL_CRNCY_CD,",
+				"          MONTH_NUM,",
+				"          YEAR_NUM,",
+				"          TXN_CRNCY_CD,",
+				"          WBS_LVL_NUM,",
+				"          hash_cd",
+				"     )) ~> sink1"
 			]
 		}
 	}
