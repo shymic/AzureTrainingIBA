@@ -1,5 +1,5 @@
 {
-	"name": "df_transform1",
+	"name": "df_transform",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

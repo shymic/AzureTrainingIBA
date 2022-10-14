@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_transform1",
+	"name": "pipeline_transform",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_transform1",
+						"referenceName": "df_transform",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"sourceTable": {
