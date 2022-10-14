@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV1",
+						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
 					"name": "sourceTable"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_refTable1",
+						"referenceName": "ds_refTable",
 						"type": "DatasetReference"
 					},
 					"name": "refTable"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sinkTable1",
+						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"

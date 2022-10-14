@@ -1,5 +1,5 @@
 {
-	"name": "ds_refTable1",
+	"name": "ds_refTable",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_AzureDB",

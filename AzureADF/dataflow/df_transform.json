@@ -6,23 +6,19 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV1",
+						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
 					"name": "sourceTable"
 				},
 				{
-					"dataset": {
-						"referenceName": "ds_refTable",
-						"type": "DatasetReference"
-					},
 					"name": "refTable"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sinkTable1",
+						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -63,10 +59,7 @@
 				"          REV_IND as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'select * from COST_ELEMENT',",
-				"     format: 'query') ~> refTable",
+				"     validateSchema: false) ~> refTable",
 				"sourceTable, refTable join(trim(sourceTable@COST_ELEM_CD) == trim(refTable@COST_ELEM_CD),",
 				"     joinType:'inner',",
 				"     matchType:'exact',",

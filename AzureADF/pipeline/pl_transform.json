@@ -29,10 +29,6 @@
 							"sourceTable": {
 								"p_sourceName": "wbs_element_cost.csv"
 							},
-							"refTable": {
-								"p_schema": "dbo",
-								"p_table": "COST_ELEMENT"
-							},
 							"SinkTable": {
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"
@@ -114,7 +110,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_sourceCSV1",
+						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
 							"p_sourceName": "wbs_element_cost.csv"
