@@ -6,21 +6,21 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_wbs_element",
+						"referenceName": "ds_sourceCSV1",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				},
 				{
 					"dataset": {
-						"referenceName": "CSV_wbs_element",
+						"referenceName": "ds_sourceCSV1",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
 				},
 				{
 					"dataset": {
-						"referenceName": "CSV_cost_element",
+						"referenceName": "ds_refTable1",
 						"type": "DatasetReference"
 					},
 					"name": "source3"
@@ -29,7 +29,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_refTable",
+						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -50,44 +50,16 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as string,",
-				"          WBS_ELEM_CC_AMT as string,",
-				"          OBJ_CRNCY_CD as string,",
-				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as string,",
-				"          YEAR_NUM as string,",
-				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as string",
-				"     ),",
-				"     allowSchemaDrift: false,",
+				"source(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(output(",
-				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as string,",
-				"          WBS_ELEM_CC_AMT as string,",
-				"          OBJ_CRNCY_CD as string,",
-				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as string,",
-				"          YEAR_NUM as string,",
-				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as string",
-				"     ),",
-				"     allowSchemaDrift: false,",
+				"source(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
-				"source(output(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as string",
-				"     ),",
-				"     allowSchemaDrift: false,",
+				"source(allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source3",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
 				"source1, source2 union(byName: true)~> unionSources",
 				"unionSources, source3 join(unionSources@COST_ELEM_CD == source3@COST_ELEM_CD,",
 				"     joinType:'inner',",
@@ -114,11 +86,6 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
 				"SelectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as integer",
-				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
