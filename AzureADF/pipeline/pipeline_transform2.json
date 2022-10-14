@@ -24,7 +24,7 @@
 							},
 							"refTable": {
 								"p_schema": "dbo",
-								"p_table": "COST_ELEMENT_1"
+								"p_table": "COST_ELEMENT"
 							},
 							"SinkTable": {
 								"p_schema": "dbo",
