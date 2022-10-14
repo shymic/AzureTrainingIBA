@@ -21,6 +21,10 @@
 						"datasetParameters": {
 							"source1": {
 								"p_sourceName": "wbs_element_cost_1.csv"
+							},
+							"sink1": {
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD"
 							}
 						}
 					},
