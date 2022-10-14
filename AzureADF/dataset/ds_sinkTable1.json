@@ -21,11 +21,11 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": {
-				"value": "dbo",
+				"value": "@dataset().p_schema",
 				"type": "Expression"
 			},
 			"table": {
-				"value": "FORECAST_LOAD",
+				"value": "@dataset().p_table",
 				"type": "Expression"
 			}
 		}
