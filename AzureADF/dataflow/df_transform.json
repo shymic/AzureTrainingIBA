@@ -67,7 +67,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     query: 'select * from COST_ELEMENT',",
 				"     format: 'query') ~> refTable",
-				"sourceTable, refTable join(sourceTable@COST_ELEM_CD == trim(refTable@COST_ELEM_CD),",
+				"sourceTable, refTable join(trim(sourceTable@COST_ELEM_CD) == trim(refTable@COST_ELEM_CD),",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
