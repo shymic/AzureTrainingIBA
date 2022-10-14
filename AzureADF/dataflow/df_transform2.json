@@ -97,7 +97,6 @@
 				"     mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO,",
 				"          FRCST_FINL_YR,",
 				"          OBJ_CRNCY_CD,",
