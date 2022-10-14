@@ -1,0 +1,51 @@
+{
+	"name": "pipeline_transform2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Transform",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_transform2",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sourceTable": {
+								"p_sourceName": "wbs_element_cost_1.csv"
+							},
+							"refTable": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
+							},
+							"SinkTable": {
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD_1"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": []
+	}
+}
