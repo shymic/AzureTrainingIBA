@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"p_sourceName": "wbs_element_cost.csv"
+								"p_sourceName": "wbs_element_cost_1.csv"
 							}
 						}
 					},
