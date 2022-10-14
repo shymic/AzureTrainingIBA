@@ -37,6 +37,19 @@
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"
 							}
+						},
+						"linkedServiceParameters": {
+							"sourceTable": {
+								"schemaLinkedService": {
+									"p_sourceName": "wbs_element_cost.csv"
+								}
+							},
+							"SinkTable": {
+								"schemaLinkedService": {
+									"p_schema": "dbo",
+									"p_table": "FORECAST_LOAD"
+								}
+							}
 						}
 					},
 					"integrationRuntime": {
@@ -101,7 +114,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceCSV1",
 						"type": "DatasetReference",
 						"parameters": {
 							"p_sourceName": "wbs_element_cost.csv"

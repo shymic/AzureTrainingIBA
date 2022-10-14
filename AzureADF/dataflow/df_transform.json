@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceCSV1",
 						"type": "DatasetReference"
 					},
 					"name": "sourceTable"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sinkTable",
+						"referenceName": "ds_sinkTable1",
 						"type": "DatasetReference"
 					},
 					"name": "SinkTable"
@@ -44,14 +44,14 @@
 				"source(output(",
 				"          WBS_ID as string,",
 				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as string,",
-				"          WBS_ELEM_CC_AMT as string,",
+				"          WBS_ELEM_OC_AMT as integer,",
+				"          WBS_ELEM_CC_AMT as integer,",
 				"          OBJ_CRNCY_CD as string,",
 				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as string,",
-				"          YEAR_NUM as string,",
+				"          MONTH_NUM as short,",
+				"          YEAR_NUM as short,",
 				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as string",
+				"          WBS_LVL_NUM as short",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
