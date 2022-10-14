@@ -1,0 +1,43 @@
+{
+	"name": "pl_changecap",
+	"properties": {
+		"activities": [
+			{
+				"name": "Run DataFlow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_changecap",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"p_sourceName": "wbs_element_cost.csv"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": []
+	}
+}
