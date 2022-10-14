@@ -1,0 +1,311 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name"
+		},
+		"AzureBlobStorage1": {
+			"type": "string"
+		},
+		"ls_AzureDB": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_transform2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Transform",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transform2",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"sourceTable": {
+										"p_sourceName": "wbs_element_cost_1.csv"
+									},
+									"refTable": {
+										"p_schema": "dbo",
+										"p_table": "COST_ELEMENT"
+									},
+									"SinkTable": {
+										"p_schema": "dbo",
+										"p_table": "FORECAST_LOAD_1"
+									}
+								}
+							},
+							"integrationRuntime": {
+								"referenceName": "ir-azure-DataFlow",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "obachilo"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_transform2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_transform2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sourceCSV1",
+								"type": "DatasetReference"
+							},
+							"name": "sourceTable"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_refTable1",
+								"type": "DatasetReference"
+							},
+							"name": "refTable"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sinkTable1",
+								"type": "DatasetReference"
+							},
+							"name": "SinkTable"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Join"
+						},
+						{
+							"name": "Transformer",
+							"description": "select columns"
+						},
+						{
+							"name": "AddColumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          WBS_ID as string,",
+						"          COST_ELEM_CD as string,",
+						"          WBS_ELEM_OC_AMT as string,",
+						"          WBS_ELEM_CC_AMT as string,",
+						"          OBJ_CRNCY_CD as string,",
+						"          CNTRL_CRNCY_CD as string,",
+						"          MONTH_NUM as string,",
+						"          YEAR_NUM as string,",
+						"          TXN_CRNCY_CD as string,",
+						"          WBS_LVL_NUM as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     maxColumns: 200) ~> sourceTable",
+						"source(output(",
+						"          COST_ELEM_CD as string,",
+						"          VAL_CAT_CD as string,",
+						"          REV_IND as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> refTable",
+						"sourceTable, refTable join(sourceTable@COST_ELEM_CD == trim(refTable@COST_ELEM_CD),",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> Join",
+						"AddColumns select(mapColumn(",
+						"          WBS_ID,",
+						"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
+						"          VAL_CAT_CD,",
+						"          FRCST_FINL_MO = MONTH_NUM,",
+						"          FRCST_FINL_YR = YEAR_NUM,",
+						"          OBJ_CRNCY_CD,",
+						"          OBJ_AMT = WBS_ELEM_OC_AMT,",
+						"          CONTRL_AMT,",
+						"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD,",
+						"          TXN_AMT,",
+						"          TXN_CRNCY_CD",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> Transformer",
+						"Join derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT)),",
+						"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
+						"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT))) ~> AddColumns",
+						"Transformer sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          WBS_ID,",
+						"          COST_ELEM_CD,",
+						"          VAL_CAT_CD,",
+						"          FRCST_FINL_MO,",
+						"          FRCST_FINL_YR,",
+						"          OBJ_CRNCY_CD,",
+						"          OBJ_AMT,",
+						"          CONTRL_AMT,",
+						"          CONTRL_CRNCY_CD,",
+						"          TXN_AMT,",
+						"          TXN_CRNCY_CD",
+						"     )) ~> SinkTable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sourceCSV1')]",
+				"[concat(variables('factoryId'), '/datasets/ds_refTable1')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sinkTable1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sourceCSV1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('AzureBlobStorage1')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_sourceName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "obachilo"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().p_sourceName",
+							"type": "Expression"
+						},
+						"container": "obachilo"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_refTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('ls_AzureDB')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_schema": {
+						"type": "string"
+					},
+					"p_table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "obachilo"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().p_schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().p_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sinkTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('ls_AzureDB')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_schema": {
+						"type": "string"
+					},
+					"p_table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "obachilo"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().p_schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().p_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
