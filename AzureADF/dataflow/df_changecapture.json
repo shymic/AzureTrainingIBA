@@ -75,6 +75,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "AlterRow1"
 				}
 			],
 			"scriptLines": [
@@ -148,6 +151,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 alterRow(updateIf(true())) ~> AlterRow1",
 				"selectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -183,7 +187,7 @@
 				"          REV_IND,",
 				"          HASH_CD",
 				"     )) ~> sinkDel",
-				"select1 sink(allowSchemaDrift: true,",
+				"AlterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:false,",
