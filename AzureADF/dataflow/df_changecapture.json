@@ -25,14 +25,21 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sinkNew"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "sink2"
+					"name": "sinkDel"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "sinkUpd"
 				}
 			],
 			"transformations": [
@@ -65,6 +72,9 @@
 				},
 				{
 					"name": "selectColumnss"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -130,6 +140,14 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectColumnss",
+				"split1@Update select(mapColumn(",
+				"          COST_ELEM_CD = stg_COST_ELEM_CD,",
+				"          VAL_CAT_CD = stg_VAL_CAT_CD,",
+				"          REV_IND = stg_REV_IND,",
+				"          HASH_CD = stg_hash_cd",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
 				"selectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -146,7 +164,7 @@
 				"          VAL_CAT_CD,",
 				"          REV_IND,",
 				"          HASH_CD",
-				"     )) ~> sink1",
+				"     )) ~> sinkNew",
 				"selectColumnss sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:true,",
@@ -157,14 +175,25 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 2,",
+				"     saveOrder: 3,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          REV_IND,",
 				"          HASH_CD",
-				"     )) ~> sink2"
+				"     )) ~> sinkDel",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkUpd"
 			]
 		}
 	}

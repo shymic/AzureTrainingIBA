@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_changecap",
+						"referenceName": "df_changecapture",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
@@ -26,7 +26,15 @@
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"
 							},
-							"sink1": {
+							"sinkNew": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
+							},
+							"sinkDel": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
+							},
+							"sinkUpd": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"
 							}
