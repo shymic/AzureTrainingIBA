@@ -74,7 +74,7 @@
 					"name": "selectColumnss"
 				},
 				{
-					"name": "select1"
+					"name": "selectColumnsss"
 				},
 				{
 					"name": "Update"
@@ -150,8 +150,8 @@
 				"          HASH_CD = stg_hash_cd",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 alterRow(updateIf(true())) ~> Update",
+				"     skipDuplicateMapOutputs: true) ~> selectColumnsss",
+				"selectColumnsss alterRow(updateIf(true())) ~> Update",
 				"selectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",

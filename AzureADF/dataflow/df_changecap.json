@@ -25,7 +25,7 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sinkUps"
 				}
 			],
 			"transformations": [
@@ -71,7 +71,6 @@
 				"     upsertable:true,",
 				"     keys:['COST_ELEM_CD'],",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
@@ -80,7 +79,7 @@
 				"          VAL_CAT_CD,",
 				"          REV_IND,",
 				"          HASH_CD = hash_cd",
-				"     )) ~> sink1"
+				"     )) ~> sinkUps"
 			]
 		}
 	}
