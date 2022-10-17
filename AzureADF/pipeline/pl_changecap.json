@@ -20,11 +20,15 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"p_sourceName": "wbs_element_cost_1.csv"
+								"p_sourceName": "cnmn_cost_element.csv"
+							},
+							"existingTable": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
 							},
 							"sink1": {
 								"p_schema": "dbo",
-								"p_table": "FORECAST_LOAD"
+								"p_table": "COST_ELEMENT_1"
 							}
 						}
 					},
