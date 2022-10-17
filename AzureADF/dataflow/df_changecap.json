@@ -26,6 +26,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sinkUps"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDel"
 				}
 			],
 			"transformations": [
@@ -37,6 +44,12 @@
 				},
 				{
 					"name": "NewAndExisting"
+				},
+				{
+					"name": "ToDelete"
+				},
+				{
+					"name": "Delete"
 				}
 			],
 			"scriptLines": [
@@ -63,6 +76,10 @@
 				"addHash, existingTable exists(addHash@hash_cd == existingTable@HASH_CD,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> NewAndExisting",
+				"existingTable, addHash exists(existingTable@COST_ELEM_CD == source1@COST_ELEM_CD,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> ToDelete",
+				"ToDelete alterRow(deleteIf(true())) ~> Delete",
 				"Upsert sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -73,13 +90,26 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          REV_IND,",
 				"          HASH_CD = hash_cd",
-				"     )) ~> sinkUps"
+				"     )) ~> sinkUps",
+				"Delete sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:true,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     keys:['COST_ELEM_CD'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
 			]
 		}
 	}
