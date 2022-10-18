@@ -1,0 +1,70 @@
+{
+	"name": "pl_copytablestocsv",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_tableList",
+					"value": "{\n    \"count\": \"2\",\n    \"value\": [\n        {\n            \"Id\": \"1\",\n            \"schema\":\"dbo\",\n            \"table\":\"WBS_COST_ELEMENT\"\n        },\n        {\n            \"Id\": \"2\",\n            \"schema\":\"dbo\",\n            \"table\":\"FORECAST_LOAD\"\n        }\n    ]\n} "
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sourceTable",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"v_tableList": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": []
+	}
+}
