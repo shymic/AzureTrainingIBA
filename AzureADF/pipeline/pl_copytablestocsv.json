@@ -16,7 +16,14 @@
 						{
 							"name": "CopyToStorage",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set query",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -28,6 +35,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@variables('v_query')",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -80,6 +91,19 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Set query",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "v_query",
+								"value": {
+									"value": "SELECT * FROM @item().table",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -98,6 +122,11 @@
 						"table": "FORECAST_LOAD"
 					}
 				]
+			}
+		},
+		"variables": {
+			"v_query": {
+				"type": "String"
 			}
 		},
 		"folder": {
