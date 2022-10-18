@@ -3,28 +3,15 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Set variable1",
-				"type": "SetVariable",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "v_tableList",
-					"value": "{\n    \"count\": \"2\",\n    \"value\": [\n        {\n            \"Id\": \"1\",\n            \"schema\":\"dbo\",\n            \"table\":\"WBS_COST_ELEMENT\"\n        },\n        {\n            \"Id\": \"2\",\n            \"schema\":\"dbo\",\n            \"table\":\"FORECAST_LOAD\"\n        }\n    ]\n} "
-				}
-			},
-			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.p_tableList",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Copy data1",
@@ -44,12 +31,53 @@
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "ds_sourceTable",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"p_schema": {
+											"value": "@item().schema",
+											"type": "Expression"
+										},
+										"p_table": {
+											"value": "@item().table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_sourceCSV",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_sourceName": {
+											"value": "@item().table",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -57,9 +85,19 @@
 				}
 			}
 		],
-		"variables": {
-			"v_tableList": {
-				"type": "String"
+		"parameters": {
+			"p_tableList": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"schema": "dbo",
+						"table": "WBS_COST_ELEMENT"
+					},
+					{
+						"schema": "dbo",
+						"table": "FORECAST_LOAD"
+					}
+				]
 			}
 		},
 		"folder": {
