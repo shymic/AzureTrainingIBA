@@ -50,9 +50,6 @@
 				},
 				{
 					"name": "Delete"
-				},
-				{
-					"name": "addHashRef"
 				}
 			],
 			"scriptLines": [
@@ -76,14 +73,13 @@
 				"     format: 'table') ~> existingTable",
 				"source1 derive(hash_cd = md5(columns())) ~> addHashSource",
 				"NewAndExisting alterRow(upsertIf(true())) ~> Upsert",
-				"addHashSource, addHashRef exists(addHashSource@hash_cd == addHashRef@hash_cd,",
+				"addHashSource, existingTable exists(addHashSource@hash_cd == existingTable@HASH_CD,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> NewAndExisting",
-				"addHashRef, addHashSource exists(existingTable@COST_ELEM_CD == source1@COST_ELEM_CD,",
+				"existingTable, addHashSource exists(existingTable@COST_ELEM_CD == source1@COST_ELEM_CD,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> ToDelete",
 				"ToDelete alterRow(deleteIf(true())) ~> Delete",
-				"existingTable derive(hash_cd = md5(columns())) ~> addHashRef",
 				"Upsert sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -99,7 +95,8 @@
 				"     mapColumn(",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
-				"          REV_IND",
+				"          REV_IND,",
+				"          HASH_CD = hash_cd",
 				"     )) ~> sinkUps",
 				"Delete sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -112,12 +109,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          REV_IND",
-				"     )) ~> sinkDel"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
 			]
 		}
 	}
