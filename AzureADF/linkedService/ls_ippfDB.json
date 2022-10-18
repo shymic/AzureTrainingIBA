@@ -1,0 +1,16 @@
+{
+	"name": "ls_ippfDB",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=10.221.16.148;initial catalog=IPPFDB;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkNmMwMzg2My03Y2M1LTQxMjctYjQyYi0xNGMzNjU2MjFhMGYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-obachilo-sqlserver",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
