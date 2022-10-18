@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "CopyForEachTable",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
@@ -14,7 +14,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "CopyToStorage",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
