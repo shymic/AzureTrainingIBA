@@ -37,7 +37,7 @@
 			],
 			"transformations": [
 				{
-					"name": "addHash"
+					"name": "addHashSource"
 				},
 				{
 					"name": "Upsert"
@@ -50,6 +50,9 @@
 				},
 				{
 					"name": "Delete"
+				},
+				{
+					"name": "addHashRef"
 				}
 			],
 			"scriptLines": [
@@ -71,15 +74,16 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> existingTable",
-				"source1 derive(hash_cd = md5(columns())) ~> addHash",
+				"source1 derive(hash_cd = md5(columns())) ~> addHashSource",
 				"NewAndExisting alterRow(upsertIf(true())) ~> Upsert",
-				"addHash, existingTable exists(addHash@hash_cd == existingTable@HASH_CD,",
+				"addHashSource, addHashRef exists(addHashSource@hash_cd == addHashRef@hash_cd,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> NewAndExisting",
-				"existingTable, addHash exists(existingTable@COST_ELEM_CD == source1@COST_ELEM_CD,",
+				"addHashRef, addHashSource exists(existingTable@COST_ELEM_CD == source1@COST_ELEM_CD,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> ToDelete",
 				"ToDelete alterRow(deleteIf(true())) ~> Delete",
+				"existingTable derive(hash_cd = md5(columns())) ~> addHashRef",
 				"Upsert sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -95,8 +99,7 @@
 				"     mapColumn(",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
-				"          REV_IND,",
-				"          HASH_CD = hash_cd",
+				"          REV_IND",
 				"     )) ~> sinkUps",
 				"Delete sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -109,7 +112,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          REV_IND",
+				"     )) ~> sinkDel"
 			]
 		}
 	}
