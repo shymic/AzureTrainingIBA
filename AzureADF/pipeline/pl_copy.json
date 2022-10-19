@@ -124,12 +124,10 @@
 		],
 		"parameters": {
 			"p_VIEW": {
-				"type": "string",
-				"defaultValue": "ELEMENT"
+				"type": "string"
 			},
 			"p_COUNTRIES_BH": {
-				"type": "string",
-				"defaultValue": "'COST'"
+				"type": "string"
 			}
 		},
 		"folder": {
