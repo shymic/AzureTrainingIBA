@@ -16,14 +16,7 @@
 						{
 							"name": "CopyToStorage",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Set query",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -36,7 +29,7 @@
 								"source": {
 									"type": "Db2Source",
 									"query": {
-										"value": "@variables('v_query')",
+										"value": "@item().query",
 										"type": "Expression"
 									}
 								},
@@ -73,25 +66,12 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"p_sourceName": {
-											"value": "@variables('v_filename')",
+											"value": "@item().filename",
 											"type": "Expression"
 										}
 									}
 								}
 							]
-						},
-						{
-							"name": "Set query",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "v_filename",
-								"value": {
-									"value": "SELECT * FROM @item().filename",
-									"type": "Expression"
-								}
-							}
 						}
 					]
 				}
