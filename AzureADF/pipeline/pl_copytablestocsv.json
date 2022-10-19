@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variables('v_tableList')",
+						"value": "@pipeline().parameters.p_TableList",
 						"type": "Expression"
 					},
 					"activities": [
@@ -29,7 +29,7 @@
 								"source": {
 									"type": "Db2Source",
 									"query": {
-										"value": "@item().query",
+										"value": "@replace(item().query,'#p_VIEW',pipeline().parameters.p_VIEW)",
 										"type": "Expression"
 									}
 								},
@@ -79,7 +79,8 @@
 		],
 		"parameters": {
 			"p_VIEW": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ELEMENT"
 			},
 			"p_TableList": {
 				"type": "array",
@@ -89,10 +90,14 @@
 						"filename": "source_1.csv"
 					},
 					{
-						"query": "SELECT * FROM CNMN.COST_ELEMENT",
+						"query": "SELECT * FROM CNMN.COST_#p_VIEW",
 						"filename": "source_2.csv"
 					}
 				]
+			},
+			"p_V": {
+				"type": "string",
+				"defaultValue": "COST"
 			}
 		},
 		"folder": {
