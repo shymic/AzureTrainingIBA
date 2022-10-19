@@ -55,7 +55,10 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_sourceName": "cnmn_cost_el.csv"
+							"p_sourceName": {
+								"value": "source_1_@{pipeline().parameters.p_VIEW}.csv",
+								"type": "Expression"
+							}
 						}
 					}
 				]
@@ -116,7 +119,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_sourceName": "COUNTRIES.csv"
+							"p_sourceName": "source_2_COUNTRIES.csv"
 						}
 					}
 				]
