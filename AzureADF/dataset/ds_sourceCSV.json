@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@dataset().p_sourceName",
+					"value": "@{dataset().p_sourceName}.csv",
 					"type": "Expression"
 				},
 				"container": "obachilo"
