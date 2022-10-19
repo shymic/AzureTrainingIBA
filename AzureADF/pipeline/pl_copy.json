@@ -18,7 +18,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT * FROM CNMN.COST_@{pipeline().parameters.p_VIEW} WHERE REV_IND=@{pipeline().parameters.p_COUNTRIES_BH}",
+							"value": "SELECT * FROM CNMN.COST_@{pipeline().parameters.p_VIEW} WHERE REV_IND @{pipeline().parameters.p_COUNTRIES_BH}",
 							"type": "Expression"
 						}
 					},
