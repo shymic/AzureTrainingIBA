@@ -1,0 +1,16 @@
+{
+	"name": "ls_ippfdb2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Db2",
+		"typeProperties": {
+			"connectionString": "server=10.221.31.249;database=STAGBASE;username=ippfstat;authenticationtype=Basic",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhMGI2YjJmNS0xZWVmLTQ2NmItYTU2NC04NWFiMzg2OWJhMWMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-obachilo-sqlserver",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
