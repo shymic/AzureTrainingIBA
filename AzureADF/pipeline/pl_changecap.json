@@ -19,9 +19,6 @@
 						"referenceName": "df_changecap",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"source1": {
-								"p_sourceName": "cnmn_cost_element.csv"
-							},
 							"sinkUps": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"

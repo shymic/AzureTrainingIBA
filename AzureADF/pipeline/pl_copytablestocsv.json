@@ -63,13 +63,7 @@
 							"outputs": [
 								{
 									"referenceName": "ds_sourceCSV",
-									"type": "DatasetReference",
-									"parameters": {
-										"p_sourceName": {
-											"value": "@item().filename",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							]
 						}

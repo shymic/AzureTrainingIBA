@@ -53,13 +53,7 @@
 				"outputs": [
 					{
 						"referenceName": "ds_sourceCSV",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_sourceName": {
-								"value": "source_1_@{pipeline().parameters.p_VIEW}.csv",
-								"type": "Expression"
-							}
-						}
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -117,10 +111,7 @@
 				"outputs": [
 					{
 						"referenceName": "ds_sourceCSV",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_sourceName": "source_2_COUNTRIES.csv"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}

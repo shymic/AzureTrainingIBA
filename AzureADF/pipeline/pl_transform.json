@@ -98,10 +98,7 @@
 				"outputs": [
 					{
 						"referenceName": "ds_sourceCSV",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_sourceName": "wbs_element_cost.csv"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}

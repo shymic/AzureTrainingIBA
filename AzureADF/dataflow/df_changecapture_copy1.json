@@ -98,7 +98,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectColumns",
 				"lookup1 alterRow(insertIf(isNull(ex_COST_ELEM_CD)),",
-				"     updateIf(stg_COST_ELEM_CD==ex_COST_ELEM_CD && stg_hash_cd!=ex_HASH_CD),",
+				"     updateIf(stg_COST_ELEM_CD==ex_COST_ELEM_CD&&stg_hash_cd!=ex_HASH_CD),",
 				"     deleteIf(stg_COST_ELEM_CD!=ex_COST_ELEM_CD)) ~> alterRow1",
 				"selectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
