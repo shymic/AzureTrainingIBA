@@ -56,7 +56,7 @@
 				"source(output(",
 				"          COST_ELEM_CD as string,",
 				"          VAL_CAT_CD as string,",
-				"          REV_IND as boolean",
+				"          REV_IND as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",

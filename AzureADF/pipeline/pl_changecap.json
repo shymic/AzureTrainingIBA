@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Run DataFlow",
+				"name": "Transform",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -21,10 +21,6 @@
 						"datasetParameters": {
 							"source1": {
 								"p_sourceName": "cnmn_cost_element.csv"
-							},
-							"existingTable": {
-								"p_schema": "dbo",
-								"p_table": "COST_ELEMENT_1"
 							},
 							"sinkUps": {
 								"p_schema": "dbo",
