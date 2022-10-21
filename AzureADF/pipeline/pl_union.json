@@ -25,10 +25,6 @@
 							"source2": {
 								"p_sourceName": "wbs_element_cost_2.csv"
 							},
-							"source3": {
-								"p_schema": "dbo",
-								"p_table": "COST_ELEMENT"
-							},
 							"SinkTable": {
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"
