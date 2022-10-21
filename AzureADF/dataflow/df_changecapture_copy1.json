@@ -1,0 +1,123 @@
+{
+	"name": "df_changecapture_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_refTable",
+						"type": "DatasetReference"
+					},
+					"name": "existingTable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "sinkTable"
+				}
+			],
+			"transformations": [
+				{
+					"name": "addHash"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "exColumns"
+				},
+				{
+					"name": "stgColumns"
+				},
+				{
+					"name": "selectColumns"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as integer,",
+				"          HASH_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT * FROM COST_ELEMENT_1',",
+				"     format: 'query') ~> existingTable",
+				"source1 derive(hash_cd = md5(columns())) ~> addHash",
+				"stgColumns, exColumns lookup(stg_hash_cd == ex_HASH_CD,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"existingTable select(mapColumn(",
+				"          ex_COST_ELEM_CD = COST_ELEM_CD,",
+				"          ex_VAL_CAT_CD = VAL_CAT_CD,",
+				"          ex_REV_IND = REV_IND,",
+				"          ex_HASH_CD = HASH_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> exColumns",
+				"addHash select(mapColumn(",
+				"          stg_COST_ELEM_CD = COST_ELEM_CD,",
+				"          stg_VAL_CAT_CD = VAL_CAT_CD,",
+				"          stg_REV_IND = REV_IND,",
+				"          stg_hash_cd = hash_cd",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> stgColumns",
+				"alterRow1 select(mapColumn(",
+				"          COST_ELEM_CD = stg_COST_ELEM_CD,",
+				"          VAL_CAT_CD = stg_VAL_CAT_CD,",
+				"          REV_IND = stg_REV_IND,",
+				"          HASH_CD = stg_hash_cd",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectColumns",
+				"lookup1 alterRow(deleteIf(isNull(ex_COST_ELEM_CD)),",
+				"     upsertIf(true())) ~> alterRow1",
+				"selectColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:true,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['COST_ELEM_CD'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          REV_IND,",
+				"          HASH_CD",
+				"     )) ~> sinkTable"
+			]
+		}
+	}
+}
