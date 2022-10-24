@@ -33,14 +33,13 @@
 					"name": "Join"
 				},
 				{
-					"name": "Transformer",
-					"description": "select columns"
-				},
-				{
 					"name": "Filter"
 				},
 				{
 					"name": "RemoveDuplicates"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -75,9 +74,13 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> Join",
-				"Filter@FilterOuput select(mapColumn(",
+				"select2 split(FRCST_FINL_YR==2022,",
+				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
+				"Filter@Rejected aggregate(groupBy(WBS_ID),",
+				"     each(match(name!='WBS_ID'), $$ = first($$))) ~> RemoveDuplicates",
+				"Join select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD = Filter@FilterOuput@COST_ELEM_CD,",
+				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
@@ -89,12 +92,8 @@
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Transformer",
-				"Join split(YEAR_NUM==2022,",
-				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
-				"Filter@Rejected aggregate(groupBy(WBS_ID),",
-				"     each(match(name != 'WBS ID'), $$ = $$)) ~> RemoveDuplicates",
-				"Transformer sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"Filter@FilterOuput sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
