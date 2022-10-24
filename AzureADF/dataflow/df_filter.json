@@ -38,6 +38,9 @@
 				},
 				{
 					"name": "Filter"
+				},
+				{
+					"name": "RemoveDuplicates"
 				}
 			],
 			"scriptLines": [
@@ -89,6 +92,8 @@
 				"     skipDuplicateMapOutputs: true) ~> Transformer",
 				"Join split(YEAR_NUM==2022,",
 				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
+				"Filter@Rejected aggregate(groupBy(WBS_ID),",
+				"     each(match(name != 'WBS ID'), $$ = $$)) ~> RemoveDuplicates",
 				"Transformer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
