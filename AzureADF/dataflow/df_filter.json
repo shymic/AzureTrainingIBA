@@ -39,7 +39,10 @@
 					"name": "RemoveDuplicates"
 				},
 				{
-					"name": "select2"
+					"name": "Transformer"
+				},
+				{
+					"name": "union1"
 				}
 			],
 			"scriptLines": [
@@ -74,7 +77,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> Join",
-				"select2 split(FRCST_FINL_YR==2022,",
+				"Transformer split(FRCST_FINL_YR==2022,",
 				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
 				"Filter@Rejected aggregate(groupBy(WBS_ID),",
 				"     each(match(name!='WBS_ID'), $$ = first($$))) ~> RemoveDuplicates",
@@ -92,8 +95,9 @@
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"Filter@FilterOuput sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> Transformer",
+				"Filter@FilterOuput, RemoveDuplicates union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
