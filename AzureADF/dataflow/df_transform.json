@@ -100,20 +100,7 @@
 				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          WBS_ID,",
-				"          COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT,",
-				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
-				"          TXN_AMT,",
-				"          TXN_CRNCY_CD",
-				"     )) ~> SinkTable"
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
 			]
 		}
 	}
