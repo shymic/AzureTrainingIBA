@@ -74,7 +74,7 @@
 				"     broadcast: 'auto')~> Join",
 				"Filter@FilterOuput select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
+				"          COST_ELEM_CD = Filter@FilterOuput@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO = MONTH_NUM,",
 				"          FRCST_FINL_YR = YEAR_NUM,",
