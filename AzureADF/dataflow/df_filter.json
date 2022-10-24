@@ -30,7 +30,7 @@
 			],
 			"transformations": [
 				{
-					"name": "Join"
+					"name": "Join1"
 				},
 				{
 					"name": "Filter"
@@ -76,12 +76,12 @@
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> Join",
+				"     broadcast: 'auto')~> Join1",
 				"Transformer split(FRCST_FINL_YR==2022,",
 				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
 				"Filter@Rejected aggregate(groupBy(WBS_ID),",
 				"     each(match(name!='WBS_ID'), $$ = first($$))) ~> RemoveDuplicates",
-				"Join select(mapColumn(",
+				"Join1 select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
