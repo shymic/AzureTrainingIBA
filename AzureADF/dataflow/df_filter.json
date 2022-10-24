@@ -37,7 +37,7 @@
 					"description": "select columns"
 				},
 				{
-					"name": "filter1"
+					"name": "Filter"
 				}
 			],
 			"scriptLines": [
@@ -72,7 +72,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> Join",
-				"filter1 select(mapColumn(",
+				"Filter@FilterOuput select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
@@ -80,14 +80,15 @@
 				"          FRCST_FINL_YR = YEAR_NUM,",
 				"          OBJ_CRNCY_CD,",
 				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
-				"          CONTRL_AMT,",
+				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
 				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD,",
-				"          TXN_AMT,",
+				"          TXN_AMT = OBJ_CRNCY_CD,",
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer",
-				"Join filter(YEAR_NUM==2022) ~> filter1",
+				"Join split(YEAR_NUM==2022,",
+				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
 				"Transformer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
