@@ -1,0 +1,47 @@
+{
+	"name": "pl_filter",
+	"properties": {
+		"activities": [
+			{
+				"name": "Transform",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_filter",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sourceTable": {
+								"p_fileName": "wbs_cost_element_1.csv"
+							},
+							"SinkTable": {
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,105 @@
+{
+	"name": "df_filter",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "sourceTable"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_refTable",
+						"type": "DatasetReference"
+					},
+					"name": "refTable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "SinkTable"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Join"
+				},
+				{
+					"name": "Transformer",
+					"description": "select columns"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          WBS_ID as string,",
+				"          COST_ELEM_CD as string,",
+				"          WBS_ELEM_OC_AMT as string,",
+				"          WBS_ELEM_CC_AMT as string,",
+				"          OBJ_CRNCY_CD as string,",
+				"          CNTRL_CRNCY_CD as string,",
+				"          MONTH_NUM as integer,",
+				"          YEAR_NUM as integer,",
+				"          TXN_CRNCY_CD as string,",
+				"          WBS_LVL_NUM as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> sourceTable",
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT * FROM COST_ELEMENT',",
+				"     format: 'query') ~> refTable",
+				"sourceTable, refTable join(trim(sourceTable@COST_ELEM_CD) == trim(refTable@COST_ELEM_CD),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> Join",
+				"filter1 select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO = MONTH_NUM,",
+				"          FRCST_FINL_YR = YEAR_NUM,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD,",
+				"          TXN_AMT,",
+				"          TXN_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Transformer",
+				"Join filter(YEAR_NUM==2022) ~> filter1",
+				"Transformer sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
+			]
+		}
+	}
+}
