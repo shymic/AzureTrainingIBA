@@ -31,13 +31,23 @@
 			],
 			"transformations": [
 				{
-					"name": "DSLink55"
+					"name": "DSLink55",
+					"description": "select transformation"
 				},
 				{
-					"name": "DSLink58Join"
+					"name": "DSLink58Join",
+					"description": "join transformation"
 				},
 				{
-					"name": "DSLink58"
+					"name": "DSLink58",
+					"description": "select transformation"
+				},
+				{
+					"name": "DSLink65derive",
+					"description": "derive transformation"
+				},
+				{
+					"name": "DSLink65"
 				}
 			],
 			"scriptLines": [
@@ -84,7 +94,7 @@
 				"     broadcast: 'auto')~> DSLink58Join",
 				"DSLink58Join select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD,",
+				"          COST_ELEM_CD = DSLink55@COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
 				"          FRCST_FINL_MO,",
 				"          FRCST_FINL_YR,",
@@ -96,7 +106,33 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> DSLink58",
-				"DSLink58 sink(allowSchemaDrift: true,",
+				"DSLink58 derive(WBS_ID = WBS_ID,",
+				"          COST_ELEM_CD = COST_ELEM_CD,",
+				"          VAL_CAT_CD = VAL_CAT_CD,",
+				"          FRCST_FINL_MO = FRCST_FINL_MO,",
+				"          FRCST_FINL_YR = FRCST_FINL_YR,",
+				"          OBJ_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
+				"          OBJ_CRNCY_CD = OBJ_CRNCY_CD,",
+				"          CONTRL_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * CONTRL_AMT,CONTRL_AMT),",
+				"          CONTRL_CRNCY_CD = CONTRL_CRNCY_CD,",
+				"          TXN_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> DSLink65derive",
+				"DSLink65derive select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          TXN_AMT,",
+				"          TXN_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DSLink65",
+				"DSLink65 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
