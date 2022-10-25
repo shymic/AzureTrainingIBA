@@ -122,6 +122,7 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     postSQLs:['Delete from STAG.WBS_FORECAST_LOAD where cast(WBS_ID as char(1))!=\\'C\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
