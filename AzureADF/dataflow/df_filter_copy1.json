@@ -1,0 +1,64 @@
+{
+	"name": "df_filter_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "sourceTable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "SinkTable"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Filter"
+				},
+				{
+					"name": "RemoveDuplicates"
+				},
+				{
+					"name": "Transformer"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> sourceTable",
+				"Transformer split(FRCST_FINL_YR==2022,",
+				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
+				"Filter@Rejected aggregate(groupBy(WBS_ID),",
+				"     each(match(name!='WBS_ID'), $$ = first($$))) ~> RemoveDuplicates",
+				"sourceTable select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Transformer",
+				"Filter@FilterOuput, RemoveDuplicates union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
+			]
+		}
+	}
+}
