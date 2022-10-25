@@ -25,7 +25,7 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "SinkTable",
+					"name": "V36S4",
 					"description": "IPPF_WBS_FORECAST_LOAD"
 				}
 			],
@@ -39,8 +39,16 @@
 					"description": "join transformation"
 				},
 				{
-					"name": "DSLink65derive",
+					"name": "DSLink58",
+					"description": "select transformation"
+				},
+				{
+					"name": "DSLink65Derive",
 					"description": "derive transformation"
+				},
+				{
+					"name": "DSLink65",
+					"description": "select transformation"
 				}
 			],
 			"scriptLines": [
@@ -85,11 +93,40 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> DSLink58Join",
-				"DSLink58Join derive(OBJ_AMT = case(trim(REV_IND)  == '1',-1 * OBJ_AMT,OBJ_AMT),",
-				"          CONTRL_AMT = case(trim(REV_IND)  == '1',-1 * CONTRL_AMT,CONTRL_AMT),",
-				"          TXN_AMT = case(trim(REV_IND)  == '1',-1 * OBJ_AMT,OBJ_AMT),",
-				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> DSLink65derive",
-				"DSLink65derive sink(allowSchemaDrift: true,",
+				"DSLink58Join select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD = DSLink55@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          REV_IND",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DSLink58",
+				"DSLink58 derive(OBJ_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
+				"          CONTRL_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * CONTRL_AMT,CONTRL_AMT),",
+				"          TXN_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> DSLink65Derive",
+				"DSLink65Derive select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          TXN_AMT,",
+				"          TXN_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DSLink65",
+				"DSLink65 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -99,20 +136,7 @@
 				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          WBS_ID,",
-				"          COST_ELEM_CD = DSLink55@COST_ELEM_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT,",
-				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
-				"          VAL_CAT_CD,",
-				"          TXN_AMT,",
-				"          TXN_CRNCY_CD",
-				"     )) ~> SinkTable"
+				"     errorHandlingOption: 'stopOnFirstError') ~> V36S4"
 			]
 		}
 	}
