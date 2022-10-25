@@ -1,0 +1,114 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "DSLink8"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "DSLink34"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "SinkTable",
+					"description": "IPPF_WBS_FORECAST_LOAD"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DSLink55"
+				},
+				{
+					"name": "DSLink58Join"
+				},
+				{
+					"name": "DSLink58"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          WBS_ID as string,",
+				"          COST_ELEM_CD as string,",
+				"          WBS_ELEM_OC_AMT as decimal(15,2),",
+				"          MONTH_NUM as integer,",
+				"          YEAR_NUM as integer,",
+				"          WBS_ELEM_CC_AMT as decimal(15,2),",
+				"          OBJ_CRNCY_CD as string,",
+				"          CNTRL_CRNCY_CD as string,",
+				"          WBS_LVL_NUM as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> DSLink8",
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> DSLink34",
+				"DSLink8 select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          FRCST_FINL_MO = MONTH_NUM,",
+				"          FRCST_FINL_YR = YEAR_NUM,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
+				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
+				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DSLink55",
+				"DSLink55, DSLink34 join(DSLink55@COST_ELEM_CD == DSLink34@COST_ELEM_CD,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> DSLink58Join",
+				"DSLink58Join select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          REV_IND",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DSLink58",
+				"DSLink58 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['DELETE FROM STAG.WBS_FORECAST_LOAD'],",
+				"     postSQLs:['Delete from STAG.WBS_FORECAST_LOAD where cast(WBS_ID as char(1))!=','C'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
+			]
+		}
+	}
+}
