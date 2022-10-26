@@ -2,7 +2,7 @@
 	"name": "adf-iba-training",
 	"properties": {
 		"globalConfigurations": {
-			"PipelineBillingEnabled": "true"
+			"PipelineBillingEnabled": "false"
 		}
 	},
 	"location": "eastus",
