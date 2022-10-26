@@ -1,0 +1,22 @@
+{
+	"name": "ds_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "obachilo"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "obachilo"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
