@@ -9,14 +9,56 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DSLink8"
+					"name": "V163S2P4"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DSLink34"
+					"name": "V163S14P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S14P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S14P3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S2P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S2P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S9P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V163S13P2"
 				}
 			],
 			"sinks": [
@@ -25,118 +67,191 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "V36S4",
-					"description": "IPPF_WBS_FORECAST_LOAD"
+					"name": "V163S4",
+					"description": "Copy_of_DB2_Connector_81"
 				}
 			],
 			"transformations": [
 				{
-					"name": "DSLink55",
-					"description": "select transformation"
+					"name": "V163S3P1",
+					"description": "union - DS=V163S2"
 				},
 				{
-					"name": "DSLink58Join",
-					"description": "join transformation"
+					"name": "V163S13P1",
+					"description": "union - DS=V163S14"
 				},
 				{
-					"name": "DSLink58",
-					"description": "select transformation"
+					"name": "V163S4P1Derive",
+					"description": "derive - DS V163S3"
 				},
 				{
-					"name": "DSLink65Derive",
-					"description": "derive transformation"
+					"name": "V163S4P1",
+					"description": "select  - DS V163S3"
 				},
 				{
-					"name": "DSLink65",
-					"description": "select transformation"
+					"name": "V163S2P3Join",
+					"description": "join - DS V163S9"
+				},
+				{
+					"name": "V163S2P3",
+					"description": "select  - DS V163S9"
+				},
+				{
+					"name": "V163S9P1Derive",
+					"description": "derive - DS V163S11"
+				},
+				{
+					"name": "V163S9P1",
+					"description": "select  - DS V163S11"
+				},
+				{
+					"name": "V163S11P1Join",
+					"description": "join - DS V163S13"
+				},
+				{
+					"name": "V163S11P1",
+					"description": "select  - DS V163S13"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
 				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as decimal(15,2),",
-				"          MONTH_NUM as integer,",
-				"          YEAR_NUM as integer,",
-				"          WBS_ELEM_CC_AMT as decimal(15,2),",
-				"          OBJ_CRNCY_CD as string,",
-				"          CNTRL_CRNCY_CD as string,",
+				"          SYS_STAT_CD as string,",
 				"          WBS_LVL_NUM as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> DSLink8",
+				"     maxColumns: 200) ~> V163S2P4",
 				"source(output(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as string",
+				"          WBS_ID as string,",
+				"          SYS_STAT_CD as string,",
+				"          WBS_LVL_NUM as integer,",
+				"          PROJ_WBS_ID as string,",
+				"          CNTRY as string,",
+				"          RCVCTRY as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> DSLink34",
-				"DSLink8 select(mapColumn(",
+				"     maxColumns: 200) ~> V163S14P1",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          SYS_STAT_CD as string,",
+				"          WBS_LVL_NUM as integer,",
+				"          PROJ_WBS_ID as string,",
+				"          CNTRY as string,",
+				"          RCVCTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S14P2",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          SYS_STAT_CD as string,",
+				"          WBS_LVL_NUM as integer,",
+				"          PROJ_WBS_ID as string,",
+				"          CNTRY as string,",
+				"          RCVCTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S14P3",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          SYS_STAT_CD as string,",
+				"          WBS_LVL_NUM as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S2P1",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          SYS_STAT_CD as string,",
+				"          WBS_LVL_NUM as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S2P2",
+				"source(output(",
+				"          SAP_CMPNY_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S9P2",
+				"source(output(",
+				"          SAP_CMPNY_CD1 as string,",
+				"          PROJ_WBS_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V163S13P2",
+				"V163S2P2, V163S2P1, V163S2P4 union(byName: true)~> V163S3P1",
+				"V163S14P3, V163S14P2, V163S14P1 union(byName: true)~> V163S13P1",
+				"V163S3P1 derive(WBS_ID = WBS_ID) ~> V163S4P1Derive",
+				"V163S4P1Derive select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD,",
-				"          FRCST_FINL_MO = MONTH_NUM,",
-				"          FRCST_FINL_YR = YEAR_NUM,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
-				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
-				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
+				"          SYS_STAT_CD,",
+				"          WBS_LVL_NUM",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink55",
-				"DSLink55, DSLink34 join(DSLink55@COST_ELEM_CD == DSLink34@COST_ELEM_CD,",
+				"     skipDuplicateMapOutputs: true) ~> V163S4P1",
+				"V163S9P2, V163S9P1 join(V163S9P2@SAP_CMPNY_CD == V163S9P1@SAP_CMPNY_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> DSLink58Join",
-				"DSLink58Join select(mapColumn(",
+				"     broadcast: 'auto')~> V163S2P3Join",
+				"V163S2P3Join select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD = DSLink55@COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT,",
-				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
-				"          REV_IND",
+				"          SYS_STAT_CD,",
+				"          WBS_LVL_NUM",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink58",
-				"DSLink58 derive(OBJ_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
-				"          CONTRL_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * CONTRL_AMT,CONTRL_AMT),",
-				"          TXN_AMT = case(trim(REV_IND)  == 'REVENUE',-1 * OBJ_AMT,OBJ_AMT),",
-				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> DSLink65Derive",
-				"DSLink65Derive select(mapColumn(",
+				"     skipDuplicateMapOutputs: true) ~> V163S2P3",
+				"V163S11P1 derive(SAP_CMPNY_CD = 'test') ~> V163S9P1Derive",
+				"V163S9P1Derive select(mapColumn(",
 				"          WBS_ID,",
-				"          COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_AMT,",
-				"          OBJ_CRNCY_CD,",
-				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
-				"          TXN_AMT,",
-				"          TXN_CRNCY_CD",
+				"          SYS_STAT_CD,",
+				"          WBS_LVL_NUM,",
+				"          PROJ_WBS_ID,",
+				"          SAP_CMPNY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink65",
-				"DSLink65 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> V163S9P1",
+				"V163S13P2, V163S13P1 join(V163S13P2@PROJ_WBS_ID == V163S13P1@PROJ_WBS_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V163S11P1Join",
+				"V163S11P1Join select(mapColumn(",
+				"          WBS_ID,",
+				"          SYS_STAT_CD,",
+				"          WBS_LVL_NUM,",
+				"          PROJ_WBS_ID = V163S13P1@PROJ_WBS_ID,",
+				"          CNTRY,",
+				"          RCVCTRY,",
+				"          SAP_CMPNY_CD1",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V163S11P1",
+				"V163S4P1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     preSQLs:['delete from #IPPF_RULES.SCHEME#.WBS_ELEMENT_SYSTEM_STATUS_LOAD'],",
+				"     postSQLs:['delete from stag.wbs_element_system_status_load where wbs_id in (\\'ARAAG7P\\', \\'ARCAC5\\', \\'RUAACX7\\', \\'RUBCEQ\\',\\'RUAACX8\\',\\'RUBCER\\');'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> V36S4"
+				"     errorHandlingOption: 'stopOnFirstError') ~> V163S4"
 			]
 		}
 	}
