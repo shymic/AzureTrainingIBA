@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_comparenewold",
+						"referenceName": "dataflow2",
 						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
@@ -30,6 +30,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"IPPF_RULES_SCHEME": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "obachilo"
 		},
