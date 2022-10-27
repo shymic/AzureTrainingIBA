@@ -26,13 +26,13 @@
 					"name": "Filter"
 				},
 				{
-					"name": "RemoveDuplicates"
-				},
-				{
 					"name": "Transformer"
 				},
 				{
 					"name": "union1"
+				},
+				{
+					"name": "rowNumber"
 				}
 			],
 			"scriptLines": [
@@ -42,11 +42,10 @@
 				"     maxColumns: 200) ~> sourceTable",
 				"Transformer split(FRCST_FINL_YR==2022,",
 				"     disjoint: false) ~> Filter@(FilterOuput, Rejected)",
-				"Filter@Rejected aggregate(groupBy(WBS_ID),",
-				"     each(match(name!='WBS_ID'), $$ = first($$))) ~> RemoveDuplicates",
 				"sourceTable select(skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer",
-				"Filter@FilterOuput, RemoveDuplicates union(byName: true)~> union1",
+				"Filter@FilterOuput, Filter@Rejected union(byName: true)~> union1",
+				"Filter@Rejected window() ~> rowNumber",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
