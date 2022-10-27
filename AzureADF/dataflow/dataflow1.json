@@ -9,14 +9,14 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DSLink8"
+					"name": "V36S1P2"
 				},
 				{
 					"dataset": {
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DSLink34"
+					"name": "V36S3P1"
 				}
 			],
 			"sinks": [
@@ -25,32 +25,42 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "SinkTable",
+					"name": "V36S4",
 					"description": "IPPF_WBS_FORECAST_LOAD"
 				}
 			],
 			"transformations": [
 				{
-					"name": "DSLink55",
-					"description": "select transformation"
+					"name": "V36S4P1Derive",
+					"description": "derive - DS V36S0"
 				},
 				{
-					"name": "DSLink58Join",
-					"description": "join transformation"
+					"name": "V36S4P1",
+					"description": "select  - DS V36S0"
 				},
 				{
-					"name": "DSLink58",
-					"description": "select transformation"
+					"name": "V36S0P1Join",
+					"description": "join - DS V36S1"
 				},
 				{
-					"name": "DSLink65derive",
-					"description": "derive transformation"
+					"name": "V36S0P1",
+					"description": "select  - DS V36S1"
 				},
 				{
-					"name": "DSLink65"
+					"name": "V36S1P1",
+					"description": "select  - DS V36S3"
 				}
 			],
 			"scriptLines": [
+				"source(output(",
+				"          COST_ELEM_CD as string,",
+				"          VAL_CAT_CD as string,",
+				"          REV_IND as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V36S1P2",
 				"source(output(",
 				"          WBS_ID as string,",
 				"          COST_ELEM_CD as string,",
@@ -65,52 +75,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> DSLink8",
-				"source(output(",
-				"          COST_ELEM_CD as string,",
-				"          VAL_CAT_CD as string,",
-				"          REV_IND as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> DSLink34",
-				"DSLink8 select(mapColumn(",
-				"          WBS_ID,",
-				"          COST_ELEM_CD,",
-				"          FRCST_FINL_MO = MONTH_NUM,",
-				"          FRCST_FINL_YR = YEAR_NUM,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
-				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
-				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink55",
-				"DSLink55, DSLink34 join(DSLink55@COST_ELEM_CD == DSLink34@COST_ELEM_CD,",
-				"     joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> DSLink58Join",
-				"DSLink58Join select(mapColumn(",
-				"          WBS_ID,",
-				"          COST_ELEM_CD = DSLink55@COST_ELEM_CD,",
-				"          VAL_CAT_CD,",
-				"          FRCST_FINL_MO,",
-				"          FRCST_FINL_YR,",
-				"          OBJ_CRNCY_CD,",
-				"          OBJ_AMT,",
-				"          CONTRL_AMT,",
-				"          CONTRL_CRNCY_CD,",
-				"          REV_IND",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink58",
-				"DSLink58 derive(OBJ_AMT = case(trim(REV_IND)  == '1',-1 * OBJ_AMT,OBJ_AMT),",
-				"          CONTRL_AMT = case(trim(REV_IND)  == '1',-1 * CONTRL_AMT,CONTRL_AMT),",
-				"          TXN_AMT = case(trim(REV_IND)  == '1',-1 * OBJ_AMT,OBJ_AMT),",
-				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> DSLink65derive",
-				"DSLink65derive select(mapColumn(",
+				"     maxColumns: 200) ~> V36S3P1",
+				"V36S0P1 derive(OBJ_AMT = case(trim(REV_IND)  == 'REVENUE',-1*OBJ_AMT,OBJ_AMT),",
+				"          CONTRL_AMT = case(trim(REV_IND)  == 'REVENUE',-1*CONTRL_AMT,CONTRL_AMT),",
+				"          TXN_AMT = case(trim(REV_IND)  == 'REVENUE',-1*OBJ_AMT,OBJ_AMT),",
+				"          TXN_CRNCY_CD = OBJ_CRNCY_CD) ~> V36S4P1Derive",
+				"V36S4P1Derive select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD,",
@@ -124,18 +94,50 @@
 				"          TXN_CRNCY_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DSLink65",
-				"DSLink65 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> V36S4P1",
+				"V36S1P1, V36S1P2 join(V36S1P1@COST_ELEM_CD == V36S1P2@COST_ELEM_CD,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V36S0P1Join",
+				"V36S0P1Join select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD = V36S1P1@COST_ELEM_CD,",
+				"          VAL_CAT_CD,",
+				"          FRCST_FINL_MO,",
+				"          FRCST_FINL_YR,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT,",
+				"          CONTRL_AMT,",
+				"          CONTRL_CRNCY_CD,",
+				"          REV_IND",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V36S0P1",
+				"V36S3P1 select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          FRCST_FINL_MO = MONTH_NUM,",
+				"          FRCST_FINL_YR = YEAR_NUM,",
+				"          OBJ_CRNCY_CD,",
+				"          OBJ_AMT = WBS_ELEM_OC_AMT,",
+				"          CONTRL_AMT = WBS_ELEM_CC_AMT,",
+				"          CONTRL_CRNCY_CD = CNTRL_CRNCY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V36S1P1",
+				"V36S4P1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     preSQLs:['DELETE FROM STAG.WBS_FORECAST_LOAD'],",
+				"     postSQLs:['DELETE FROM STAG.WBS_FORECAST_LOAD WHERE CAST(WBS_ID AS CHAR(1))!=\\'C\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
+				"     errorHandlingOption: 'stopOnFirstError') ~> V36S4"
 			]
 		}
 	}
