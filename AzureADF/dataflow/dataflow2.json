@@ -255,6 +255,7 @@
 				"     postSQLs:['delete from stag.wbs_element_system_status_load where wbs_id in (\\'ARAAG7P\\', \\'ARCAC5\\', \\'RUAACX7\\', \\'RUBCEQ\\',\\'RUAACX8\\',\\'RUBCER\\');'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V163S4"
 			]
 		}
