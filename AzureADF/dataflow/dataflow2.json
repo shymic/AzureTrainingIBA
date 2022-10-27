@@ -77,10 +77,6 @@
 					"description": "union - DS=V163S2"
 				},
 				{
-					"name": "V163S13P1",
-					"description": "union - DS=V163S14"
-				},
-				{
 					"name": "V163S4P1Derive",
 					"description": "derive - DS V163S3"
 				},
@@ -111,9 +107,16 @@
 				{
 					"name": "V163S11P1",
 					"description": "select  - DS V163S13"
+				},
+				{
+					"name": "V163S13P1",
+					"description": "union - DS=V163S14"
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     IPPF_RULES_SCHEME as string",
+				"}",
 				"source(output(",
 				"          WBS_ID as string,",
 				"          SYS_STAT_CD as string,",
@@ -192,8 +195,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V163S13P2",
-				"V163S2P2, V163S2P1, V163S2P4 union(byName: true)~> V163S3P1",
-				"V163S14P3, V163S14P2, V163S14P1 union(byName: true)~> V163S13P1",
+				"V163S2P2, V163S2P1, V163S2P4, V163S2P3 union(byName: true)~> V163S3P1",
 				"V163S3P1 derive(WBS_ID = WBS_ID) ~> V163S4P1Derive",
 				"V163S4P1Derive select(mapColumn(",
 				"          WBS_ID,",
@@ -214,7 +216,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V163S2P3",
-				"V163S11P1 derive(SAP_CMPNY_CD = 'test') ~> V163S9P1Derive",
+				"V163S11P1 derive(SAP_CMPNY_CD = case(!isNull(SAP_CMPNY_CD1),case((WBS_LVL_NUM == 1.0 || RCVCTRY == '606'),SAP_CMPNY_CD1,RCVCTRY),CNTRY)\r",
+				") ~> V163S9P1Derive",
 				"V163S9P1Derive select(mapColumn(",
 				"          WBS_ID,",
 				"          SYS_STAT_CD,",
@@ -240,6 +243,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V163S11P1",
+				"V163S14P3, V163S14P2, V163S14P1 union(byName: true)~> V163S13P1",
 				"V163S4P1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -247,7 +251,7 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['delete from #IPPF_RULES.SCHEME#.WBS_ELEMENT_SYSTEM_STATUS_LOAD'],",
+				"     preSQLs:[('delete from ' + $IPPF_RULES_SCHEME + '.WBS_ELEMENT_SYSTEM_STATUS_LOAD')],",
 				"     postSQLs:['delete from stag.wbs_element_system_status_load where wbs_id in (\\'ARAAG7P\\', \\'ARCAC5\\', \\'RUAACX7\\', \\'RUBCEQ\\',\\'RUAACX8\\',\\'RUBCER\\');'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
