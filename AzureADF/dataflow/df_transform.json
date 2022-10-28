@@ -97,7 +97,7 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:['DELETE FROM FORECAST_LOAD'],",
+				"     preSQLs:['  DELETE FROM FORECAST_LOAD\\n  WHERE WBS_ID = \\'KHDSGU4\\'\\n  --OR  WBS_ID = \\'TTTTTTT\\'\\n  OR WBS_ID = \\'TYANBSA\\';'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTable"
