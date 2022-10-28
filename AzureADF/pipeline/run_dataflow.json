@@ -16,8 +16,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow2",
-						"type": "DataFlowReference"
+						"referenceName": "df_transform",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sourceTable": {
+								"p_fileName": "wbs_element_cost.csv"
+							},
+							"SinkTable": {
+								"p_schema": "dbo",
+								"p_table": "FORECAST_LOAD"
+							}
+						}
 					},
 					"integrationRuntime": {
 						"referenceName": "ir-azure-DataFlow",
@@ -30,11 +39,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"IPPF_RULES_SCHEME": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "obachilo"
 		},
