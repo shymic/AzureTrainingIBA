@@ -1,0 +1,73 @@
+{
+	"name": "df_33",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V77S2P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V77S0",
+					"description": "IPPF_STAG_DEPT_REFERENCE"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V77S0P1",
+					"description": "select  - DS V77S2"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          COUNTRY_CD as string,",
+				"          LEDGER_CD as string,",
+				"          LERU_ID as string,",
+				"          FROM_PRODID as string,",
+				"          EBU_SOP_IND as string,",
+				"          LOB_ID as string,",
+				"          DPT_TYP_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V77S2P1",
+				"V77S2P1 select(mapColumn(",
+				"          COUNTRY_CD,",
+				"          LEDGER_CD,",
+				"          LERU_ID,",
+				"          FROM_PRODID,",
+				"          EBU_SOP_IND,",
+				"          LOB_ID,",
+				"          DPT_TYP_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V77S0P1",
+				"V77S0P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[('DELETE FROM ' + $p_IPPF_RULES_SCHEME + '.DEPT_REFERENCE')],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V77S0"
+			]
+		}
+	}
+}
