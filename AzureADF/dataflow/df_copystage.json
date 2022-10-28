@@ -40,13 +40,13 @@
 					"name": "AddColumns"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "select1"
 				},
 				{
-					"name": "derivedColumn2"
+					"name": "select2"
 				},
 				{
-					"name": "derivedColumn3"
+					"name": "select3"
 				}
 			],
 			"scriptLines": [
@@ -99,9 +99,48 @@
 				"Join derive(TXN_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT)),",
 				"          TXN_CRNCY_CD = OBJ_CRNCY_CD,",
 				"          CONTRL_AMT = case(REV_IND==1,toString(toDecimal(WBS_ELEM_OC_AMT)*-1),toString(WBS_ELEM_OC_AMT))) ~> AddColumns",
-				"sourceTable derive(test = 'test') ~> derivedColumn1",
-				"sourceTable derive(test = 'test') ~> derivedColumn2",
-				"sourceTable derive(test = 'test') ~> derivedColumn3",
+				"sourceTable select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          WBS_ELEM_OC_AMT,",
+				"          WBS_ELEM_CC_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CNTRL_CRNCY_CD,",
+				"          MONTH_NUM,",
+				"          YEAR_NUM,",
+				"          TXN_CRNCY_CD,",
+				"          WBS_LVL_NUM",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"sourceTable select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          WBS_ELEM_OC_AMT,",
+				"          WBS_ELEM_CC_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CNTRL_CRNCY_CD,",
+				"          MONTH_NUM,",
+				"          YEAR_NUM,",
+				"          TXN_CRNCY_CD,",
+				"          WBS_LVL_NUM",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"sourceTable select(mapColumn(",
+				"          WBS_ID,",
+				"          COST_ELEM_CD,",
+				"          WBS_ELEM_OC_AMT,",
+				"          WBS_ELEM_CC_AMT,",
+				"          OBJ_CRNCY_CD,",
+				"          CNTRL_CRNCY_CD,",
+				"          MONTH_NUM,",
+				"          YEAR_NUM,",
+				"          TXN_CRNCY_CD,",
+				"          WBS_LVL_NUM",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
 				"Transformer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
