@@ -1,0 +1,74 @@
+{
+	"name": "df_007",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V70S2P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V70S0",
+					"description": "LIPPF_PLAN_CURRENCY_LOAD"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V70S0P1Derive",
+					"description": "derive - DS V70S2"
+				},
+				{
+					"name": "V70S0P1",
+					"description": "select  - DS V70S2"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          CURRENCY_CD as string,",
+				"          YEAR_NUM as integer,",
+				"          MONTH_NUM as integer,",
+				"          PLAN_EXCHG_RATE as decimal(15,7),",
+				"          LST_RFRSH_TMS as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V70S2P1",
+				"V70S2P1 derive(PLAN_EXCHG_DT = toDate(toString(YEAR_NUM)+'-'+toString(MONTH_NUM)+'-'+'1'),",
+				"          PLAN_EXCHG_RATE = 1/PLAN_EXCHG_RATE) ~> V70S0P1Derive",
+				"V70S0P1Derive select(mapColumn(",
+				"          CURRENCY_CD,",
+				"          PLAN_EXCHG_DT,",
+				"          PLAN_EXCHG_RATE,",
+				"          LST_RFRSH_TMS",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V70S0P1",
+				"V70S0P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[('DELETE FROM ' + $p_IPPF_RULES_SCHEME + '.PLAN_CURENCY_LOAD')],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V70S0"
+			]
+		}
+	}
+}
