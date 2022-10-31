@@ -1,5 +1,5 @@
 {
-	"name": "dataflow2",
+	"name": "df_010",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -216,8 +216,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V163S2P3",
-				"V163S11P1 derive(SAP_CMPNY_CD = case(!isNull(SAP_CMPNY_CD1),case((WBS_LVL_NUM == 1.0 || RCVCTRY == '606'),SAP_CMPNY_CD1,RCVCTRY),CNTRY)\r",
-				") ~> V163S9P1Derive",
+				"V163S11P1 derive(SAP_CMPNY_CD = case(!isNull(SAP_CMPNY_CD1),case((WBS_LVL_NUM == 1.0 || RCVCTRY == '606'),SAP_CMPNY_CD1,RCVCTRY),CNTRY)) ~> V163S9P1Derive",
 				"V163S9P1Derive select(mapColumn(",
 				"          WBS_ID,",
 				"          SYS_STAT_CD,",
