@@ -57,7 +57,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_fileName": {
-								"value": "Copy_2_of_DB2_Connector_96.csv",
+								"value": "V161S1.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "LIPPFD005",
 								"type": "Expression"
 							}
 						}
@@ -126,7 +130,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_fileName": {
-								"value": "Copy_of_ALLEGRO_PROJECT_HEADER.csv",
+								"value": "V161S11.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "LIPPFD005",
 								"type": "Expression"
 							}
 						}
@@ -195,7 +203,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_fileName": {
-								"value": "Copy_2_of_DB2_Connector_95.csv",
+								"value": "V161S2.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "LIPPFD005",
 								"type": "Expression"
 							}
 						}
@@ -226,7 +238,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "  SELECT distinct v.RCVCUSTCTRY as SAP_CMPNY_CD1,v.contractnumber as PROJ_WBS_ID FROM BMSIW.t510wrk_UV           V  JOIN  BMSIW.COUNTRY_REF_UV AL2  ON v.COUNTRY=AL2.COUNTRY_CD JOIN  BMSIW.COUNTRY_REF_UV AL3 ON v.RCVCUSTCTRY=AL3.COUNTRY_CD JOIN BMSIW.GEO_RGN_CTRY_UV AL4 ON AL4.CTRY_CD=AL2.COUNTRY_CD JOIN BMSIW.GEO_RGN_CTRY_UV AL5 ON AL5.CTRY_CD=AL3.COUNTRY_CD    where v.country <> v.RCVCUSTCTRY     and v.country='606'  and v.contractnumber <>''   WITH UR",
+							"value": "SELECT distinct v.RCVCUSTCTRY as SAP_CMPNY_CD1,v.contractnumber as PROJ_WBS_ID FROM BMSIW.t510wrk_UV           V  JOIN  BMSIW.COUNTRY_REF_UV AL2  ON v.COUNTRY=AL2.COUNTRY_CD JOIN  BMSIW.COUNTRY_REF_UV AL3 ON v.RCVCUSTCTRY=AL3.COUNTRY_CD JOIN BMSIW.GEO_RGN_CTRY_UV AL4 ON AL4.CTRY_CD=AL2.COUNTRY_CD JOIN BMSIW.GEO_RGN_CTRY_UV AL5 ON AL5.CTRY_CD=AL3.COUNTRY_CD    where v.country <> v.RCVCUSTCTRY     and v.country='606'  and v.contractnumber <>''   WITH UR",
 							"type": "Expression"
 						}
 					},
@@ -264,7 +276,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_fileName": {
-								"value": "Copy_5_of_DB2_Connector_96.csv",
+								"value": "V161S4.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "LIPPFD005",
 								"type": "Expression"
 							}
 						}
@@ -333,7 +349,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_fileName": {
-								"value": "PACT.csv",
+								"value": "V161S7.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "LIPPFD005",
 								"type": "Expression"
 							}
 						}
@@ -378,9 +398,6 @@
 			"p_IPPF_RULES_COUNTRIES": {
 				"type": "String"
 			}
-		},
-		"folder": {
-			"name": "obachilo"
 		},
 		"annotations": []
 	}
