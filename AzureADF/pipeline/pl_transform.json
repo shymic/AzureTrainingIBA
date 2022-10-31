@@ -26,9 +26,6 @@
 						"referenceName": "df_transform",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"sourceTable": {
-								"p_sourceName": "wbs_element_cost.csv"
-							},
 							"SinkTable": {
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"

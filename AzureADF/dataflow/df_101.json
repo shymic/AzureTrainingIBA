@@ -214,7 +214,7 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     preSQLs:['DELETE FROM STAG.FEATURE_LOAD'],",
-				"     postSQLs:[(\"DELETE FROM STAG.FEATURE_LOAD WHERE WBS_ID \" + \r\\n\"IN (SELECT WBS_SHORT_ID_BH FROM CNMN.WBS_ELEMENT WHERE APPL_IND = 'BH' AND IS_MIGR = 'N') AND CAST(SAP_CMPNY_CD AS CHAR(3))  \" + $p_IPPF_RULES_COUNTRIES_BH + \"\")],",
+				"     postSQLs:[(\"DELETE FROM STAG.FEATURE_LOAD WHERE WBS_ID \" + \r\"IN (SELECT WBS_SHORT_ID_BH FROM CNMN.WBS_ELEMENT WHERE APPL_IND = 'BH' AND IS_MIGR = 'N') AND CAST(SAP_CMPNY_CD AS CHAR(3))  \" + $p_IPPF_RULES_COUNTRIES_BH + \"\")],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V0S10"

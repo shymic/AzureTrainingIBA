@@ -82,7 +82,7 @@
 				"Filter@Rejected aggregate(groupBy(WBS_ID,",
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD),",
-				"     each(match(name!='WBS_ID' && name!='VAL_CAT_CD' && name!='COST_ELEM_CD'), $$ = first($$))) ~> RemoveDuplicates",
+				"     each(match(name!='WBS_ID'&&name!='VAL_CAT_CD'&&name!='COST_ELEM_CD'), $$ = first($$))) ~> RemoveDuplicates",
 				"Join1 select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD = sourceTable@COST_ELEM_CD,",
