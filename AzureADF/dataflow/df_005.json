@@ -93,9 +93,6 @@
 				}
 			],
 			"scriptLines": [
-				"parameters{",
-				"     p_IPPF_RULES_SCHEME as string",
-				"}",
 				"source(output(",
 				"          SAP_CMPNY_CD as string",
 				"     ),",
