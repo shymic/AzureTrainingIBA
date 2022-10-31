@@ -359,6 +359,61 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V161S7",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_005",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"V161S0P2": {
+								"p_folder": "LIPPFD005"
+							},
+							"V161S5P1": {
+								"p_folder": "LIPPFD005"
+							},
+							"V161S5P2": {
+								"p_folder": "LIPPFD005"
+							},
+							"V161S8P1": {
+								"p_folder": "LIPPFD005"
+							},
+							"V161S10P1": {
+								"p_folder": "LIPPFD005"
+							},
+							"V161S6": {
+								"p_schema": "dbo",
+								"p_table": "PROJECT_HEADER_LOAD"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
 			}
 		],
 		"parameters": {
