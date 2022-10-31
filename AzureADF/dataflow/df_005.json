@@ -16,8 +16,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "V161S5P1",
-					"description": "desc"
+					"name": "V161S5P1"
 				},
 				{
 					"dataset": {
