@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pl_005",
 	"properties": {
 		"activities": [
 			{
@@ -398,6 +398,9 @@
 			"p_IPPF_RULES_COUNTRIES": {
 				"type": "String"
 			}
+		},
+		"folder": {
+			"name": "obachilo"
 		},
 		"annotations": []
 	}
