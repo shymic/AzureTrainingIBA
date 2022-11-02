@@ -1,0 +1,79 @@
+{
+	"name": "pl_007",
+	"properties": {
+		"activities": [
+			{
+				"name": "V70S2P1",
+				"description": "BMS_CURR_EXCHANGE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT AL1.CURRENCY_CD, AL1.YEAR_NUM, AL1.MONTH_NUM, AL1.PLAN_EXCHG_RATE, current timestamp as LST_RFRSH_TMS FROM BDWDM.CURR_EXCHANGE_UV AL1 WITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_sourceName": {
+								"value": "V70S2P1.csv",
+								"type": "Expression"
+							},
+							"p_folder": {
+								"value": "@{pipeline().parameters.p_folder}",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"p_folder": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
