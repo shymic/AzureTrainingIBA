@@ -20,7 +20,9 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"p_fileName": "cnmn_cost_element.csv"
+								"p_fileName": "cnmn_cost_element.csv",
+								"p_folder": "sources",
+								"p_container": "obachilo"
 							},
 							"sinkUps": {
 								"p_schema": "dbo",
