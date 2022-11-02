@@ -423,37 +423,48 @@
 		],
 		"parameters": {
 			"p_IPPF_RULES_COMPANY_COND": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "and sc.COMPANY_CD like ('NEWIS%')"
 			},
 			"p_IPPF_RULES_VIEW": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "UV"
 			},
 			"p_IPPF_RULES_CONTR_STATUS": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "--AND      CO.CONTRACTSTATUS    <> 'N' "
 			},
 			"p_IPPF_RULES_DIVISIONS": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "IN ('Z4', 'Z6', 'K5', 'Z8', '72', '7G', '7H', 'Z1', '7D', 'J9', '80', 'K4', 'K8', 'K9', 'T8', 'H5', '7Y', '20', 'G2', '48', '46', '30', '36', '2P', '8F', '7F', '2R', '1C', '4E', '70', '51', '66')"
 			},
 			"p_IPPF_RULES_GEO": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "--AND    CO.GEO_SRC_CD = 'NA'    AND    WR.GEO_SRC_CD = 'NA'"
 			},
 			"p_IPPF_RULES_RGN_LVL1_CD": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "in (cast('EA' as char(2)),cast('EP' as char(2)),cast('EM' as char(2))) "
 			},
 			"p_IPPF_RULES_COUNTRIES_MIGR": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('622' as char(3)), cast('846' as char(3)))"
 			},
 			"p_IPPF_RULES_COUNTRIES_BH": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "in (cast('358' as char(3)), cast('622' as char(3)), cast('724' as char(3)), cast('767' as char(3)), cast('854' as char(3)), cast('618' as char(3)), cast('848' as char(3)), cast('809' as char(3)), cast('913' as char(3)), cast('706' as char(3)),cast('623' as char(3)), cast('624' as char(3)), cast('653' as char(3)), cast('678' as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('846' as char(3)))"
 			},
 			"p_IPPF_RULES_GEO_NAME": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "EU"
 			},
 			"p_IPPF_RULES_INST": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "CDT - EU"
 			},
 			"p_IPPF_RULES_COUNTRIES": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "in (cast ('602' as char(3)), cast('618' as char(3)), cast('668' as char(3)), cast('678' as char(3)), cast('706' as char(3)), cast('726' as char(3)), cast('740' as char(3)), cast('755' as char(3)), cast('758' as char(3)), cast('764' as char(3)), cast('788' as char(3)), cast('820' as char(3)), cast('808' as char(3)), cast('822' as char(3)), cast('821' as char(3)), cast('832' as char(3)), cast('826' as char(3)), cast('846' as char(3)), cast('848' as char(3)), cast('864' as char(3)), cast('866' as char(3)), cast('862' as char(3)), cast('889' as char(3)), cast('865' as char(3)), cast('724' as char(3)), cast('702' as char(3)), cast('806' as char(3)), cast('675' as char(3)), cast('622' as char(3)), cast ('624' as char(3)))"
 			}
 		},
 		"folder": {
