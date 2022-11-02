@@ -74,6 +74,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "obachilo"
+		},
 		"annotations": []
 	}
 }
