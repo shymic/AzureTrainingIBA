@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"sourceTable": {
-								"p_fileName": "wbs_element_cost_1.csv"
+								"p_sourceName": "wbs_element_cost_1.csv"
 							},
 							"SinkTable": {
 								"p_schema": "dbo",
