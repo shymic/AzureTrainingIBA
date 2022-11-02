@@ -60,20 +60,12 @@
 								"value": "V77S2P1.csv",
 								"type": "Expression"
 							},
-							"p_folder": {
-								"value": "@{pipeline().parameters.p_folder}",
-								"type": "Expression"
-							}
+							"p_folder": "LIPPF033"
 						}
 					}
 				]
 			}
 		],
-		"parameters": {
-			"p_folder": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "obachilo"
 		},
