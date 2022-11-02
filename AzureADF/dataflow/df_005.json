@@ -307,7 +307,7 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:[('DELETE FROM ' + 'dbo' + '.PROJECT_HEADER_LOAD')],",
+				"     preSQLs:[('DELETE FROM ' + $p_IPPF_RULES_SCHEME + '.PROJECT_HEADER_LOAD')],",
 				"     postSQLs:['DELETE FROM STAG.PROJECT_HEADER_LOAD WHERE CAST(PROJ_WBS_ID AS CHAR(1)) NOT IN (\\'C\\',\\'F\\',\\'J\\') AND APPL_IND=\\'BH\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
