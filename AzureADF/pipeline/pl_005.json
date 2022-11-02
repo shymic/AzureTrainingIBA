@@ -56,16 +56,12 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
+							"p_sourceName": {
 								"value": "V161S1.csv",
 								"type": "Expression"
 							},
 							"p_folder": {
 								"value": "LIPPFD005",
-								"type": "Expression"
-							},
-							"p_container": {
-								"value": "@pipeline().parameters.p_container",
 								"type": "Expression"
 							}
 						}
@@ -133,15 +129,14 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
+							"p_sourceName": {
 								"value": "V161S11.csv",
 								"type": "Expression"
 							},
 							"p_folder": {
 								"value": "LIPPFD005",
 								"type": "Expression"
-							},
-							"p_container": "@pipeline().parameters.p_container"
+							}
 						}
 					}
 				]
@@ -207,7 +202,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
+							"p_sourceName": {
 								"value": "V161S2.csv",
 								"type": "Expression"
 							},
@@ -281,7 +276,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
+							"p_sourceName": {
 								"value": "V161S4.csv",
 								"type": "Expression"
 							},
@@ -355,7 +350,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
+							"p_sourceName": {
 								"value": "V161S7.csv",
 								"type": "Expression"
 							},
@@ -399,31 +394,34 @@
 						},
 						"datasetParameters": {
 							"V161S0P2": {
-								"p_fileName": "V161S1.csv",
+								"p_sourceName": "V161S1.csv",
 								"p_folder": "LIPPFD005"
 							},
 							"V161S5P1": {
-								"p_fileName": "V161S4.csv",
+								"p_sourceName": "V161S4.csv",
 								"p_folder": "LIPPFD005"
 							},
 							"V161S5P2": {
-								"p_fileName": "V161S2.csv",
+								"p_sourceName": "V161S2.csv",
 								"p_folder": "LIPPFD005"
 							},
 							"V161S8P1": {
-								"p_fileName": "V161S7.csv",
+								"p_sourceName": "V161S7.csv",
 								"p_folder": "LIPPFD005"
 							},
 							"V161S10P1": {
-								"p_fileName": "V161S11.csv",
+								"p_sourceName": "V161S11.csv",
 								"p_folder": "LIPPFD005"
 							},
 							"V161S6": {
-								"p_schema": {
-									"value": "@pipeline().parameters.p_IPPF_RULES_SCHEME",
-									"type": "Expression"
-								},
 								"p_table": "PROJECT_HEADER_LOAD"
+							}
+						},
+						"linkedServiceParameters": {
+							"V161S5P1": {
+								"schemaLinkedService": {
+									"p_folder": "sources"
+								}
 							}
 						}
 					},
@@ -486,10 +484,6 @@
 			"p_container": {
 				"type": "string",
 				"defaultValue": "obachilo"
-			},
-			"p_IPPF_RULES_SCHEME": {
-				"type": "string",
-				"defaultValue": "dbo"
 			}
 		},
 		"folder": {
