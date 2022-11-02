@@ -1,0 +1,188 @@
+{
+	"name": "df_100",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V177S2P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V177S4P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V177S8P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V177S7",
+					"description": "STAG"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V177S2P1Derive",
+					"description": "derive - DS V177S0"
+				},
+				{
+					"name": "V177S2P1",
+					"description": "select  - DS V177S0"
+				},
+				{
+					"name": "V177S7P1",
+					"description": "select  - DS V177S1"
+				},
+				{
+					"name": "V177S1P1Join",
+					"description": "join - DS V177S2"
+				},
+				{
+					"name": "V177S1P1",
+					"description": "select  - DS V177S2"
+				},
+				{
+					"name": "V177S0P1Join",
+					"description": "join - DS V177S4"
+				},
+				{
+					"name": "V177S0P1",
+					"description": "select  - DS V177S4"
+				},
+				{
+					"name": "V177S4P1Derive",
+					"description": "derive - DS V177S8"
+				},
+				{
+					"name": "V177S4P1",
+					"description": "select  - DS V177S8"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          PROJ_WBS_ID as string,",
+				"          BRAND_SHORT_NM as string,",
+				"          ACCT_BRAND_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V177S2P2",
+				"source(output(",
+				"          PRFT_CNTR_CD as string,",
+				"          BRAND_SHORT_NM as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V177S4P2",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          PRFT_CNTR_CD as string,",
+				"          PROJ_WBS_ID as string,",
+				"          CFT_WORK_NUM as string,",
+				"          SYS_STAT_CD as string,",
+				"          cntry as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V177S8P1",
+				"V177S0P1 derive(BRAND_SHORT_NM = (IF),",
+				"          WBS_CBG = concat(trim(PROJ_WBS_ID) , concat(\"-\", BRAND_SHORT_NM) )) ~> V177S2P1Derive",
+				"V177S2P1Derive select(mapColumn(",
+				"          WBS_ID,",
+				"          PROJ_WBS_ID,",
+				"          CFT_WORK_NUM,",
+				"          SYS_STAT_CD,",
+				"          cntry,",
+				"          BRAND_SHORT_NM,",
+				"          WBS_CBG",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V177S2P1",
+				"V177S1P1 select(mapColumn(",
+				"          WBS_ID,",
+				"          CFT_WORK_NUM,",
+				"          SYS_STAT_CD,",
+				"          cntry,",
+				"          WBS_CBG,",
+				"          ACCT_BRAND_ID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V177S7P1",
+				"V177S2P2, V177S2P1 join(V177S2P2@PROJ_WBS_ID == V177S2P1@PROJ_WBS_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V177S1P1Join",
+				"V177S1P1Join select(mapColumn(",
+				"          WBS_ID,",
+				"          CFT_WORK_NUM,",
+				"          SYS_STAT_CD,",
+				"          cntry,",
+				"          WBS_CBG,",
+				"          ACCT_BRAND_ID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V177S1P1",
+				"V177S4P2, V177S4P1 join(V177S4P2@PRFT_CNTR_CD == V177S4P1@PRFT_CNTR_CD,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V177S0P1Join",
+				"V177S0P1Join select(mapColumn(",
+				"          WBS_ID,",
+				"          PROJ_WBS_ID,",
+				"          CFT_WORK_NUM,",
+				"          SYS_STAT_CD,",
+				"          cntry,",
+				"          BRAND_SHORT_NM",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V177S0P1",
+				"V177S8P1 derive(PRFT_CNTR_CD = if(substring(right(trim(PRFT_CNTR_CD) , 5) , 1, 2)  == '2R')) ~> V177S4P1Derive",
+				"V177S4P1Derive select(mapColumn(",
+				"          WBS_ID,",
+				"          PRFT_CNTR_CD,",
+				"          PROJ_WBS_ID,",
+				"          CFT_WORK_NUM,",
+				"          SYS_STAT_CD,",
+				"          cntry",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V177S4P1",
+				"V177S7P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[(\"DELETE FROM \" + $p_IPPF_RULES_SCHEME + \".WBS_PACT_C_LOAD\")],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V177S7"
+			]
+		}
+	}
+}
