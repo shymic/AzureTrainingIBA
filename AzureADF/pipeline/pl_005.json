@@ -391,6 +391,12 @@
 					"dataflow": {
 						"referenceName": "df_005",
 						"type": "DataFlowReference",
+						"parameters": {
+							"p_IPPF_RULES_SCHEME": {
+								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"V161S0P2": {
 								"p_fileName": "V161S1.csv",
@@ -413,14 +419,17 @@
 								"p_folder": "LIPPFD005"
 							},
 							"V161S6": {
-								"p_schema": "dbo",
+								"p_schema": {
+									"value": "@pipeline().parameters.p_IPPF_RULES_SCHEME",
+									"type": "Expression"
+								},
 								"p_table": "PROJECT_HEADER_LOAD"
 							}
 						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
 					},
 					"traceLevel": "None",
 					"cacheSinks": {
@@ -477,6 +486,10 @@
 			"p_container": {
 				"type": "string",
 				"defaultValue": "obachilo"
+			},
+			"p_IPPF_RULES_SCHEME": {
+				"type": "string",
+				"defaultValue": "dbo"
 			}
 		},
 		"folder": {
