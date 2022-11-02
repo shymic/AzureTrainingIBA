@@ -12,6 +12,10 @@
 			"p_folder": {
 				"type": "string",
 				"defaultValue": "sources"
+			},
+			"p_container": {
+				"type": "string",
+				"defaultValue": "obachilo"
 			}
 		},
 		"folder": {

@@ -304,8 +304,8 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:[('DELETE FROM ' + 'dbo' + '.PROJECT_HEADER_LOAD')],",
-				"     postSQLs:['DELETE FROM DBO.PROJECT_HEADER_LOAD WHERE CAST(PROJ_WBS_ID AS CHAR(1)) NOT IN (\\'C\\',\\'F\\',\\'J\\') AND APPL_IND=\\'BH\\''],",
+				"     preSQLs:[('DELETE FROM ' + \r\\n'dbo' + '.PROJECT_HEADER_LOAD')],",
+				"     postSQLs:['DELETE FROM DBO.PROJECT_HEADER_LOAD \\nWHERE CAST(PROJ_WBS_ID AS CHAR(1)) NOT IN (\\'C\\',\\'F\\',\\'J\\') AND APPL_IND=\\'BH\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V161S6"
