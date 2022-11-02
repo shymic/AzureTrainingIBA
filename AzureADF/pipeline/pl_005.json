@@ -480,10 +480,6 @@
 			"p_IPPF_RULES_COUNTRIES": {
 				"type": "String",
 				"defaultValue": "in (cast ('602' as char(3)), cast('618' as char(3)), cast('668' as char(3)), cast('678' as char(3)), cast('706' as char(3)), cast('726' as char(3)), cast('740' as char(3)), cast('755' as char(3)), cast('758' as char(3)), cast('764' as char(3)), cast('788' as char(3)), cast('820' as char(3)), cast('808' as char(3)), cast('822' as char(3)), cast('821' as char(3)), cast('832' as char(3)), cast('826' as char(3)), cast('846' as char(3)), cast('848' as char(3)), cast('864' as char(3)), cast('866' as char(3)), cast('862' as char(3)), cast('889' as char(3)), cast('865' as char(3)), cast('724' as char(3)), cast('702' as char(3)), cast('806' as char(3)), cast('675' as char(3)), cast('622' as char(3)), cast ('624' as char(3)))"
-			},
-			"p_container": {
-				"type": "string",
-				"defaultValue": "obachilo"
 			}
 		},
 		"folder": {
