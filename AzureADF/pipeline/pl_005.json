@@ -452,9 +452,6 @@
 			"p_IPPF_RULES_INST": {
 				"type": "String"
 			},
-			"p_folder": {
-				"type": "String"
-			},
 			"p_IPPF_RULES_COUNTRIES": {
 				"type": "String"
 			}
