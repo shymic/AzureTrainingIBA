@@ -6,16 +6,12 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"p_fileName": {
+			"p_sourceName": {
 				"type": "string"
 			},
 			"p_folder": {
 				"type": "string",
 				"defaultValue": "sources"
-			},
-			"p_container": {
-				"type": "string",
-				"defaultValue": "obachilo"
 			}
 		},
 		"folder": {
