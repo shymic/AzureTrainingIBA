@@ -40,7 +40,8 @@
 								"p_folder": "LIPPFD005"
 							},
 							"V161S6": {
-								"p_schema": "dbo"
+								"p_schema": "dbo",
+								"p_table": "PROJECT_HEADER_LOAD"
 							}
 						}
 					},
