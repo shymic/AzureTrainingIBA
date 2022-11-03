@@ -16,15 +16,31 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_transform",
+						"referenceName": "df_005",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"sourceTable": {
-								"p_sourceName": "wbs_element_cost.csv"
+							"V161S0P2": {
+								"p_sourceName": "V161S1.csv",
+								"p_folder": "LIPPFD005"
 							},
-							"SinkTable": {
-								"p_schema": "dbo",
-								"p_table": "FORECAST_LOAD"
+							"V161S5P1": {
+								"p_sourceName": "V161S2.csv",
+								"p_folder": "LIPPFD005"
+							},
+							"V161S5P2": {
+								"p_sourceName": "V161S4.csv",
+								"p_folder": "LIPPFD005"
+							},
+							"V161S8P1": {
+								"p_sourceName": "V161S7.csv",
+								"p_folder": "LIPPFD005"
+							},
+							"V161S10P1": {
+								"p_sourceName": "V161S11.csv",
+								"p_folder": "LIPPFD005"
+							},
+							"V161S6": {
+								"p_schema": "dbo"
 							}
 						}
 					},
