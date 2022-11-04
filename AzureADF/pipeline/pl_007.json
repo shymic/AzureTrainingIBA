@@ -87,7 +87,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"p_IPPF_RULES_SCHEME": {
-								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"value": "@pipeline().parameters.p_IPPF_RULES_SCHEME",
 								"type": "Expression"
 							}
 						},
