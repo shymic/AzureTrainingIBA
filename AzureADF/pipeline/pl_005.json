@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "V161S1",
+				"name": "V161S0P2",
 				"description": "V161S1",
 				"type": "Copy",
 				"dependsOn": [],
@@ -19,7 +19,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT\n    CAST(AL1.CTRY_CD AS CHAR(4)) AS SAP_CMPNY_CD\nFROM\n    BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN\n    BMSIW.COUNTRY_REF_UV AL2\nON\n    AL1.CTRY_CD=AL2.COUNTRY_CD\nAND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\nAND AL2.STATUS='O'\nWHERE\n    '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - ' ||\n    '@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR  (\n        AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES}\n    AND '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - ' ||\n        '@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nFETCH\n    FIRST 250 rows only WITH UR",
+							"value": "SELECT cast(AL1.CTRY_CD as char(4)) as SAP_CMPNY_CD\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL2.STATUS='O'\nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} and '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nfetch first 250 rows only\nWITH UR",
 							"type": "Expression"
 						}
 					},
@@ -56,98 +56,19 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
-								"value": "V161S1.csv",
-								"type": "Expression"
-							},
-							"p_folder": {
-								"value": "LIPPFD005",
-								"type": "Expression"
-							}
+							"p_fileName": "V161S0P2.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
 						}
 					}
 				]
 			},
 			{
-				"name": "V161S11",
-				"description": "V161S11",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "V161S1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "Db2Source",
-						"query": {
-							"value": "SELECT\n    t1.WBS_NUM       AS PROJ_WBS_NUM ,\n    t1.SHORT_DESC    AS PROJ_NM ,\n    t1.PLAN_STRT_DT  AS PROJ_PLANNED_STRT_DT ,\n    t1.PLAN_CMPLN_DT AS PROJ_PLANNED_END_DT ,\n    '-1'               AS PRFT_CNTR_CD ,\n    ' '               AS COST_CNTR_CD ,\n    t1.APPL_NUM       AS APPL_NUM ,\n    t1.APPL_NM        AS APPL_NM ,\n    t1.FUNCTL_AREA_CD AS FUNCTL_AREA_CD ,\n    t1.CNTL_PROJ_CD   AS CNTL_AREA_CD ,\n    t1.PROJ_PROF_CD   AS PROJ_PROF_CD ,\n    t1.PROJ_CRNCY_CD  AS PROJ_CRNCY_CD ,\n    t2.PROJ_TYP_CD    AS PROJ_TYP_CD ,\n    t1.SAP_CMPNY_CD   AS CMPNY_CD ,\n    t1.CHRG_CTRY_CD   AS CHRG_CTRY_CD ,\n    t1.WBS_ID         AS PROJ_ID ,\n    'BH'              AS APPL_IND\nFROM\n    BLUEPP.WBS_PROJ_HEADER_@{pipeline().parameters.p_IPPF_RULES_VIEW} t1\nINNER JOIN\n    bmsiw.COMPANY_REF_@{pipeline().parameters.p_IPPF_RULES_VIEW} sc\nON\n    sc.sap_company_cd = t1.SAP_CMPNY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\nLEFT JOIN\n    BLUEPP.WBS_ELEMENT_MASTER_@{pipeline().parameters.p_IPPF_RULES_VIEW} t2\nON\n    t1.WBS_ID = t2.WBS_ID\nWHERE\n    CAST(t1.CHRG_CTRY_CD AS CHAR(3)) @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\nfetch first 8700 rows only;",
-							"type": "Expression"
-						}
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false,
-					"dataIntegrationUnits": 2,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "ds_sourceDB2",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "ds_sourceCSV",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_fileName": {
-								"value": "V161S11.csv",
-								"type": "Expression"
-							},
-							"p_folder": {
-								"value": "LIPPFD005",
-								"type": "Expression"
-							}
-						}
-					}
-				]
-			},
-			{
-				"name": "V161S2",
+				"name": "V161S5P1",
 				"description": "V161S2",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "V161S11",
+						"activity": "V161S0P2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -165,7 +86,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT DISTINCT\n    1                                                AS PROJ_WBS_NUM,\n    CAST(CON.DESCRIPTION AS CHAR(240) ) AS PROJ_DESC,\n    CON.CONTRCREATEDATE                              AS PROJ_PLANNED_STRT_DT,\n    CON.CONTRBEGINDATE                               AS PROJ_PLANNED_END_DT,\n    ''                                               AS PRFT_CNTR_CD,\n    ''                                               AS COST_CNTR_CD,\n    0                                                AS APPLCNT_NUM,\n    ''                                               AS APPLCNT_NM,\n    ''                                               AS FUNCTL_AREA_CD,\n    ''                                               AS CNTL_AREA_CD,\n    ''                                               AS PROJ_PROF_CD,\n    ''                                               AS PROJ_CRNCY_CD,\n    ''                                               AS PROJ_TYP_CD,\n    CON.COUNTRY                                      AS SAP_CMPNY_CD,\n    CON.COUNTRY                                      AS BH_SAP_CMPNY_CD,\n    CON.CONTRACTNUMBER                               AS PROJ_WBS_ID,\n    'BMS'                                            AS APPL_IND\nFROM\n    BMSIW.T510BUS_UV BUS,\n    BMSIW.T510WRK_UV WRK,\n    BMSIW.T510CON_UV CON\nJOIN\n    BMSIW.COMPANY_REF_UV sc\nON\n    sc.COUNTRY_CD = WRK.COUNTRY\nAND sc.COMPANY_CD = WRK.COMPANYCODE and sc.COMPANY_CD like ('NEWIS%')\nWHERE\n    BUS.COUNTRY = WRK.COUNTRY\n/*AND BUS.COMPANYCODE = WRK.COMPANYCODE\n--AND BUS.BUSINESSTYPE = WRK.BUSINESSTYPE\nAND WRK.COUNTRY = CON.COUNTRY\nAND WRK.COMPANYCODE = CON.COMPANYCODE\nAND WRK.CONTRACTNUMBER = CON.CONTRACTNUMBER\nAND (\n        SUBSTR(CHAR(CON.CONTRENDDATE),1,7) >= SUBSTR(CHAR(CURRENT DATE - 3 YEARS),1,7) --changed by\n        -- E.S. Task 560.1  \n        OR    CON.CONTRACTSTATUS IN ( 'A', 'P' ) ) AND CON.CONTRACTNUMBER<>''\n        --AND      CO.CONTRACTSTATUS    <> 'N' \n        AND  ( ( CON.COUNTRY in (      SELECT cast(AL1.CTRY_CD as char(4)) FROM BMSIW.GEO_RGN_CTRY_UV AL1 \n        JOIN\n         BMSIW.COUNTRY_REF_UV AL2          ON AL1.CTRY_CD=AL2.COUNTRY_CD         \n         AND AL1.RGN_LVL1_CD in (cast(\\'EA\\' as char(2)),cast(\\'EP\\' as char(2)),cast(\\'EM\\' as char(2)))         \n         AND AL1.CTRY_CD not in (cast('358' as char(3)), cast('622' as char(3)), cast('724' as char(3)), cast('767' as char(3)), cast('854' as char(3)), cast('618' as char(3)), cast('848' as char(3)), cast('809' as char(3)), cast('913' as char(3)), cast('706' as char(3)),cast('623' as char(3)), cast('624' as char(3)), cast('653' as char(3)), cast('678' as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('846' as char(3)))        \n         AND AL1.CTRY_CD not as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('622' as char(3)), cast('846' as char(3)))         \n         AND AL2.STATUS='O'  and AL1.CTRY_CD!='606' WHERE 'CDT - EU'<>'CDT - EU' OR (AL1.CTRY_CD in (cast ('602' as char(3)), cast('618' as char(3)), cast('668' as char(3)), cast('678' as char(3)), cast('706' as char(3)), cast('726' as char(3)), cast('740' as char(3)), cast('755' as char(3)), cast('758' as char(3)), cast('764' as char(3)), cast('788' as char(3)), cast('820' as char(3)), cast('808' as char(3)), cast('822' as char(3)), cast('821' as char(3)), cast('832' as char(3)), cast('826' as char(3)), cast('846' as char(3)), cast('848' as char(3)), cast('864' as char(3)), cast('866' as char(3)), cast('862' as char(3)), cast('889' as char(3)), cast('865' as char(3)), cast('724' as char(3)), cast('702' as char(3)), cast('806' as char(3)), cast('675' as char(3)), cast('622' as char(3)), cast ('624' as char(3))) \n         and 'CDT - EU'='CDT - EU') fetch first 250 rows only)\n         AND    CO.GEO_SRC_CD = 'NA'    AND    WR.GEO_SRC_CD = 'NA' ) or (CON.COUNTRY='606')) \n        --AND      BU.BUSMEASUREDIV   in IN ('Z4', 'Z6', 'K5', 'Z8', '72', '7G', '7H', 'Z1', '7D', 'J9', '80', 'K4', 'K8', 'K9', 'T8', 'H5', '7Y', '20', 'G2', '48', '46', '30', '36', '2P', '8F', '7F', '2R', '1C', '4E', '70', '51', '66')\n         */\nfetch first 3000 rows only;",
+							"value": "SELECT DISTINCT\n1 as PROJ_WBS_NUM,\ncast(CON.DESCRIPTION as char(240) for SBCS data) as PROJ_DESC,\nCON.CONTRCREATEDATE as PROJ_PLANNED_STRT_DT,\nCON.CONTRBEGINDATE as PROJ_PLANNED_END_DT,\n'' as PRFT_CNTR_CD,\n'' as COST_CNTR_CD,\n0 as APPLCNT_NUM,\n'' as APPLCNT_NM,\n'' as FUNCTL_AREA_CD,\n'' as CNTL_AREA_CD,\n'' as PROJ_PROF_CD,\n'' as PROJ_CRNCY_CD,\n'' as PROJ_TYP_CD,\n CON.COUNTRY as SAP_CMPNY_CD,\nCON.COUNTRY as BH_SAP_CMPNY_CD,\nCON.CONTRACTNUMBER as PROJ_WBS_ID,\n'BMS' as APPL_IND\n                                              \n FROM \nBMSIW.T510BUS_UV        BUS,    \nBMSIW.T510WRK_UV        WRK,                                                 \nBMSIW.T510CON_UV        CON \n \nJOIN BMSIW.COMPANY_REF_UV sc on sc.COUNTRY_CD = WRK.COUNTRY  and sc.COMPANY_CD = WRK.COMPANYCODE @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\n\nWHERE  BUS.COUNTRY        = WRK.COUNTRY              \nAND    BUS.COMPANYCODE    = WRK.COMPANYCODE          \nAND    BUS.BUSINESSTYPE   = WRK.BUSINESSTYPE         \nAND    WRK.COUNTRY        = CON.COUNTRY              \nAND    WRK.COMPANYCODE    = CON.COMPANYCODE          \nAND    WRK.CONTRACTNUMBER = CON.CONTRACTNUMBER    \n \nAND ( substr(char(CON.CONTRENDDATE),1,7) >= substr(char(current date  - 3 YEARS),1,7)  --changed by E.S. Task 560.1\n OR    CON.CONTRACTSTATUS IN ( 'A', 'P' ) )\nAND CON.CONTRACTNUMBER<>''\n@{pipeline().parameters.p_IPPF_RULES_CONTR_STATUS}             \nAND  ( ( CON.COUNTRY    in (      SELECT cast(AL1.CTRY_CD as char(4))\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL1.CTRY_CD not @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\n        AND AL1.CTRY_CD not @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_MIGR}\n        AND AL2.STATUS='O'  and AL1.CTRY_CD!='606'\nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} and '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nfetch first 250 rows only) @{pipeline().parameters.p_IPPF_RULES_GEO}\n) or (CON.COUNTRY='606'))\n--AND    BU.BUSMEASUREDIV   in @{pipeline().parameters.p_IPPF_RULES_DIVISIONS}                                                       \nWITH UR",
 							"type": "Expression"
 						}
 					},
@@ -202,25 +123,19 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
-								"value": "V161S2.csv",
-								"type": "Expression"
-							},
-							"p_folder": {
-								"value": "LIPPFD005",
-								"type": "Expression"
-							}
+							"p_fileName": "V161S5P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
 						}
 					}
 				]
 			},
 			{
-				"name": "V161S4",
+				"name": "V161S5P2",
 				"description": "V161S4",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "V161S2",
+						"activity": "V161S5P1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -238,7 +153,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT DISTINCT\n    v.RCVCUSTCTRY    AS SAP_CMPNY_CD1,\n    v.contractnumber AS PROJ_WBS_ID\nFROM\n    BMSIW.t510wrk_UV V\nJOIN\n    BMSIW.COUNTRY_REF_UV AL2\nON\n    v.COUNTRY=AL2.COUNTRY_CD\nJOIN\n    BMSIW.COUNTRY_REF_UV AL3\nON\n    v.RCVCUSTCTRY=AL3.COUNTRY_CD\nJOIN\n    BMSIW.GEO_RGN_CTRY_UV AL4\nON\n    AL4.CTRY_CD=AL2.COUNTRY_CD\nJOIN\n    BMSIW.GEO_RGN_CTRY_UV AL5\nON\n    AL5.CTRY_CD=AL3.COUNTRY_CD\nWHERE\n    v.country <> v.RCVCUSTCTRY\nAND v.country='606'\nAND v.contractnumber <>'' WITH UR",
+							"value": "SELECT distinct v.RCVCUSTCTRY as SAP_CMPNY_CD1,v.contractnumber as PROJ_WBS_ID\nFROM BMSIW.t510wrk_UV           V \nJOIN  BMSIW.COUNTRY_REF_UV AL2 \nON v.COUNTRY=AL2.COUNTRY_CD\nJOIN  BMSIW.COUNTRY_REF_UV AL3\nON v.RCVCUSTCTRY=AL3.COUNTRY_CD\nJOIN BMSIW.GEO_RGN_CTRY_UV AL4\nON AL4.CTRY_CD=AL2.COUNTRY_CD\nJOIN BMSIW.GEO_RGN_CTRY_UV AL5\nON AL5.CTRY_CD=AL3.COUNTRY_CD\n   where v.country <> v.RCVCUSTCTRY \n   and v.country='606'\n and v.contractnumber <>''  \nWITH UR",
 							"type": "Expression"
 						}
 					},
@@ -275,25 +190,19 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
-								"value": "V161S4.csv",
-								"type": "Expression"
-							},
-							"p_folder": {
-								"value": "LIPPFD005",
-								"type": "Expression"
-							}
+							"p_fileName": "V161S5P2.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
 						}
 					}
 				]
 			},
 			{
-				"name": "V161S7",
+				"name": "V161S8P1",
 				"description": "V161S7",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "V161S4",
+						"activity": "V161S5P2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -311,7 +220,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT DISTINCT\n    1                    AS PROJ_WBS_NUM,\n    co.ACCTGRP_DESC      AS PROJ_DESC,\n    CO.CNTRCT_BEGIN_DATE AS PROJ_PLANNED_STRT_DT,\n    CO.CNTRCT_END_DATE   AS PROJ_PLANNED_END_DT,\n    ''                   AS PRFT_CNTR_CD,\n    ''                   AS COST_CNTR_CD,\n    0                    AS APPLCNT_NUM,\n    ''                   AS APPLCNT_NM,\n    ''                   AS FUNCTL_AREA_CD,\n    ''                   AS CNTL_AREA_CD,\n    ''                   AS PROJ_PROF_CD,\n    ''                   AS PROJ_CRNCY_CD,\n    ''                   AS PROJ_TYP_CD,\n    CO.OWNING_COUNTRY_CD AS SAP_CMPNY_CD,\n    CO.OWNING_COUNTRY_CD AS BH_SAP_CMPNY_CD,\n    CO.ACCTGRP_ID        AS PROJ_WBS_ID,\n    'BMS'                AS APPL_IND\nFROM\n    bmsiw.account_uv wrk\nINNER JOIN\n    BMSIW.ACCOUNT_GROUP_UV CO\nON\n    wrk.ACCTGRP_ID = CO.ACCTGRP_ID\nAND wrk.CONTROL_GROUP_CD = CO.CONTROL_GROUP_CD\n/*INNER JOIN\n    BMSIW.T510BUS_UV BUS\nON\n    BUS.COUNTRY = WRK.OWNING_COUNTRY_CD\n--AND BUS.COMPANYCODE = WRK.OWNING_COMPANY_CD\n--AND BUS.BUSINESSTYPE = WRK.BUS_TYP_CD\nLEFT JOIN\n    BMSIW.T510CON_UV co1\nON\n    co.ACCTGRP_ID = co1.contractnumber\n--AND wrk.OWNING_COUNTRY_CD = co1.COUNTRY\n--AND co.OWNING_COMPANY_CD = co1.COMPANYCODE\nJOIN\n    BMSIW.COMPANY_REF_UV sc\nON\n    sc.COUNTRY_CD = WRK.OWNING_COUNTRY_CD\n--AND sc.COMPANY_CD = WRK.OWNING_COMPANY_CD and sc.COMPANY_CD like ('NEWIS%')\nWHERE\n    co1.CONTRACTNUMBER IS NULL\nAND bus.LOBID IN ('SO',\n                  'ITS',\n                  'MAI',\n                  'ISS',\n                  'EBH',\n                  'CLD',\n                  'CLO')\nAND co.ACCTGRP_ID<>''\nAND wrk.status IN ('O')\nAND bus.BUSMEASUREDIV <> '16'\nAND wrk.ACCT_TYP_CD = 'C'\nAND wrk.OFFERING_COMP_CD <> ''\nAND wrk.OWNING_COUNTRY_CD IN\n    (\n        SELECT\n            CAST(AL1.CTRY_CD AS CHAR(4))\n        FROM\n            BMSIW.GEO_RGN_CTRY_UV AL1\n        JOIN\n            BMSIW.COUNTRY_REF_UV AL2\n        ON\n            AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD in (cast('EA' as char(2)),cast('EP' as char(2)),cast('EM' as char(2))) \n        AND AL1.CTRY_CD NOT in (cast('358' as char(3)), cast('622' as char(3)), cast('724' as char(3)), cast('767' as char(3)), cast('854' as char(3)), cast('618' as char(3)), cast('848' as char(3)), cast('809' as char(3)), cast('913' as char(3)), cast('706' as char(3)),cast('623' as char(3)), cast('624' as char(3)), cast('653' as char(3)), cast('678' as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('846' as char(3)))\n        AND AL1.CTRY_CD NOT in (cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('622' as char(3)), cast('846' as char(3)))\n        AND AL2.STATUS='O'\n        WHERE\n            'CDT - EU'<>'CDT - EU'\n        OR  (\n                AL1.CTRY_CD in (cast ('602' as char(3)), cast('618' as char(3)), cast('668' as char(3)), cast('678' as char(3)), cast('706' as char(3)), cast('726' as char(3)), cast('740' as char(3)), cast('755' as char(3)), cast('758' as char(3)), cast('764' as char(3)), cast('788' as char(3)), cast('820' as char(3)), cast('808' as char(3)), cast('822' as char(3)), cast('821' as char(3)), cast('832' as char(3)), cast('826' as char(3)), cast('846' as char(3)), cast('848' as char(3)), cast('864' as char(3)), cast('866' as char(3)), cast('862' as char(3)), cast('889' as char(3)), cast('865' as char(3)), cast('724' as char(3)), cast('702' as char(3)), cast('806' as char(3)), cast('675' as char(3)), cast('622' as char(3)), cast ('624' as char(3)))\n            AND 'CDT - EU'='CDT - EU')\n        FETCH\n            FIRST 250 rows only)*/\nfetch first 280 rows only;",
+							"value": "SELECT DISTINCT \n1 as PROJ_WBS_NUM,\nco.ACCTGRP_DESC as PROJ_DESC,\nCO.CNTRCT_BEGIN_DATE as PROJ_PLANNED_STRT_DT,\nCO.CNTRCT_END_DATE as PROJ_PLANNED_END_DT,\n'' as PRFT_CNTR_CD,\n'' as COST_CNTR_CD,\n0 as APPLCNT_NUM,\n'' as APPLCNT_NM,\n'' as FUNCTL_AREA_CD,\n'' as CNTL_AREA_CD,\n'' as PROJ_PROF_CD,\n'' as PROJ_CRNCY_CD,\n'' as PROJ_TYP_CD,\nCO.OWNING_COUNTRY_CD  as SAP_CMPNY_CD,\nCO.OWNING_COUNTRY_CD  as BH_SAP_CMPNY_CD,\nCO.ACCTGRP_ID as PROJ_WBS_ID,\n'BMS' as APPL_IND\n\nfrom\nbmsiw.account_uv wrk\nINNER JOIN BMSIW.ACCOUNT_GROUP_UV CO\n    ON wrk.ACCTGRP_ID = CO.ACCTGRP_ID\n   AND wrk.CONTROL_GROUP_CD = CO.CONTROL_GROUP_CD\nINNER JOIN BMSIW.T510BUS_UV BUS\n    ON BUS.COUNTRY        = WRK.OWNING_COUNTRY_CD              \n   AND BUS.COMPANYCODE    = WRK.OWNING_COMPANY_CD          \n   AND BUS.BUSINESSTYPE   = WRK.BUS_TYP_CD\nLEFT join BMSIW.T510CON_UV co1\n    on co.ACCTGRP_ID = co1.contractnumber\n    and wrk.OWNING_COUNTRY_CD = co1.COUNTRY\n    and co.OWNING_COMPANY_CD = co1.COMPANYCODE\n\nJOIN BMSIW.COMPANY_REF_UV sc on sc.COUNTRY_CD = WRK.OWNING_COUNTRY_CD   and sc.COMPANY_CD = WRK.OWNING_COMPANY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\n\nWHERE co1.CONTRACTNUMBER IS NULL  and bus.LOBID in ('SO','ITS','MAI','ISS','EBH','CLD','CLO')\nand co.ACCTGRP_ID<>''\nand wrk.status in ('O')\nand bus.BUSMEASUREDIV <> '16'\nand wrk.ACCT_TYP_CD = 'C' \nand wrk.OFFERING_COMP_CD <> ''\n\nAND wrk.OWNING_COUNTRY_CD in (SELECT cast(AL1.CTRY_CD as char(4))\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL1.CTRY_CD not @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\n        AND AL1.CTRY_CD not @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_MIGR}\n        AND AL2.STATUS='O' \nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} and '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nfetch first 250 rows only)    \n     \nwith ur",
 							"type": "Expression"
 						}
 					},
@@ -348,67 +257,183 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_fileName": {
-								"value": "V161S7.csv",
-								"type": "Expression"
-							},
-							"p_folder": {
-								"value": "LIPPFD005",
-								"type": "Expression"
-							}
+							"p_fileName": "V161S8P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
 						}
 					}
 				]
+			},
+			{
+				"name": "V161S10P1",
+				"description": "V161S11",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V161S8P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\n t1.WBS_NUM as PROJ_WBS_NUM\n ,t1.SHORT_DESC as PROJ_NM\n ,t1.PLAN_STRT_DT as PROJ_PLANNED_STRT_DT\n ,t1.PLAN_CMPLN_DT as PROJ_PLANNED_END_DT\n ,case when t1.PRFT_CNTR_CD ='' then '-1' else t1.PRFT_CNTR_CD end as PRFT_CNTR_CD\n ,' ' as COST_CNTR_CD\n ,t1.APPL_NUM as APPL_NUM\n ,t1.APPL_NM as APPL_NM\n ,t1.FUNCTL_AREA_CD as FUNCTL_AREA_CD\n ,t1.CNTL_PROJ_CD as CNTL_AREA_CD\n ,t1.PROJ_PROF_CD as PROJ_PROF_CD\n ,t1.PROJ_CRNCY_CD as PROJ_CRNCY_CD\n ,t2.PROJ_TYP_CD as PROJ_TYP_CD\n ,t1.SAP_CMPNY_CD as CMPNY_CD\n ,t1.CHRG_CTRY_CD as CHRG_CTRY_CD\n ,t1.WBS_ID as PROJ_ID\n ,'BH' as APPL_IND \nFROM BLUEPP.WBS_PROJ_HEADER_@{pipeline().parameters.p_IPPF_RULES_VIEW} t1\ninner join bmsiw.COMPANY_REF_@{pipeline().parameters.p_IPPF_RULES_VIEW} sc on sc.sap_company_cd = t1.SAP_CMPNY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\nLEFT JOIN BLUEPP.WBS_ELEMENT_MASTER_@{pipeline().parameters.p_IPPF_RULES_VIEW} t2 ON\nt1.WBS_ID = t2.WBS_ID\nwhere cast(t1.CHRG_CTRY_CD as char(3)) @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S10P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "Transformation",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V161S10P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_005",
+						"type": "DataFlowReference",
+						"parameters": {
+							"p_IPPF_RULES_SCHEME": {
+								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"V161S0P2": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S0P2.csv"
+							},
+							"V161S5P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S5P1.csv"
+							},
+							"V161S5P2": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S5P2.csv"
+							},
+							"V161S8P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S8P1.csv"
+							},
+							"V161S10P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S10P1.csv"
+							},
+							"V161S6": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
+									"type": "Expression"
+								},
+								"p_table": "PROJECT_HEADER_LOAD"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None"
+				}
 			}
 		],
 		"parameters": {
 			"p_IPPF_RULES_COMPANY_COND": {
-				"type": "String",
-				"defaultValue": "and sc.COMPANY_CD like ('NEWIS%')"
+				"type": "String"
 			},
 			"p_IPPF_RULES_VIEW": {
-				"type": "String",
-				"defaultValue": "UV"
+				"type": "String"
 			},
 			"p_IPPF_RULES_CONTR_STATUS": {
-				"type": "String",
-				"defaultValue": "--AND      CO.CONTRACTSTATUS    <> 'N' "
+				"type": "String"
 			},
 			"p_IPPF_RULES_DIVISIONS": {
-				"type": "String",
-				"defaultValue": "IN ('Z4', 'Z6', 'K5', 'Z8', '72', '7G', '7H', 'Z1', '7D', 'J9', '80', 'K4', 'K8', 'K9', 'T8', 'H5', '7Y', '20', 'G2', '48', '46', '30', '36', '2P', '8F', '7F', '2R', '1C', '4E', '70', '51', '66')"
+				"type": "String"
 			},
-			"p_IPPF_RULES_GEO": {
-				"type": "String",
-				"defaultValue": "--AND    CO.GEO_SRC_CD = 'NA'    AND    WR.GEO_SRC_CD = 'NA'"
+			"p_IPPF_RULES_SCHEME": {
+				"type": "String"
 			},
 			"p_IPPF_RULES_RGN_LVL1_CD": {
-				"type": "String",
-				"defaultValue": "in (cast('EA' as char(2)),cast('EP' as char(2)),cast('EM' as char(2))) "
+				"type": "String"
+			},
+			"p_IPPF_RULES_GEO": {
+				"type": "String"
 			},
 			"p_IPPF_RULES_COUNTRIES_MIGR": {
-				"type": "String",
-				"defaultValue": "as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('622' as char(3)), cast('846' as char(3)))"
+				"type": "String"
 			},
 			"p_IPPF_RULES_COUNTRIES_BH": {
-				"type": "String",
-				"defaultValue": "in (cast('358' as char(3)), cast('622' as char(3)), cast('724' as char(3)), cast('767' as char(3)), cast('854' as char(3)), cast('618' as char(3)), cast('848' as char(3)), cast('809' as char(3)), cast('913' as char(3)), cast('706' as char(3)),cast('623' as char(3)), cast('624' as char(3)), cast('653' as char(3)), cast('678' as char(3)),cast('702' as char(3)), cast('742' as char(3)),cast('788' as char(3)), cast('806' as char(3)), cast('812' as char(3)),cast('846' as char(3)))"
+				"type": "String"
 			},
 			"p_IPPF_RULES_GEO_NAME": {
-				"type": "String",
-				"defaultValue": "EU"
+				"type": "String"
 			},
 			"p_IPPF_RULES_INST": {
-				"type": "String",
-				"defaultValue": "CDT - EU"
+				"type": "String"
 			},
 			"p_IPPF_RULES_COUNTRIES": {
-				"type": "String",
-				"defaultValue": "in (cast ('602' as char(3)), cast('618' as char(3)), cast('668' as char(3)), cast('678' as char(3)), cast('706' as char(3)), cast('726' as char(3)), cast('740' as char(3)), cast('755' as char(3)), cast('758' as char(3)), cast('764' as char(3)), cast('788' as char(3)), cast('820' as char(3)), cast('808' as char(3)), cast('822' as char(3)), cast('821' as char(3)), cast('832' as char(3)), cast('826' as char(3)), cast('846' as char(3)), cast('848' as char(3)), cast('864' as char(3)), cast('866' as char(3)), cast('862' as char(3)), cast('889' as char(3)), cast('865' as char(3)), cast('724' as char(3)), cast('702' as char(3)), cast('806' as char(3)), cast('675' as char(3)), cast('622' as char(3)), cast ('624' as char(3)))"
+				"type": "String"
 			}
-		},
-		"folder": {
-			"name": "obachilo"
 		},
 		"annotations": []
 	}
