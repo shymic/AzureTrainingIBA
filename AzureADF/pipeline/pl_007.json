@@ -19,7 +19,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT AL1.CURRENCY_CD, AL1.YEAR_NUM, AL1.MONTH_NUM, AL1.PLAN_EXCHG_RATE, current timestamp as LST_RFRSH_TMS\\nFROM BDWDM.CURR_EXCHANGE_UV AL1 WITH UR",
+							"value": "SELECT AL1.CURRENCY_CD, AL1.YEAR_NUM, AL1.MONTH_NUM, AL1.PLAN_EXCHG_RATE, current timestamp as LST_RFRSH_TMS\nFROM BDWDM.CURR_EXCHANGE_UV AL1 WITH UR",
 							"type": "Expression"
 						}
 					},
@@ -93,15 +93,15 @@
 						},
 						"datasetParameters": {
 							"V70S2P1": {
-								"p_fileName": "V70S2P1.csv",
-								"p_folder": "LIPPFD0007_PLAN_CURRENCY_LOAD_INTGRT"
+								"p_folder": "LIPPFD0007_PLAN_CURRENCY_LOAD_INTGRT",
+								"p_fileName": "V70S2P1.csv"
 							},
 							"V70S0": {
 								"p_schema": {
-									"value": "@pipeline().parameters.p_IPPF_RULES_SCHEME",
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
 									"type": "Expression"
 								},
-								"p_table": "PLAN_CURRENCY_LOAD_INTGRT"
+								"p_table": "PLAN_CURENCY_LOAD"
 							}
 						}
 					},

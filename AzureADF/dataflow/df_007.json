@@ -47,7 +47,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V70S2P1",
-				"V70S2P1 derive(PLAN_EXCHG_DT = toDate(toString(YEAR_NUM)+'-'+toString(MONTH_NUM)+'-'+'1'),",
+				"V70S2P1 derive(PLAN_EXCHG_DT = toDate(toString(YEAR_NUM)+'-'+toString(MONTH_NUM)+'-'+toString(1)),",
 				"          PLAN_EXCHG_RATE = 1/PLAN_EXCHG_RATE) ~> V70S0P1Derive",
 				"V70S0P1Derive select(mapColumn(",
 				"          CURRENCY_CD,",
@@ -64,7 +64,7 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     preSQLs:[('DELETE FROM ' + $p_IPPF_RULES_SCHEME + '.PLAN_CURENCY_LOAD')],",
+				"     preSQLs:[(\"DELETE FROM \"\r\\n + $p_IPPF_RULES_SCHEME + \".PLAN_CURENCY_LOAD\")],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V70S0"
