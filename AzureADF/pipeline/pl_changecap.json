@@ -20,7 +20,6 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"p_sourceName": "cnmn_cost_element.csv",
 								"p_folder": "sources"
 							},
 							"sinkUps": {

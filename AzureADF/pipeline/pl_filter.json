@@ -19,9 +19,6 @@
 						"referenceName": "df_filter",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"sourceTable": {
-								"p_sourceName": "wbs_element_cost_1.csv"
-							},
 							"SinkTable": {
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"

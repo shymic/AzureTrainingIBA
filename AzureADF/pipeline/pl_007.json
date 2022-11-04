@@ -56,7 +56,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference",
 						"parameters": {
-							"p_sourceName": "V70S2P1.csv",
+							"p_fileName": "V70S2P1.csv",
 							"p_folder": "LIPPFD0007_PLAN_CURRENCY_LOAD_INTGRT"
 						}
 					}
@@ -93,7 +93,7 @@
 						},
 						"datasetParameters": {
 							"V70S2P1": {
-								"p_sourceName": "V70S2P1.csv",
+								"p_fileName": "V70S2P1.csv",
 								"p_folder": "LIPPFD0007_PLAN_CURRENCY_LOAD_INTGRT"
 							},
 							"V70S0": {
