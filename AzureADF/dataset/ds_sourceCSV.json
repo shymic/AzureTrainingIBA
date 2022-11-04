@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"p_sourceName": {
+			"p_fileName": {
 				"type": "string"
 			},
 			"p_folder": {
@@ -23,7 +23,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@dataset().p_sourceName",
+					"value": "@dataset().p_fileName",
 					"type": "Expression"
 				},
 				"folderPath": {
