@@ -401,28 +401,22 @@
 			"p_IPPF_RULES_COMPANY_COND": {
 				"type": "String"
 			},
-			"p_IPPF_RULES_VIEW": {
-				"type": "String"
-			},
 			"p_IPPF_RULES_CONTR_STATUS": {
 				"type": "String"
 			},
-			"p_IPPF_RULES_DIVISIONS": {
+			"p_IPPF_RULES_COUNTRIES": {
 				"type": "String"
 			},
-			"p_IPPF_RULES_SCHEME": {
-				"type": "String"
-			},
-			"p_IPPF_RULES_RGN_LVL1_CD": {
-				"type": "String"
-			},
-			"p_IPPF_RULES_GEO": {
+			"p_IPPF_RULES_COUNTRIES_BH": {
 				"type": "String"
 			},
 			"p_IPPF_RULES_COUNTRIES_MIGR": {
 				"type": "String"
 			},
-			"p_IPPF_RULES_COUNTRIES_BH": {
+			"p_IPPF_RULES_DIVISIONS": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_GEO": {
 				"type": "String"
 			},
 			"p_IPPF_RULES_GEO_NAME": {
@@ -431,9 +425,18 @@
 			"p_IPPF_RULES_INST": {
 				"type": "String"
 			},
-			"p_IPPF_RULES_COUNTRIES": {
+			"p_IPPF_RULES_RGN_LVL1_CD": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_SCHEME": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_VIEW": {
 				"type": "String"
 			}
+		},
+		"folder": {
+			"name": "obachilo"
 		},
 		"annotations": []
 	}
