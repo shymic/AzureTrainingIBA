@@ -78,6 +78,12 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -150,6 +156,16 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn2 select(mapColumn(",
+				"          s_COST_ELEM_CD,",
+				"          s_VAL_CAT_CD,",
+				"          s_REV_IND,",
+				"          s_hash_cd,",
+				"          ROW_STATUS_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"derivedColumn1 derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> derivedColumn2",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
