@@ -23,7 +23,15 @@
 								"p_fileName": "cnmn_cost_element.csv",
 								"p_folder": "sources"
 							},
-							"sink1": {
+							"sinkIns": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
+							},
+							"sinkUpd": {
+								"p_schema": "dbo",
+								"p_table": "COST_ELEMENT_1"
+							},
+							"sinkDel": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"
 							}
