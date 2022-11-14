@@ -107,7 +107,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"select1 derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd_exist),1,3))) ~> derivedColumn1",
+				"select1 derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd),1,3))) ~> derivedColumn1",
 				"split1@Insert alterRow(insertIf(true())) ~> InsertRow",
 				"InsertRow select(mapColumn(",
 				"          COST_ELEM_CD = s_COST_ELEM_CD,",
@@ -146,7 +146,7 @@
 				"          ex_COST_ELEM_CD = existingTable@COST_ELEM_CD,",
 				"          ex_VAL_CAT_CD = existingTable@VAL_CAT_CD,",
 				"          ex_REV_IND = existingTable@REV_IND,",
-				"          ex_hash_cd_exist = ex_hash_cd",
+				"          ex_hash_cd",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
@@ -159,6 +159,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 3,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkIns",
 				"selectUpd sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -170,6 +171,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkUpd",
 				"selectDel sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -181,6 +183,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
 			]
 		}
