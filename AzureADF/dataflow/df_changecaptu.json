@@ -25,7 +25,21 @@
 						"referenceName": "ds_sinkTable",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sinkIns"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "sinkUpd"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDel"
 				}
 			],
 			"transformations": [
@@ -42,10 +56,25 @@
 					"name": "derivedColumn1"
 				},
 				{
-					"name": "AlterRow1"
+					"name": "InsertRow"
 				},
 				{
-					"name": "select1"
+					"name": "selectIns"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "UpdRow"
+				},
+				{
+					"name": "DelRow"
+				},
+				{
+					"name": "selectUpd"
+				},
+				{
+					"name": "selectDel"
 				}
 			],
 			"scriptLines": [
@@ -76,28 +105,68 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
 				"join1 derive(change_code = case(isNull(hash_cd_source),2,case(isNull(hash_cd_exist),1,3))) ~> derivedColumn1",
-				"derivedColumn1 alterRow(updateIf(change_code==3),",
-				"     insertIf(change_code==1),",
-				"     deleteIf(change_code==2)) ~> AlterRow1",
-				"AlterRow1 select(mapColumn(",
-				"          COST_ELEM_CD = source1@COST_ELEM_CD,",
-				"          VAL_CAT_CD = source1@VAL_CAT_CD,",
-				"          REV_IND = source1@REV_IND,",
+				"split1@Insert alterRow(insertIf(true())) ~> InsertRow",
+				"InsertRow select(mapColumn(",
+				"          COST_ELEM_CD = split1@Insert@COST_ELEM_CD,",
+				"          VAL_CAT_CD = split1@Insert@VAL_CAT_CD,",
+				"          REV_IND = split1@Insert@REV_IND,",
 				"          HASH_CD = hash_cd_source",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectIns",
+				"derivedColumn1 split(change_code==1,",
+				"     change_code==3,",
+				"     disjoint: false) ~> split1@(Insert, Update, Delete)",
+				"split1@Update alterRow(updateIf(true())) ~> UpdRow",
+				"split1@Delete alterRow(deleteIf(true())) ~> DelRow",
+				"UpdRow select(mapColumn(",
+				"          COST_ELEM_CD = split1@Update@COST_ELEM_CD,",
+				"          VAL_CAT_CD = split1@Update@VAL_CAT_CD,",
+				"          REV_IND = split1@Update@REV_IND,",
+				"          HASH_CD = hash_cd_source",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectUpd",
+				"DelRow select(mapColumn(",
+				"          COST_ELEM_CD = split1@Delete@COST_ELEM_CD,",
+				"          VAL_CAT_CD = split1@Delete@VAL_CAT_CD,",
+				"          REV_IND = split1@Delete@REV_IND,",
+				"          HASH_CD = hash_cd_source",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectDel",
+				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     deletable:true,",
+				"     deletable:false,",
 				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkIns",
+				"selectUpd sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
 				"     updateable:true,",
 				"     upsertable:false,",
 				"     keys:['COST_ELEM_CD'],",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkUpd",
+				"selectDel sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:true,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     keys:['COST_ELEM_CD'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
 			]
 		}
 	}
