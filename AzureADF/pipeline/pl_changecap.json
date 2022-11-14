@@ -16,17 +16,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_changecap",
+						"referenceName": "df_changecaptu",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
+								"p_fileName": "cnmn_cost_element.csv",
 								"p_folder": "sources"
 							},
-							"sinkUps": {
-								"p_schema": "dbo",
-								"p_table": "COST_ELEMENT_1"
-							},
-							"sinkDel": {
+							"sink1": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"
 							}
