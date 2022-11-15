@@ -60,6 +60,9 @@
 					"name": "FullJoin"
 				},
 				{
+					"name": "changeCode"
+				},
+				{
 					"name": "InsertRow"
 				},
 				{
@@ -117,6 +120,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> FullJoin",
+				"renameColumns derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd),1,case(notEquals(s_hash_cd, ex_hash_cd),3,0)))) ~> changeCode",
 				"split1@Insert alterRow(insertIf(true())) ~> InsertRow",
 				"InsertRow select(mapColumn(",
 				"          COST_ELEM_CD = s_COST_ELEM_CD,",
@@ -126,7 +130,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectIns",
-				"renameColumns split(change_code==1,",
+				"changeCode split(change_code==1,",
 				"     change_code==3,",
 				"     change_code==2,",
 				"     disjoint: false) ~> split1@(Insert, Update, Delete)",
@@ -169,7 +173,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectFile",
-				"renameColumns derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
+				"changeCode derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
