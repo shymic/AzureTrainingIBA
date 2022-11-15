@@ -19,8 +19,7 @@
 						"referenceName": "df_changecaptu",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"source1": {
-								"p_fileName": "cnmn_cost_element.csv",
+							"sourceCSV": {
 								"p_folder": "sources"
 							},
 							"sinkIns": {
@@ -34,6 +33,9 @@
 							"sinkDel": {
 								"p_schema": "dbo",
 								"p_table": "COST_ELEMENT_1"
+							},
+							"sinkFile": {
+								"p_folder": "sources"
 							}
 						}
 					},
@@ -42,6 +44,7 @@
 						"type": "IntegrationRuntimeReference"
 					},
 					"traceLevel": "None",
+					"runConcurrently": true,
 					"cacheSinks": {
 						"firstRowOnly": true
 					}
