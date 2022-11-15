@@ -101,9 +101,6 @@
 				},
 				{
 					"name": "alterRow1"
-				},
-				{
-					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -146,7 +143,7 @@
 				"changeCode split(change_code==1,",
 				"     change_code==3,",
 				"     change_code==2,",
-				"     disjoint: false) ~> split1@(Insert, Update, Delete, Copy)",
+				"     disjoint: false) ~> split1@(Insert, Update, Delete)",
 				"split1@Update alterRow(updateIf(true())) ~> UpdRow",
 				"split1@Delete alterRow(deleteIf(true())) ~> DelRow",
 				"UpdRow select(mapColumn(",
@@ -190,14 +187,6 @@
 				"changeCode alterRow(insertIf(change_code==1),",
 				"     deleteIf(change_code==2),",
 				"     updateIf(change_code==3)) ~> alterRow1",
-				"alterRow1 select(mapColumn(",
-				"          s_COST_ELEM_CD,",
-				"          s_VAL_CAT_CD,",
-				"          s_REV_IND,",
-				"          s_hash_cd",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -238,11 +227,11 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 4) ~> sinkFile",
-				"select2 sink(allowSchemaDrift: true,",
+				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     deletable:false,",
+				"     deletable:true,",
 				"     insertable:true,",
-				"     updateable:false,",
+				"     updateable:true,",
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
