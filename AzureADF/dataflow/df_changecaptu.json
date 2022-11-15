@@ -47,13 +47,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "sinkFile"
-				},
-				{
-					"dataset": {
-						"referenceName": "ds_sinkTable",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -65,9 +58,6 @@
 				},
 				{
 					"name": "FullJoin"
-				},
-				{
-					"name": "changeCode"
 				},
 				{
 					"name": "InsertRow"
@@ -98,9 +88,6 @@
 				},
 				{
 					"name": "RowStatus"
-				},
-				{
-					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -130,7 +117,6 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> FullJoin",
-				"renameColumns derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd),1,case(notEquals(s_hash_cd, ex_hash_cd),3,0)))) ~> changeCode",
 				"split1@Insert alterRow(insertIf(true())) ~> InsertRow",
 				"InsertRow select(mapColumn(",
 				"          COST_ELEM_CD = s_COST_ELEM_CD,",
@@ -140,7 +126,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectIns",
-				"changeCode split(change_code==1,",
+				"renameColumns split(change_code==1,",
 				"     change_code==3,",
 				"     change_code==2,",
 				"     disjoint: false) ~> split1@(Insert, Update, Delete)",
@@ -183,10 +169,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectFile",
-				"changeCode derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
-				"changeCode alterRow(insertIf(change_code==1),",
-				"     deleteIf(change_code==2),",
-				"     updateIf(change_code==3)) ~> alterRow1",
+				"renameColumns derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -226,18 +209,7 @@
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 4) ~> sinkFile",
-				"alterRow1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     deletable:true,",
-				"     insertable:true,",
-				"     updateable:true,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 5,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     saveOrder: 4) ~> sinkFile"
 			]
 		}
 	}
