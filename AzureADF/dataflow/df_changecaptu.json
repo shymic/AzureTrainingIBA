@@ -46,6 +46,13 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
+					"name": "sinkFile"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
@@ -84,13 +91,19 @@
 					"name": "selectDel"
 				},
 				{
-					"name": "select1"
+					"name": "renameColumns"
+				},
+				{
+					"name": "selectFile"
+				},
+				{
+					"name": "RowStatus"
+				},
+				{
+					"name": "alterRow1"
 				},
 				{
 					"name": "select2"
-				},
-				{
-					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -120,7 +133,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> FullJoin",
-				"select1 derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd),1,case(notEquals(s_hash_cd, ex_hash_cd),3,0)))) ~> changeCode",
+				"renameColumns derive(change_code = case(isNull(s_hash_cd),2,case(isNull(ex_hash_cd),1,case(notEquals(s_hash_cd, ex_hash_cd),3,0)))) ~> changeCode",
 				"split1@Insert alterRow(insertIf(true())) ~> InsertRow",
 				"InsertRow select(mapColumn(",
 				"          COST_ELEM_CD = s_COST_ELEM_CD,",
@@ -163,8 +176,8 @@
 				"          ex_hash_cd",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"derivedColumn2 select(mapColumn(",
+				"     skipDuplicateMapOutputs: true) ~> renameColumns",
+				"RowStatus select(mapColumn(",
 				"          s_COST_ELEM_CD,",
 				"          s_VAL_CAT_CD,",
 				"          s_REV_IND,",
@@ -172,8 +185,19 @@
 				"          ROW_STATUS_CD",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFile",
+				"changeCode derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
+				"changeCode alterRow(insertIf(change_code==1),",
+				"     deleteIf(change_code==2),",
+				"     updateIf(change_code==3)) ~> alterRow1",
+				"alterRow1 select(mapColumn(",
+				"          s_COST_ELEM_CD,",
+				"          s_VAL_CAT_CD,",
+				"          s_REV_IND,",
+				"          s_hash_cd",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"changeCode derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> derivedColumn2",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -209,10 +233,22 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel",
-				"select2 sink(allowSchemaDrift: true,",
+				"selectFile sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 4) ~> sinkFile",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 5,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
