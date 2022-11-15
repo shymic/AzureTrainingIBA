@@ -9,7 +9,7 @@
 						"referenceName": "ds_sourceCSV",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "sourceCSV"
 				},
 				{
 					"dataset": {
@@ -101,7 +101,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false) ~> sourceCSV",
 				"source(output(",
 				"          COST_ELEM_CD as string,",
 				"          VAL_CAT_CD as string,",
@@ -113,9 +113,9 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     query: 'SELECT * FROM COST_ELEMENT_1',",
 				"     format: 'query') ~> existingTable",
-				"source1 derive(s_hash_cd = md5(columns())) ~> addHashSource",
+				"sourceCSV derive(s_hash_cd = md5(columns())) ~> addHashSource",
 				"existingTable derive(ex_hash_cd = HASH_CD) ~> addHashExist",
-				"addHashSource, addHashExist join(source1@COST_ELEM_CD == existingTable@COST_ELEM_CD,",
+				"addHashSource, addHashExist join(sourceCSV@COST_ELEM_CD == existingTable@COST_ELEM_CD,",
 				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -153,9 +153,9 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectDel",
 				"FullJoin select(mapColumn(",
-				"          s_COST_ELEM_CD = source1@COST_ELEM_CD,",
-				"          s_VAL_CAT_CD = source1@VAL_CAT_CD,",
-				"          s_REV_IND = source1@REV_IND,",
+				"          s_COST_ELEM_CD = sourceCSV@COST_ELEM_CD,",
+				"          s_VAL_CAT_CD = sourceCSV@VAL_CAT_CD,",
+				"          s_REV_IND = sourceCSV@REV_IND,",
 				"          s_hash_cd,",
 				"          ex_COST_ELEM_CD = existingTable@COST_ELEM_CD,",
 				"          ex_VAL_CAT_CD = existingTable@VAL_CAT_CD,",
