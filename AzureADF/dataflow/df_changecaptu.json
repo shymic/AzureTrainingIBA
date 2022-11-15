@@ -183,7 +183,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 3,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkIns",
 				"selectUpd sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -195,7 +195,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 2,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sinkUpd",
 				"selectDel sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -213,7 +213,7 @@
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 4) ~> sinkFile"
+				"     saveOrder: 2) ~> sinkFile"
 			]
 		}
 	}
