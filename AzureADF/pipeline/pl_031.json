@@ -1,0 +1,265 @@
+{
+	"name": "pl_031",
+	"properties": {
+		"activities": [
+			{
+				"name": "V0S68P1",
+				"description": "POC_INDICATOR_SOURCE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\ncast(AL1.MAIN_CONTR_NBR as char(24)) as WBS_ID,\nAL1.CTY as CNTRY,\ncast(1 as decimal(2,1)) as WBS_LVL_NUM,\ncast(AL1.AP51_IND as char(1)) as AP51_IND,\ncast('' as char(1))  as POC_IND,\ncast(AL1.RISC_IND as char(1)) as RISC_IND,\ncast(AL1.CLOSED_IND as char(1)) as CLOSED_IND,\ncast('' as char(3))  as UOA\nFROM MIRCC.CFLVCLT AL1\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V0S68P1.csv",
+							"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP"
+						}
+					}
+				]
+			},
+			{
+				"name": "V0S67P1",
+				"description": "Copy_of_POC_INDICATOR_SOURCE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V0S68P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\ncast(AL1.PROJECT_NBR as char(24)) as WBS_ID,\nAL1.CONTRACT_NBR,\nAL1.TOA,\nAL1.CTY as CNTRY,\ncast(2 as decimal(2,1)) as WBS_LVL_NUM,\ncast('' as char(1)) as AP51_IND,\ncast(AL1.POC_IND as char(1)) as POC_IND,\ncast('' as char(1)) as RISC_IND,\ncast('' as char(1))  as CLOSED_IND\nFROM MIRCC.CFLVITM AL1\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V0S67P1.csv",
+							"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP"
+						}
+					}
+				]
+			},
+			{
+				"name": "V0S67P6",
+				"description": "Copy_2_of_POC_INDICATOR_SOURCE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V0S67P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\ncast(AL1.PROJECT_NBR as char(24)) as WBS_ID,\nAL1.CONTRACT_NBR,\nAL1.TOA,\nAL1.CTY as CNTRY,\ncast(2 as decimal(2,1)) as WBS_LVL_NUM,\ncast('' as char(1)) as AP51_IND,\ncast(AL1.POC_IND as char(1)) as POC_IND,\ncast('' as char(1)) as RISC_IND,\ncast('' as char(1))  as CLOSED_IND,\ncast(AL1.UOA as char(3))  as UOA\nFROM  MIRCC.CFLVUOA  AL1\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V0S67P6.csv",
+							"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP"
+						}
+					}
+				]
+			},
+			{
+				"name": "Transformation",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V0S67P6",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_031",
+						"type": "DataFlowReference",
+						"parameters": {
+							"p_IPPF_RULES_SCHEME": {
+								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"V0S68P1": {
+								"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP",
+								"p_fileName": "V0S68P1.csv"
+							},
+							"V0S67P1": {
+								"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP",
+								"p_fileName": "V0S67P1.csv"
+							},
+							"V0S67P6": {
+								"p_folder": "LIPPFD0031_POC_INDICATOR_LOAD_INTGRT_AP",
+								"p_fileName": "V0S67P6.csv"
+							},
+							"V79S2": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
+									"type": "Expression"
+								},
+								"p_table": "POC_INDICATOR_LOAD"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None"
+				}
+			}
+		],
+		"parameters": {
+			"p_IPPF_RULES_SCHEME": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
