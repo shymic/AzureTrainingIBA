@@ -1,0 +1,316 @@
+{
+	"name": "df_041",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S0P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S3P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S13P3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S8P3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S13P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S8P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S8P2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V162S7",
+					"description": "Copy_of_WBS_RESOURCE_DATA_LOAD"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V162S13P2Join",
+					"description": "Join_136"
+				},
+				{
+					"name": "V162S13P2",
+					"description": "Join_136"
+				},
+				{
+					"name": "V162S0P1Derive",
+					"description": "Copy_3_of_Transformer_78"
+				},
+				{
+					"name": "V162S0P1",
+					"description": "Copy_3_of_Transformer_78"
+				},
+				{
+					"name": "V162S2P1Join",
+					"description": "Join_119"
+				},
+				{
+					"name": "V162S2P1",
+					"description": "Join_119"
+				},
+				{
+					"name": "V162S7P1",
+					"description": "Copy_of_Transformer"
+				},
+				{
+					"name": "V162S3P1",
+					"description": "Funnel_46"
+				},
+				{
+					"name": "V162S6P1",
+					"description": "UNION_RATES"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S0P2",
+				"source(output(",
+				"          WBS_ID as string,",
+				"          SAP_CMPNY_CD1 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S3P2",
+				"source(output(",
+				"          CNUM_ID as string,",
+				"          WBS_ID as string,",
+				"          EMPLOYEECOUNTRY as string,",
+				"          SERIALNUMBER as string,",
+				"          RESOURCE_TYPE as string,",
+				"          BAND as string,",
+				"          WEEKENDINGDATE as date,",
+				"          CURRENCY_CD as string,",
+				"          BILL_RATE as decimal(20,2),",
+				"          COST_RATE as decimal(20,2),",
+				"          EMF_RATE as decimal(20,2),",
+				"          GDC_FLG as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S13P3",
+				"source(output(",
+				"          CNUM_ID as string,",
+				"          WBS_ID as string,",
+				"          EMPLOYEECOUNTRY as string,",
+				"          SERIALNUMBER as string,",
+				"          RESOURCE_TYPE as string,",
+				"          BAND as string,",
+				"          WEEKENDINGDATE as date,",
+				"          CURRENCY_CD as string,",
+				"          BILL_RATE as decimal(20,2),",
+				"          COST_RATE as decimal(20,2),",
+				"          EMF_RATE as decimal(20,2),",
+				"          GDC_FLG as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S8P3",
+				"source(output(",
+				"          CNUM_ID as string,",
+				"          WBS_ID as string,",
+				"          EMPLOYEECOUNTRY as string,",
+				"          SERIALNUMBER as string,",
+				"          RESOURCE_TYPE as string,",
+				"          BAND as string,",
+				"          WEEKENDINGDATE as date,",
+				"          CURRENCY_CD as string,",
+				"          BILL_RATE as decimal(20,2),",
+				"          COST_RATE as decimal(20,2),",
+				"          EMF_RATE as decimal(20,2),",
+				"          GDC_FLG as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S13P1",
+				"source(output(",
+				"          CNUM_ID as string,",
+				"          WBS_ID as string,",
+				"          EMPLOYEECOUNTRY as string,",
+				"          SERIALNUMBER as string,",
+				"          RESOURCE_TYPE as string,",
+				"          BAND as string,",
+				"          WEEKENDINGDATE as date,",
+				"          CURRENCY_CD as string,",
+				"          BILL_RATE as decimal(20,2),",
+				"          COST_RATE as decimal(20,2),",
+				"          EMF_RATE as decimal(20,2),",
+				"          GDC_FLG as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S8P1",
+				"source(output(",
+				"          CNUM_ID as string,",
+				"          WBS_ID as string,",
+				"          EMPLOYEECOUNTRY as string,",
+				"          SERIALNUMBER as string,",
+				"          RESOURCE_TYPE as string,",
+				"          BAND as string,",
+				"          WEEKENDINGDATE as date,",
+				"          CURRENCY_CD as string,",
+				"          BILL_RATE as decimal(20,2),",
+				"          COST_RATE as decimal(20,2),",
+				"          EMF_RATE as decimal(20,2),",
+				"          GDC_FLG as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S8P2",
+				"V162S0P2, V162S0P1 join(V162S0P2@CNTRY == V162S0P1@CNTRY,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V162S13P2Join",
+				"V162S13P2Join select(mapColumn(",
+				"          CNUM_ID,",
+				"          WBS_ID,",
+				"          EMPLOYEECOUNTRY,",
+				"          SERIALNUMBER,",
+				"          RESOURCE_TYPE,",
+				"          BAND,",
+				"          WEEKENDINGDATE,",
+				"          CURRENCY_CD,",
+				"          BILL_RATE,",
+				"          COST_RATE,",
+				"          EMF_RATE,",
+				"          GDC_FLG,",
+				"          CNTRY = V162S0P1@CNTRY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S13P2",
+				"V162S2P1 derive(CNTRY = case(!isNull(SAP_CMPNY_CD1) ,SAP_CMPNY_CD1,CNTRY)) ~> V162S0P1Derive",
+				"V162S0P1Derive select(mapColumn(",
+				"          CNUM_ID,",
+				"          WBS_ID,",
+				"          EMPLOYEECOUNTRY,",
+				"          SERIALNUMBER,",
+				"          RESOURCE_TYPE,",
+				"          BAND,",
+				"          WEEKENDINGDATE,",
+				"          CURRENCY_CD,",
+				"          BILL_RATE,",
+				"          COST_RATE,",
+				"          EMF_RATE,",
+				"          GDC_FLG,",
+				"          CNTRY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S0P1",
+				"V162S3P2, V162S3P1 join(V162S3P2@WBS_ID == V162S3P1@WBS_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V162S2P1Join",
+				"V162S2P1Join select(mapColumn(",
+				"          CNUM_ID,",
+				"          WBS_ID = V162S3P1@WBS_ID,",
+				"          EMPLOYEECOUNTRY,",
+				"          SERIALNUMBER,",
+				"          RESOURCE_TYPE,",
+				"          BAND,",
+				"          WEEKENDINGDATE,",
+				"          CURRENCY_CD,",
+				"          BILL_RATE,",
+				"          COST_RATE,",
+				"          EMF_RATE,",
+				"          GDC_FLG,",
+				"          CNTRY,",
+				"          SAP_CMPNY_CD1",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S2P1",
+				"V162S6P1 select(mapColumn(",
+				"          CNUM_ID = CNUM,",
+				"          WBS_ID,",
+				"          EMPLOYEECOUNTRY,",
+				"          SERIALNUMBER,",
+				"          RESOURCE_TYPE,",
+				"          BAND,",
+				"          WEEKENDINGDATE,",
+				"          CURRENCY_CD,",
+				"          BILL_RATE,",
+				"          COST_RATE,",
+				"          EMF_RATE,",
+				"          GDC_FLG,",
+				"          CNTRY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S7P1",
+				"V162S8P3, V162S8P2, V162S8P1 union(byName: true)~> V162S3P1",
+				"V162S13P2, V162S13P3, V162S13P1 union(byName: true)~> V162S6P1",
+				"V162S7P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[(\"DELETE FROM \" + $p_IPPF_RULES_SCHEME + \".WBS_RESOURCE_DATA_LOAD\")],",
+				"     postSQLs:['UPDATE STAG.JOB_STATUS SET STAT=\\'Y\\',LST_REFRSH_TMS=CURRENT TIMESTAMP,LST_SUCCS_TMS=CURRENT TIMESTAMP WHERE JOB_NAME=\\'WBS_RESOURCE_DATA_LOAD\\''],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V162S7"
+			]
+		}
+	}
+}
