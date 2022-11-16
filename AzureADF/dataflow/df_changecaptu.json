@@ -40,13 +40,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "sinkDel"
-				},
-				{
-					"dataset": {
-						"referenceName": "ds_sourceCSV",
-						"type": "DatasetReference"
-					},
-					"name": "sinkFile"
 				}
 			],
 			"transformations": [
@@ -79,12 +72,6 @@
 				},
 				{
 					"name": "selectDel"
-				},
-				{
-					"name": "selectFile"
-				},
-				{
-					"name": "RowStatus"
 				}
 			],
 			"scriptLines": [
@@ -145,16 +132,6 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectDel",
-				"RowStatus select(mapColumn(",
-				"          COST_ELEM_CD = sourceCSV@COST_ELEM_CD,",
-				"          VAL_CAT_CD = sourceCSV@VAL_CAT_CD,",
-				"          REV_IND = sourceCSV@REV_IND,",
-				"          HASH_CD = addHashSource@HASH_CD,",
-				"          ROW_STATUS_CD",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectFile",
-				"changeCode derive(ROW_STATUS_CD = case(change_code==1,'I',case(change_code==2,'D','U'))) ~> RowStatus",
 				"selectIns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -189,12 +166,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel",
-				"selectFile sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 2) ~> sinkFile"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDel"
 			]
 		}
 	}
