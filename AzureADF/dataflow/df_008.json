@@ -1,0 +1,195 @@
+{
+	"name": "df_008",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S0P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S4P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S0P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S9P2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V162S9P5"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V162S6",
+					"description": "Copy_of_DB2_Connector_83"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V162S2P1Join",
+					"description": "Join_119"
+				},
+				{
+					"name": "V162S2P1",
+					"description": "Join_119"
+				},
+				{
+					"name": "V162S4P1Derive",
+					"description": "Copy_2_of_ITEM_MAP"
+				},
+				{
+					"name": "V162S4P1",
+					"description": "Copy_2_of_ITEM_MAP"
+				},
+				{
+					"name": "V162S9P3Join",
+					"description": "Join_111"
+				},
+				{
+					"name": "V162S9P3",
+					"description": "Join_111"
+				},
+				{
+					"name": "V162S6P1",
+					"description": "Copy_of_CONTRACT_ITEM_MAP"
+				},
+				{
+					"name": "V162S7P1",
+					"description": "Copy_of_Funnel_87"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          SAP_CMPNY_CD1 as string,",
+				"          SYS_CNTRCT_NUM as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S0P2",
+				"source(output(",
+				"          BH_SAP_CMPNY_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S4P2",
+				"source(output(",
+				"          SYS_CNTRCT_NUM as string,",
+				"          BH_SAP_CMPNY_CD as string,",
+				"          CNTRCT_LINE_ITM_NUM as integer,",
+				"          SYS_STAT_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S0P1",
+				"source(output(",
+				"          SYS_CNTRCT_NUM as string,",
+				"          BH_SAP_CMPNY_CD as string,",
+				"          CNTRCT_LINE_ITM_NUM as integer,",
+				"          SYS_STAT_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S9P2",
+				"source(output(",
+				"          SYS_CNTRCT_NUM as string,",
+				"          BH_SAP_CMPNY_CD as string,",
+				"          CNTRCT_LINE_ITM_NUM as integer,",
+				"          SYS_STAT_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V162S9P5",
+				"V162S0P2, V162S0P1 join(V162S0P2@SYS_CNTRCT_NUM == V162S0P1@SYS_CNTRCT_NUM,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V162S2P1Join",
+				"V162S2P1Join select(mapColumn(",
+				"          SYS_CNTRCT_NUM = V162S0P1@SYS_CNTRCT_NUM,",
+				"          BH_SAP_CMPNY_CD,",
+				"          CNTRCT_LINE_ITM_NUM,",
+				"          SYS_STAT_CD,",
+				"          SAP_CMPNY_CD1",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S2P1",
+				"V162S2P1 derive(BH_SAP_CMPNY_CD = case(!isNull(SAP_CMPNY_CD1) ,SAP_CMPNY_CD1,BH_SAP_CMPNY_CD)) ~> V162S4P1Derive",
+				"V162S4P1Derive select(mapColumn(",
+				"          SYS_CNTRCT_NUM,",
+				"          CNTRCT_LINE_ITM_NUM,",
+				"          SYS_STAT_CD,",
+				"          BH_SAP_CMPNY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S4P1",
+				"V162S4P2, V162S4P1 join(V162S4P2@BH_SAP_CMPNY_CD == V162S4P1@BH_SAP_CMPNY_CD,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V162S9P3Join",
+				"V162S9P3Join select(mapColumn(",
+				"          SYS_CNTRCT_NUM,",
+				"          CNTRCT_LINE_ITM_NUM,",
+				"          SYS_STAT_CD,",
+				"          BH_SAP_CMPNY_CD = V162S4P1@BH_SAP_CMPNY_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S9P3",
+				"V162S7P1 select(mapColumn(",
+				"          SYS_CNTRCT_NUM,",
+				"          BH_SAP_CMPNY_CD,",
+				"          CNTRCT_LINE_ITM_NUM,",
+				"          SYS_STAT_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S6P1",
+				"V162S9P5, V162S9P3, V162S9P2 union(byName: true)~> V162S7P1",
+				"V162S6P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[(\"DELETE FROM \" + $p_IPPF_RULES_SCHEME + \".CONTRACT_ITEM_SYSTEM_STATUS_LOAD\")],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V162S6"
+			]
+		}
+	}
+}
