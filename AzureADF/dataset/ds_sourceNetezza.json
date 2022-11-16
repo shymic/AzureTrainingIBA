@@ -9,7 +9,7 @@
 			"name": "obachilo"
 		},
 		"annotations": [],
-		"type": "Db2Table",
+		"type": "NetezzaTable",
 		"schema": []
 	}
 }
