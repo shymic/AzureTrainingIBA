@@ -82,6 +82,29 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_006",
+						"type": "DataFlowReference",
+						"parameters": {
+							"p_IPPF_RULES_SCHEME": {
+								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"V69S2P1": {
+								"p_folder": "LIPPFD0006_CURRENCY_EXCHANGE_LOAD_INTGRT",
+								"p_fileName": "V69S2P1.csv"
+							},
+							"V69S0": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
+									"type": "Expression"
+								},
+								"p_table": "CURRENCY_EXCHANGE_LOAD"
+							}
+						}
+					},
 					"integrationRuntime": {
 						"referenceName": "ir-azure-DataFlow",
 						"type": "IntegrationRuntimeReference"

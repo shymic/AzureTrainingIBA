@@ -1,0 +1,71 @@
+{
+	"name": "df_006",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V69S2P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V69S0",
+					"description": "DB2_Connector_21"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V69S0P1",
+					"description": "XFR_CURR_EXCH_LOAD"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          BAS_CRNCY_CD as string,",
+				"          TO_CRNCY_CD as string,",
+				"          CROSS_EXCH_RT as decimal(15,7),",
+				"          INVRT_EXCH_RT as decimal(15,7),",
+				"          INVRT_IND as string,",
+				"          PRCOESS_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V69S2P1",
+				"V69S2P1 select(mapColumn(",
+				"          BAS_CRNCY_CD,",
+				"          TO_CRNCY_CD,",
+				"          CROSS_EXCH_RT,",
+				"          INVRT_EXCH_RT,",
+				"          INVRT_IND,",
+				"          PRCOESS_DT",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V69S0P1",
+				"V69S0P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[(\"DELETE  FROM  \" + $p_IPPF_RULES_SCHEME + \".CURRENCY_EXCHANGE_LOAD\")],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V69S0"
+			]
+		}
+	}
+}
