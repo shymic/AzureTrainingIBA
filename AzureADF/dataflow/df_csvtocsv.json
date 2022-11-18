@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Output",
+						"referenceName": "ds_sinkCSV",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -155,7 +155,6 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"surrogateKey1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
