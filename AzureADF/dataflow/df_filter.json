@@ -48,7 +48,7 @@
 			"scriptLines": [
 				"source(output(",
 				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
+				"          cost_elem_cd as string,",
 				"          WBS_ELEM_OC_AMT as integer,",
 				"          WBS_ELEM_CC_AMT as integer,",
 				"          OBJ_CRNCY_CD as string,",
@@ -72,7 +72,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     query: 'SELECT * FROM COST_ELEMENT',",
 				"     format: 'query') ~> refTable",
-				"sourceTable, refTable join(trim(sourceTable@COST_ELEM_CD) == trim(refTable@COST_ELEM_CD),",
+				"sourceTable, refTable join(sourceTable@cost_elem_cd == refTable@COST_ELEM_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
