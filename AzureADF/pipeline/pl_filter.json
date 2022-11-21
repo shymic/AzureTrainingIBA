@@ -19,6 +19,10 @@
 						"referenceName": "df_filter",
 						"type": "DataFlowReference",
 						"datasetParameters": {
+							"sourceTable": {
+								"p_fileName": "wbs_element_cost_1.csv",
+								"p_folder": "sources"
+							},
 							"SinkTable": {
 								"p_schema": "dbo",
 								"p_table": "FORECAST_LOAD"
