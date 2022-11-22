@@ -43,9 +43,6 @@
 				},
 				{
 					"name": "union1"
-				},
-				{
-					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -86,7 +83,7 @@
 				"          COST_ELEM_CD,",
 				"          VAL_CAT_CD),",
 				"     each(match(name!='WBS_ID'&&name!='VAL_CAT_CD'&&name!='COST_ELEM_CD'), $$ = first($$))) ~> RemoveDuplicates",
-				"derivedColumn1 select(mapColumn(",
+				"Join1 select(mapColumn(",
 				"          WBS_ID,",
 				"          COST_ELEM_CD = sourceTable@cost_elem_cd,",
 				"          VAL_CAT_CD,",
@@ -102,7 +99,6 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Transformer",
 				"Filter@FilterOuput, RemoveDuplicates union(byName: true)~> union1",
-				"Join1 derive(OBJ_CRNCY_CD = case(isNull(OBJ_CRNCY_CD),toString(null()),OBJ_CRNCY_CD)) ~> derivedColumn1",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
