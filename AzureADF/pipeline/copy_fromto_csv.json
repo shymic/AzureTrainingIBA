@@ -16,11 +16,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "Db2Source",
-						"query": {
-							"value": "select * from CNMN.ACCOUNT_@{pipeline().parameters.p_postfix}",
-							"type": "Expression"
-						}
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM WBS_COST_ELEMENT",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -47,23 +46,22 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_sourceDB2",
+						"referenceName": "ds_refTable",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_fc_current",
-						"type": "DatasetReference"
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "wbs_test.csv",
+							"p_folder": "sources"
+						}
 					}
 				]
 			}
 		],
-		"parameters": {
-			"p_postfix": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "obachilo"
 		},
