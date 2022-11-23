@@ -1,0 +1,101 @@
+{
+	"name": "df_032",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V128S7P4"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V128S7P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V128S5",
+					"description": "CUNCURENCY_INFO_PREP"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V128S8P1",
+					"description": "Lookup_87"
+				},
+				{
+					"name": "V128S5P1Derive",
+					"description": "concurrency_input"
+				},
+				{
+					"name": "V128S5P1",
+					"description": "concurrency_input"
+				},
+				{
+					"name": "V128S5AlterRow"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          VAL as string,",
+				"          OBJ as string,",
+				"          SRC as string,",
+				"          CNTRCT_SYS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V128S7P4",
+				"source(output(",
+				"          OBJ as string,",
+				"          VAL1 as string,",
+				"          SRC as string,",
+				"          CNTRCT_SYS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V128S7P1",
+				"V128S7P1, V128S7P4 lookup(V128S7P1@SRC == V128S7P4@SRC",
+				"     && V128S7P1@OBJ == V128S7P4@OBJ",
+				"     && V128S7P1@CNTRCT_SYS == V128S7P4@CNTRCT_SYS,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> V128S8P1",
+				"V128S8P1 derive(VAL = case(isNull(VAL) ,VAL1,VAL)) ~> V128S5P1Derive",
+				"V128S5P1Derive select(mapColumn(",
+				"          OBJ = V128S7P1@OBJ,",
+				"          VAL,",
+				"          SRC = V128S7P4@SRC,",
+				"          CNTRCT_SYS = V128S7P1@CNTRCT_SYS",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V128S5P1",
+				"V128S5P1 alterRow(updateIf(true())) ~> V128S5AlterRow",
+				"V128S5AlterRow sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['SRC','OBJ','CNTRCT_SYS'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V128S5"
+			]
+		}
+	}
+}
