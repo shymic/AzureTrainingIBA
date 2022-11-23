@@ -77,7 +77,7 @@
 				"V128S5P1Derive select(mapColumn(",
 				"          OBJ = V128S7P1@OBJ,",
 				"          VAL,",
-				"          SRC = V128S7P4@SRC,",
+				"          SRC = V128S7P1@SRC,",
 				"          CNTRCT_SYS = V128S7P1@CNTRCT_SYS",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
