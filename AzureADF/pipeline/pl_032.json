@@ -1,0 +1,191 @@
+{
+	"name": "pl_032",
+	"properties": {
+		"activities": [
+			{
+				"name": "V128S7P4",
+				"description": "IPPF",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT \n\nCAST(CURRENT TIMESTAMP @{pipeline().parameters.p_IPPF_RULES_LCL_TM_TO_GMT} AS CHAR(16)) || ' GMT' AS VAL, \n'ACCOUNT CONFIGURATION' AS OBJ,\n'ACTS' AS SRC,\n'ALL' AS CNTRCT_SYS\nFROM SYSIBM.SYSDUMMY1\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V128S7P4.csv",
+							"p_folder": "LIPPFD0032_CONCURRENCY_ACCT_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V128S7P1",
+				"description": "CUNCURENCY_INFO",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V128S7P4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT \nOBJ,\nSRC,\nVAL AS VAL1,\nCNTRCT_SYS\nFROM @{pipeline().parameters.p_IPPF_RULES_SCHEME}.CUNCURENCY_INFO\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceDB2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V128S7P1.csv",
+							"p_folder": "LIPPFD0032_CONCURRENCY_ACCT_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "Transformation",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V128S7P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_032",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"V128S7P4": {
+								"p_folder": "LIPPFD0032_CONCURRENCY_ACCT_LOAD_INTGRT",
+								"p_fileName": "V128S7P4.csv"
+							},
+							"V128S7P1": {
+								"p_folder": "LIPPFD0032_CONCURRENCY_ACCT_LOAD_INTGRT",
+								"p_fileName": "V128S7P1.csv"
+							},
+							"V128S5": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
+									"type": "Expression"
+								},
+								"p_table": "CUNCURENCY_INFO_PREP"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None"
+				}
+			}
+		],
+		"parameters": {
+			"p_IPPF_RULES_LCL_TM_TO_GMT": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_SCHEME": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
