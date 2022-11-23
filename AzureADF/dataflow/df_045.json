@@ -1,0 +1,121 @@
+{
+	"name": "df_045",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V0S15P1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "V0S15P4"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkTable",
+						"type": "DatasetReference"
+					},
+					"name": "V69S0",
+					"description": "STAG_EXCHANGE_RATE_HIC_LOAD"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V0S17P1Derive",
+					"description": "input"
+				},
+				{
+					"name": "V0S17P1",
+					"description": "input"
+				},
+				{
+					"name": "V69S2P3Join",
+					"description": "Join_15"
+				},
+				{
+					"name": "V69S2P3",
+					"description": "DSLink16"
+				},
+				{
+					"name": "V0S18P1",
+					"description": "Sort_17"
+				},
+				{
+					"name": "V69S0P2",
+					"description": "Remove_Duplicates_18"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     p_IPPF_RULES_SCHEME as string",
+				"}",
+				"source(output(",
+				"          CRNCY_CD as string,",
+				"          LCL_TO_US as decimal(15,10),",
+				"          US_TO_LCL as decimal(15,10)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V0S15P1",
+				"source(output(",
+				"          CRNCY_CD as string,",
+				"          CRNCY_CD_OLD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V0S15P4",
+				"V69S2P3 derive(CRNCY_CD = case(notEquals(trim(CRNCY_CD_OLD) ,''),CRNCY_CD_OLD,CRNCY_CD),",
+				"          ORDER = case(trim(CRNCY_CD_OLD)  == '',1,2)) ~> V0S17P1Derive",
+				"V0S17P1Derive select(mapColumn(",
+				"          CRNCY_CD,",
+				"          LCL_TO_US,",
+				"          US_TO_LCL,",
+				"          ORDER",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V0S17P1",
+				"V0S15P1, V0S15P4 join(V0S15P1@CRNCY_CD == V0S15P4@CRNCY_CD,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V69S2P3Join",
+				"V69S2P3Join select(mapColumn(",
+				"          CRNCY_CD = V0S15P1@CRNCY_CD,",
+				"          LCL_TO_US,",
+				"          US_TO_LCL,",
+				"          CRNCY_CD_OLD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V69S2P3",
+				"V0S17P1 sort(asc(CRNCY_CD, true),",
+				"     asc(ORDER, true)) ~> V0S18P1",
+				"V0S18P1 aggregate(groupBy(CRNCY_CD),",
+				"     each(match(name!='CRNCY_CD'), $$ = first($$))) ~> V69S0P2",
+				"V69S0P2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:[(\"DELETE FROM \" + $p_IPPF_RULES_SCHEME + \".EXCHANGE_RATE_HIC_LOAD\")],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V69S0"
+			]
+		}
+	}
+}
