@@ -31,8 +31,12 @@
 			],
 			"transformations": [
 				{
-					"name": "V128S8P1",
+					"name": "V128S8P1Lookup",
 					"description": "Lookup_87"
+				},
+				{
+					"name": "V128S8P1",
+					"description": "DSLink98"
 				},
 				{
 					"name": "V128S5P1Derive",
@@ -72,13 +76,22 @@
 				"     && V128S7P1@CNTRCT_SYS == V128S7P4@CNTRCT_SYS,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> V128S8P1",
+				"     broadcast: 'auto')~> V128S8P1Lookup",
+				"V128S8P1Lookup select(mapColumn(",
+				"          OBJ = V128S7P4@OBJ,",
+				"          VAL1,",
+				"          VAL,",
+				"          SRC = V128S7P4@SRC,",
+				"          CNTRCT_SYS = V128S7P4@CNTRCT_SYS",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V128S8P1",
 				"V128S8P1 derive(VAL = case(isNull(VAL) ,VAL1,VAL)) ~> V128S5P1Derive",
 				"V128S5P1Derive select(mapColumn(",
-				"          OBJ = V128S7P1@OBJ,",
+				"          OBJ,",
 				"          VAL,",
-				"          SRC = V128S7P1@SRC,",
-				"          CNTRCT_SYS = V128S7P1@CNTRCT_SYS",
+				"          SRC,",
+				"          CNTRCT_SYS",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V128S5P1",
