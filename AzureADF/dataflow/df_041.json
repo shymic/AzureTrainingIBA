@@ -71,15 +71,15 @@
 				},
 				{
 					"name": "V162S13P2",
-					"description": "Join_136"
+					"description": "DSLink47"
 				},
 				{
 					"name": "V162S0P1Derive",
-					"description": "Copy_3_of_Transformer_78"
+					"description": "DSLink80"
 				},
 				{
 					"name": "V162S0P1",
-					"description": "Copy_3_of_Transformer_78"
+					"description": "DSLink80"
 				},
 				{
 					"name": "V162S2P1Join",
@@ -87,19 +87,23 @@
 				},
 				{
 					"name": "V162S2P1",
-					"description": "Join_119"
+					"description": "output6"
 				},
 				{
 					"name": "V162S7P1",
-					"description": "Copy_of_Transformer"
+					"description": "insert"
 				},
 				{
 					"name": "V162S3P1",
 					"description": "Funnel_46"
 				},
 				{
-					"name": "V162S6P1",
+					"name": "V162S6P1Funnel",
 					"description": "UNION_RATES"
+				},
+				{
+					"name": "V162S6P1",
+					"description": "DSLink4"
 				}
 			],
 			"scriptLines": [
@@ -216,7 +220,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V162S8P2",
-				"V162S0P2, V162S0P1 join(V162S0P2@CNTRY == V162S0P1@CNTRY,",
+				"V162S0P1, V162S0P2 join(V162S0P1@CNTRY == V162S0P2@CNTRY,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -256,7 +260,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V162S0P1",
-				"V162S3P2, V162S3P1 join(V162S3P2@WBS_ID == V162S3P1@WBS_ID,",
+				"V162S3P1, V162S3P2 join(V162S3P1@WBS_ID == V162S3P2@WBS_ID,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -296,8 +300,25 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V162S7P1",
-				"V162S8P3, V162S8P2, V162S8P1 union(byName: true)~> V162S3P1",
-				"V162S13P2, V162S13P3, V162S13P1 union(byName: true)~> V162S6P1",
+				"V162S8P1, V162S8P2, V162S8P3 union(byName: true)~> V162S3P1",
+				"V162S13P1, V162S13P2, V162S13P3 union(byName: true)~> V162S6P1Funnel",
+				"V162S6P1Funnel select(mapColumn(",
+				"          CNUM = CNUM_ID,",
+				"          WBS_ID,",
+				"          EMPLOYEECOUNTRY,",
+				"          SERIALNUMBER,",
+				"          RESOURCE_TYPE,",
+				"          BAND,",
+				"          WEEKENDINGDATE,",
+				"          CURRENCY_CD,",
+				"          BILL_RATE,",
+				"          COST_RATE,",
+				"          EMF_RATE,",
+				"          GDC_FLG,",
+				"          CNTRY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V162S6P1",
 				"V162S7P1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -309,6 +330,7 @@
 				"     postSQLs:['UPDATE STAG.JOB_STATUS SET STAT=\\'Y\\',LST_REFRSH_TMS=CURRENT TIMESTAMP,LST_SUCCS_TMS=CURRENT TIMESTAMP WHERE JOB_NAME=\\'WBS_RESOURCE_DATA_LOAD\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V162S7"
 			]
 		}
