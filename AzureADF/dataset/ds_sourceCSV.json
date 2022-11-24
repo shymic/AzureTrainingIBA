@@ -27,7 +27,7 @@
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@dataset().p_folder",
+					"value": "/AP/@{dataset().p_folder}",
 					"type": "Expression"
 				},
 				"container": "obachilo"
