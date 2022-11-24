@@ -10,8 +10,7 @@
 				"type": "string"
 			},
 			"p_folder": {
-				"type": "string",
-				"defaultValue": "sources"
+				"type": "string"
 			}
 		},
 		"folder": {
