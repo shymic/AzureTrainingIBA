@@ -331,7 +331,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> V162S7"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     outputRejectedData: true) ~> V162S7"
 			]
 		}
 	}
