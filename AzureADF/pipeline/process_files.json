@@ -24,6 +24,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -87,20 +88,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "CSV_input_files_param",
-									"type": "DatasetReference",
-									"parameters": {
-										"filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "CSV_input_files",
+									"type": "DatasetReference"
 								},
-								"fieldList": [
-									"size"
-								],
+								"fieldList": [],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -140,14 +134,8 @@
 										"userProperties": [],
 										"typeProperties": {
 											"dataset": {
-												"referenceName": "CSV_input_files_param",
-												"type": "DatasetReference",
-												"parameters": {
-													"filename": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												}
+												"referenceName": "CSV_input_files",
+												"type": "DatasetReference"
 											},
 											"logStorageSettings": {
 												"linkedServiceName": {
@@ -207,14 +195,8 @@
 										},
 										"inputs": [
 											{
-												"referenceName": "CSV_input_files_param",
-												"type": "DatasetReference",
-												"parameters": {
-													"filename": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												}
+												"referenceName": "CSV_Films",
+												"type": "DatasetReference"
 											}
 										],
 										"outputs": [
