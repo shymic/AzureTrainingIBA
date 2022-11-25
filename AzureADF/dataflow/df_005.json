@@ -178,7 +178,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V161S10P1",
-				"V161S0P2, V161S0P1 join(V161S0P2@SAP_CMPNY_CD == V161S0P1@SAP_CMPNY_CD,",
+				"V161S0P2, V161S0P1 join(ERROR_FUNCTION('') == V161S0P1@SAP_CMPNY_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
