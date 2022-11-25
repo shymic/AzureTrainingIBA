@@ -6,21 +6,21 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "V161S0P2"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "V161S5P1"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "V161S5P2",
@@ -28,14 +28,14 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "V161S8P1"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "V161S10P1"
@@ -97,10 +97,7 @@
 				"parameters{",
 				"     p_IPPF_RULES_SCHEME as string",
 				"}",
-				"source(output(",
-				"          SAP_CMPNY_CD as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V161S0P2",
@@ -200,7 +197,7 @@
 				"          PROJ_PROF_CD,",
 				"          PROJ_CRNCY_CD,",
 				"          PROJ_TYP_CD,",
-				"          SAP_CMPNY_CD = V161S0P1@SAP_CMPNY_CD,",
+				"          SAP_CMPNY_CD,",
 				"          BH_SAP_CMPNY_CD,",
 				"          PROJ_WBS_ID,",
 				"          APPL_IND",
