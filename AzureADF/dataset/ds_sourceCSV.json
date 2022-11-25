@@ -2,7 +2,7 @@
 	"name": "ds_sourceCSV",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "Local_AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
