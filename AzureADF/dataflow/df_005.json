@@ -23,8 +23,7 @@
 						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
-					"name": "V161S5P2",
-					"description": "V161S5P2.csv"
+					"name": "V161S5P2"
 				},
 				{
 					"dataset": {
@@ -54,50 +53,53 @@
 			"transformations": [
 				{
 					"name": "V161S9P3Join",
-					"description": "join - DS V161S0"
+					"description": "Join_111"
 				},
 				{
 					"name": "V161S9P3",
-					"description": "select  - DS V161S0"
+					"description": "DSLink113"
 				},
 				{
 					"name": "V161S0P1Derive",
-					"description": "derive - DS V161S3"
+					"description": "project_header_input21"
 				},
 				{
 					"name": "V161S0P1",
-					"description": "select  - DS V161S3"
+					"description": "project_header_input21"
 				},
 				{
 					"name": "V161S3P1Join",
-					"description": "join - DS V161S5"
+					"description": "Join_119"
 				},
 				{
 					"name": "V161S3P1",
-					"description": "select  - DS V161S5"
+					"description": "output6"
 				},
 				{
 					"name": "V161S9P2",
-					"description": "select  - DS V161S8"
+					"description": "DSLink109"
 				},
 				{
 					"name": "V161S6P1",
-					"description": "union - DS V161S9"
+					"description": "Copy_of_Funnel_100"
 				},
 				{
 					"name": "V161S9P1Derive",
-					"description": "derive - DS V161S10"
+					"description": "PROJECT_HEADER_input"
 				},
 				{
 					"name": "V161S9P1",
-					"description": "select  - DS V161S10"
+					"description": "PROJECT_HEADER_input"
 				}
 			],
 			"scriptLines": [
 				"parameters{",
 				"     p_IPPF_RULES_SCHEME as string",
 				"}",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          SAP_CMPNY_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V161S0P2",
@@ -178,7 +180,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     maxColumns: 200) ~> V161S10P1",
-				"V161S0P2, V161S0P1 join(ERROR_FUNCTION('') == V161S0P1@SAP_CMPNY_CD,",
+				"V161S0P1, V161S0P2 join(V161S0P1@SAP_CMPNY_CD == V161S0P2@SAP_CMPNY_CD,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -197,7 +199,7 @@
 				"          PROJ_PROF_CD,",
 				"          PROJ_CRNCY_CD,",
 				"          PROJ_TYP_CD,",
-				"          SAP_CMPNY_CD,",
+				"          SAP_CMPNY_CD = V161S0P1@SAP_CMPNY_CD,",
 				"          BH_SAP_CMPNY_CD,",
 				"          PROJ_WBS_ID,",
 				"          APPL_IND",
@@ -275,7 +277,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> V161S9P2",
-				"V161S9P1, V161S9P3, V161S9P2 union(byName: true)~> V161S6P1",
+				"V161S9P1, V161S9P2, V161S9P3 union(byName: true)~> V161S6P1",
 				"V161S10P1 derive(PROJ_CRNCY_CD = left(PROJ_CRNCY_CD, 3)) ~> V161S9P1Derive",
 				"V161S9P1Derive select(mapColumn(",
 				"          PROJ_WBS_NUM,",
@@ -309,6 +311,7 @@
 				"     postSQLs:['DELETE FROM STAG.PROJECT_HEADER_LOAD WHERE CAST(PROJ_WBS_ID AS CHAR(1)) NOT IN (\\'C\\',\\'F\\',\\'J\\') AND APPL_IND=\\'BH\\''],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> V161S6"
 			]
 		}
