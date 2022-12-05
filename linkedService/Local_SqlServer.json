@@ -1,0 +1,17 @@
+{
+	"name": "Local_SqlServer",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=BACHILO-ON;initial catalog=TESTDB",
+			"userName": "IBA\\Bachilo_O",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI4N2M4OThmYy00NmIxLTQ5ODUtOGU5Mi0xOWZkMGQ0NGM1ZDUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-obachilo-sqlserver",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

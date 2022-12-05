@@ -1,0 +1,16 @@
+{
+	"name": "ls_ippfdb2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Db2",
+		"typeProperties": {
+			"connectionString": "server=10.221.31.249;database=IPPFDB;username=a3inlieu;authenticationtype=Basic",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhZGRjYWI1MS00OGIyLTQ5MDEtYjUzMS0zYTY4ZDlhYWQwZWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-obachilo-sqlserver",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

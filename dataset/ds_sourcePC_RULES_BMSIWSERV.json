@@ -1,0 +1,13 @@
+{
+	"name": "ds_sourcePC_RULES_BMSIWSERV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
