@@ -1,5 +1,5 @@
 {
-	"name": "ds_sourceDB2",
+	"name": "ds_sourceIPPF_RULES_BMSIWSERV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_ippfdb2",

@@ -1,12 +1,13 @@
 {
-	"name": "ds_sourceDB2",
+	"name": "ds_sourcePC_RULES_IPPFDBSERV",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_ippfdb2",
+			"referenceName": "ls_AzureDB",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
-		"type": "Db2Table"
+		"type": "AzureSqlTable",
+		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }

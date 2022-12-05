@@ -1,16 +1,5 @@
 {
 	"name": "adf-iba-training",
-	"properties": {
-		"globalParameters": {
-			"global_param": {
-				"type": "string",
-				"value": "TEST"
-			}
-		},
-		"globalConfigurations": {
-			"PipelineBillingEnabled": "false"
-		}
-	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",

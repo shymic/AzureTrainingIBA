@@ -7,14 +7,11 @@
 		},
 		"parameters": {
 			"p_fileName": {
-				"type": "string"
+				"type": "String"
 			},
 			"p_folder": {
-				"type": "string"
+				"type": "String"
 			}
-		},
-		"folder": {
-			"name": "obachilo"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
@@ -29,7 +26,7 @@
 					"value": "@dataset().p_folder",
 					"type": "Expression"
 				},
-				"container": "obachilo"
+				"container": "sources"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
@@ -37,5 +34,6 @@
 			"quoteChar": "\""
 		},
 		"schema": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
