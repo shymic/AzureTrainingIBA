@@ -5,17 +5,9 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "CSV_fc",
-						"type": "DatasetReference"
-					},
 					"name": "New"
 				},
 				{
-					"dataset": {
-						"referenceName": "CSV_fc_current",
-						"type": "DatasetReference"
-					},
 					"name": "Existing"
 				}
 			],
@@ -159,9 +151,7 @@
 				"          {IPPF T&M indicator} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> New",
+				"     validateSchema: false) ~> New",
 				"source(output(",
 				"          {WBS ID} as string,",
 				"          {Entity type} as string,",
@@ -268,9 +258,7 @@
 				"          {IPPF T&M indicator} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     maxColumns: 200) ~> Existing",
+				"     validateSchema: false) ~> Existing",
 				"Existing derive(CurrHash = sha2(256,{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF industry local})) ~> ExistingHash",
 				"New derive(SourceHash = sha2(256,{Entity type},Country,Brand,{Profit center description},{IPPF sector (brand)},{IPPF sector (S&D)},{IPPF industry local})) ~> NewHash",
 				"NewHash, ExistingHash exists(SourceHash == CurrHash,",
