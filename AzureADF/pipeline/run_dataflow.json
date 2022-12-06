@@ -16,34 +16,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_005",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"V161S0P2": {
-								"p_fileName": "V161S1.csv",
-								"p_folder": "LIPPFD005"
-							},
-							"V161S5P1": {
-								"p_fileName": "V161S2.csv",
-								"p_folder": "LIPPFD005"
-							},
-							"V161S5P2": {
-								"p_fileName": "V161S4.csv",
-								"p_folder": "LIPPFD005"
-							},
-							"V161S8P1": {
-								"p_fileName": "V161S7.csv",
-								"p_folder": "LIPPFD005"
-							},
-							"V161S10P1": {
-								"p_fileName": "V161S11.csv",
-								"p_folder": "LIPPFD005"
-							},
-							"V161S6": {
-								"p_schema": "dbo",
-								"p_table": "PROJECT_HEADER_LOAD"
-							}
-						}
+						"referenceName": "df_transform",
+						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
 						"referenceName": "ir-azure-DataFlow",
