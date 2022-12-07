@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_sourceCSV",
+						"referenceName": "ds_sourceFile",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
@@ -50,34 +50,10 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as integer,",
-				"          WBS_ELEM_CC_AMT as integer,",
-				"          OBJ_CRNCY_CD as string,",
-				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as short,",
-				"          YEAR_NUM as short,",
-				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as short",
-				"     ),",
-				"     allowSchemaDrift: false,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(output(",
-				"          WBS_ID as string,",
-				"          COST_ELEM_CD as string,",
-				"          WBS_ELEM_OC_AMT as integer,",
-				"          WBS_ELEM_CC_AMT as integer,",
-				"          OBJ_CRNCY_CD as string,",
-				"          CNTRL_CRNCY_CD as string,",
-				"          MONTH_NUM as short,",
-				"          YEAR_NUM as short,",
-				"          TXN_CRNCY_CD as string,",
-				"          WBS_LVL_NUM as short",
-				"     ),",
-				"     allowSchemaDrift: false,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
 				"source(output(",
