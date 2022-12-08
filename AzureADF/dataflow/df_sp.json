@@ -29,7 +29,7 @@
 				"     schemaName: '',",
 				"     tableName: '',",
 				"     isolationLevel: 'READ_UNCOMMITTED') ~> source1",
-				"source1 derive() ~> derivedColumn1"
+				"source1 derive(cd = $p_output) ~> derivedColumn1"
 			]
 		}
 	}
