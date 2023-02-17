@@ -1,0 +1,31 @@
+{
+	"name": "pl_ExecutePipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_LIPPFD0005_demo",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_IPPF_RULES_COMPANY_COND": "xxxx",
+						"p_IPPF_RULES_CONTR_STATUS": "xxxx",
+						"p_IPPF_RULES_COUNTRIES": "xxxx",
+						"p_IPPF_RULES_COUNTRIES_BH": "xxxx",
+						"p_IPPF_RULES_COUNTRIES_MIGR": "xxxx",
+						"p_IPPF_RULES_DIVISIONS": "xxxx"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-01-20T07:44:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

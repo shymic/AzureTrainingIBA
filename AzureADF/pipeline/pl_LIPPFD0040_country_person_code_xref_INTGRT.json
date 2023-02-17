@@ -1,0 +1,181 @@
+{
+	"name": "pl_LIPPFD0040_country_person_code_xref_INTGRT",
+	"properties": {
+		"activities": [
+			{
+				"name": "V30S1P3",
+				"description": "COUNTRY_PERSON_CODE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT  CAST(CTRY_CD AS CHAR(3)) AS CTRY_CD , CAST(PRSNL_SYS_ID AS CHAR(3))  AS PRSNL_SYS_CD  FROM (\nSELECT DISTINCT A1.COUNTRY_CD AS CTRY_CD,A1.PRSNL_SYS_ID AS PRSNL_SYS_ID FROM BMSIW.COMPANY_REF_UV A1 WHERE\nA1.COUNTRY_CD!='' AND A1.PRSNL_SYS_ID!=''\nUNION\nSELECT DISTINCT A2.COUNTRY_CD AS CTRY_CD ,A1.PRSNL_SYS_ID AS PRSNL_SYS_ID FROM BMSIW.EMP_REF_UV A1\nINNER JOIN BMSIW.COUNTRY_REF_UV A2 ON\nUPPER(A1.ISO_CTRY_CD)=UPPER(A2.ISO_COUNTRY_ID)) T1\nWHERE CTRY_CD!=PRSNL_SYS_ID  \nAND SUBSTR(CTRY_CD,1,1)<>'?'\n\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V30S1P3.csv",
+							"p_folder": "LIPPFD0040_country_person_code_xref_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V30S9P1",
+				"description": "CNMN_COUNTRY_PERSON_CODE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V30S1P3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\n CAST(CTRY_CD AS CHAR(3)), CAST(PRSNL_SYS_CD AS CHAR(3)),HASH_CD\nFROM @{pipeline().parameters.p_IPPF_RULES_SCHEME1}.COUNTRY_PERSON_CODE_XREF\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_IPPFDBSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V30S9P1.csv",
+							"p_folder": "LIPPFD0040_country_person_code_xref_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "Transformation",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V30S9P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_LIPPFD0040_country_person_code_xref_INTGRT",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"V30S1P3": {
+								"p_folder": "LIPPFD0040_country_person_code_xref_INTGRT",
+								"p_fileName": "V30S1P3.csv"
+							},
+							"V30S9P1": {
+								"p_folder": "LIPPFD0040_country_person_code_xref_INTGRT",
+								"p_fileName": "V30S9P1.csv"
+							},
+							"V30S14": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME1}",
+									"type": "Expression"
+								},
+								"p_table": "COUNTRY_PERSON_CODE_XREF"
+							},
+							"V30S16": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME1}",
+									"type": "Expression"
+								},
+								"p_table": "COUNTRY_PERSON_CODE_XREF"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None"
+				}
+			}
+		],
+		"parameters": {
+			"p_IPPF_RULES_SCHEME1": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-17T08:51:05Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

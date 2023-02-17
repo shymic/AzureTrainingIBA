@@ -255,7 +255,7 @@
 					"source": {
 						"type": "Db2Source",
 						"query": {
-							"value": "SELECT\n    T1.WBS_NUM       AS PROJ_WBS_NUM ,\n    T1.SHORT_DESC    AS PROJ_NM ,\n    T1.PLAN_STRT_DT  AS PROJ_PLANNED_STRT_DT ,\n    T1.PLAN_CMPLN_DT AS PROJ_PLANNED_END_DT ,\n    /*CASE\n        WHEN T1.PRFT_CNTR_CD =''\n        THEN '-1'\n        ELSE T1.PRFT_CNTR_CD\n    END               AS PRFT_CNTR_CD ,*/\n    ' '               AS COST_CNTR_CD ,\n    T1.APPL_NUM       AS APPL_NUM ,\n    T1.APPL_NM        AS APPL_NM ,\n    T1.FUNCTL_AREA_CD AS FUNCTL_AREA_CD ,\n    T1.CNTL_PROJ_CD   AS CNTL_AREA_CD ,\n    T1.PROJ_PROF_CD   AS PROJ_PROF_CD ,\n    T1.PROJ_CRNCY_CD  AS PROJ_CRNCY_CD ,\n    T2.PROJ_TYP_CD    AS PROJ_TYP_CD ,\n    T1.SAP_CMPNY_CD   AS CMPNY_CD ,\n    T1.CHRG_CTRY_CD   AS CHRG_CTRY_CD ,\n    T1.WBS_ID         AS PROJ_ID ,\n    'BH'              AS APPL_IND\nFROM\n    BLUEPP.WBS_PROJ_HEADER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T1\nINNER JOIN\n    BMSIW.COMPANY_REF_@{pipeline().parameters.p_IPPF_RULES_VIEW} SC\nON\n    SC.SAP_COMPANY_CD = T1.SAP_CMPNY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\nLEFT JOIN\n    BLUEPP.WBS_ELEMENT_MASTER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T2\nON\n    T1.WBS_ID = T2.WBS_ID\nWHERE\n    CAST(T1.CHRG_CTRY_CD AS CHAR(3)) @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}",
+							"value": "SELECT\n    T1.WBS_NUM       AS PROJ_WBS_NUM ,\n    T1.SHORT_DESC    AS PROJ_NM ,\n    T1.PLAN_STRT_DT  AS PROJ_PLANNED_STRT_DT ,\n    T1.PLAN_CMPLN_DT AS PROJ_PLANNED_END_DT ,\n    /*CASE\n        WHEN T1.PRFT_CNTR_CD =''\n        THEN '-1'\n        ELSE T1.PRFT_CNTR_CD\n    END               AS PRFT_CNTR_CD ,*/\n    ' '               AS COST_CNTR_CD ,\n    T1.APPL_NUM       AS APPL_NUM ,\n    T1.APPL_NM        AS APPL_NM ,\n    T1.FUNCTL_AREA_CD AS FUNCTL_AREA_CD ,\n    T1.CNTL_PROJ_CD   AS CNTL_AREA_CD ,\n    T1.PROJ_PROF_CD   AS PROJ_PROF_CD ,\n    T1.PROJ_CRNCY_CD  AS PROJ_CRNCY_CD ,\n    T2.PROJ_TYP_CD    AS PROJ_TYP_CD ,\n    T1.SAP_CMPNY_CD   AS CMPNY_CD ,\n    T1.CHRG_CTRY_CD   AS CHRG_CTRY_CD ,\n    T1.WBS_ID         AS PROJ_ID ,\n    'BH'              AS APPL_IND\nFROM\n    BLUEPP.WBS_PROJ_HEADER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T1\nINNER JOIN\n    BMSIW.COMPANY_REF_@{pipeline().parameters.p_IPPF_RULES_VIEW} SC\nON\n    SC.SAP_COMPANY_CD = T1.SAP_CMPNY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\nLEFT JOIN\n    BLUEPP.WBS_ELEMENT_MASTER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T2\nON\n    T1.WBS_ID = T2.WBS_ID\nWHERE\n    CAST(T1.CHRG_CTRY_CD AS CHAR(3)) @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\nfetch first 10000 rows only;",
 							"type": "Expression"
 						}
 					},
@@ -408,7 +408,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-12-05T11:45:57Z"
+		"lastPublishTime": "2022-12-14T06:48:51Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

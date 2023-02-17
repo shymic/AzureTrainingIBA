@@ -1,0 +1,402 @@
+{
+	"name": "pl_LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+	"properties": {
+		"activities": [
+			{
+				"name": "V161S0P2",
+				"description": "Copy_2_of_DB2_Connector_96",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT CAST(AL1.CTRY_CD AS CHAR(4)) AS SAP_CMPNY_CD\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL2.STATUS='O'\nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} AND '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nFETCH FIRST 250 ROWS ONLY\nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S0P2.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V161S5P1",
+				"description": "Copy_2_of_DB2_Connector_95",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V161S0P2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT DISTINCT\n1 AS PROJ_WBS_NUM,\nCAST(CON.DESCRIPTION AS CHAR(240) FOR SBCS DATA) AS PROJ_DESC,\nCON.CONTRCREATEDATE AS PROJ_PLANNED_STRT_DT,\nCON.CONTRBEGINDATE AS PROJ_PLANNED_END_DT,\n'' AS PRFT_CNTR_CD,\n'' AS COST_CNTR_CD,\n0 AS APPLCNT_NUM,\n'' AS APPLCNT_NM,\n'' AS FUNCTL_AREA_CD,\n'' AS CNTL_AREA_CD,\n'' AS PROJ_PROF_CD,\n'' AS PROJ_CRNCY_CD,\n'' AS PROJ_TYP_CD,\n CON.COUNTRY AS SAP_CMPNY_CD,\nCON.COUNTRY AS BH_SAP_CMPNY_CD,\nCON.CONTRACTNUMBER AS PROJ_WBS_ID,\n'BMS' AS APPL_IND\n                                              \n FROM \nBMSIW.T510BUS_UV        BUS,    \nBMSIW.T510WRK_UV        WRK,                                                 \nBMSIW.T510CON_UV        CON \n \nJOIN BMSIW.COMPANY_REF_UV SC ON SC.COUNTRY_CD = WRK.COUNTRY  AND SC.COMPANY_CD = WRK.COMPANYCODE @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\n\nWHERE  BUS.COUNTRY        = WRK.COUNTRY              \nAND    BUS.COMPANYCODE    = WRK.COMPANYCODE          \nAND    BUS.BUSINESSTYPE   = WRK.BUSINESSTYPE         \nAND    WRK.COUNTRY        = CON.COUNTRY              \nAND    WRK.COMPANYCODE    = CON.COMPANYCODE          \nAND    WRK.CONTRACTNUMBER = CON.CONTRACTNUMBER    \n \nAND ( SUBSTR(CHAR(CON.CONTRENDDATE),1,7) >= SUBSTR(CHAR(CURRENT DATE  - 3 YEARS),1,7)  --CHANGED BY E.S. TASK 560.1\n OR    CON.CONTRACTSTATUS IN ( 'A', 'P' ) )\nAND CON.CONTRACTNUMBER<>''\n@{pipeline().parameters.p_IPPF_RULES_CONTR_STATUS}             \nAND  ( ( CON.COUNTRY    IN (      SELECT CAST(AL1.CTRY_CD AS CHAR(4))\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL1.CTRY_CD NOT @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\n        AND AL1.CTRY_CD NOT @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_MIGR}\n        AND AL2.STATUS='O'  AND AL1.CTRY_CD!='606'\nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} AND '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nFETCH FIRST 250 ROWS ONLY) @{pipeline().parameters.p_IPPF_RULES_GEO}\n) OR (CON.COUNTRY='606'))\n--AND    BU.BUSMEASUREDIV   IN @{pipeline().parameters.p_IPPF_RULES_DIVISIONS}                                                       \nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S5P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V161S5P2",
+				"description": "Copy_5_of_DB2_Connector_96",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V161S5P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT DISTINCT V.RCVCUSTCTRY AS SAP_CMPNY_CD1,V.CONTRACTNUMBER AS PROJ_WBS_ID\nFROM BMSIW.T510WRK_UV           V \nJOIN  BMSIW.COUNTRY_REF_UV AL2 \nON V.COUNTRY=AL2.COUNTRY_CD\nJOIN  BMSIW.COUNTRY_REF_UV AL3\nON V.RCVCUSTCTRY=AL3.COUNTRY_CD\nJOIN BMSIW.GEO_RGN_CTRY_UV AL4\nON AL4.CTRY_CD=AL2.COUNTRY_CD\nJOIN BMSIW.GEO_RGN_CTRY_UV AL5\nON AL5.CTRY_CD=AL3.COUNTRY_CD\n   WHERE V.COUNTRY <> V.RCVCUSTCTRY \n   AND V.COUNTRY='606'\n AND V.CONTRACTNUMBER <>''  \nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S5P2.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V161S8P1",
+				"description": "PACT",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V161S5P2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT DISTINCT \n1 AS PROJ_WBS_NUM,\nCO.ACCTGRP_DESC AS PROJ_DESC,\nCO.CNTRCT_BEGIN_DATE AS PROJ_PLANNED_STRT_DT,\nCO.CNTRCT_END_DATE AS PROJ_PLANNED_END_DT,\n'' AS PRFT_CNTR_CD,\n'' AS COST_CNTR_CD,\n0 AS APPLCNT_NUM,\n'' AS APPLCNT_NM,\n'' AS FUNCTL_AREA_CD,\n'' AS CNTL_AREA_CD,\n'' AS PROJ_PROF_CD,\n'' AS PROJ_CRNCY_CD,\n'' AS PROJ_TYP_CD,\nCO.OWNING_COUNTRY_CD  AS SAP_CMPNY_CD,\nCO.OWNING_COUNTRY_CD  AS BH_SAP_CMPNY_CD,\nCO.ACCTGRP_ID AS PROJ_WBS_ID,\n'BMS' AS APPL_IND\n\nFROM\nBMSIW.ACCOUNT_UV WRK\nINNER JOIN BMSIW.ACCOUNT_GROUP_UV CO\n    ON WRK.ACCTGRP_ID = CO.ACCTGRP_ID\n   AND WRK.CONTROL_GROUP_CD = CO.CONTROL_GROUP_CD\nINNER JOIN BMSIW.T510BUS_UV BUS\n    ON BUS.COUNTRY        = WRK.OWNING_COUNTRY_CD              \n   AND BUS.COMPANYCODE    = WRK.OWNING_COMPANY_CD          \n   AND BUS.BUSINESSTYPE   = WRK.BUS_TYP_CD\nLEFT JOIN BMSIW.T510CON_UV CO1\n    ON CO.ACCTGRP_ID = CO1.CONTRACTNUMBER\n    AND WRK.OWNING_COUNTRY_CD = CO1.COUNTRY\n    AND CO.OWNING_COMPANY_CD = CO1.COMPANYCODE\n\nJOIN BMSIW.COMPANY_REF_UV SC ON SC.COUNTRY_CD = WRK.OWNING_COUNTRY_CD   AND SC.COMPANY_CD = WRK.OWNING_COMPANY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\n\nWHERE CO1.CONTRACTNUMBER IS NULL  AND BUS.LOBID IN ('SO','ITS','MAI','ISS','EBH','CLD','CLO')\nAND CO.ACCTGRP_ID<>''\nAND WRK.STATUS IN ('O')\nAND BUS.BUSMEASUREDIV <> '16'\nAND WRK.ACCT_TYP_CD = 'C' \nAND WRK.OFFERING_COMP_CD <> ''\n\nAND WRK.OWNING_COUNTRY_CD IN (SELECT CAST(AL1.CTRY_CD AS CHAR(4))\nFROM BMSIW.GEO_RGN_CTRY_UV AL1\nJOIN BMSIW.COUNTRY_REF_UV AL2 \n        ON AL1.CTRY_CD=AL2.COUNTRY_CD\n        AND AL1.RGN_LVL1_CD @{pipeline().parameters.p_IPPF_RULES_RGN_LVL1_CD}\n        AND AL1.CTRY_CD NOT @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}\n        AND AL1.CTRY_CD NOT @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_MIGR}\n        AND AL2.STATUS='O' \nWHERE '@{pipeline().parameters.p_IPPF_RULES_INST}'<>'CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}'\nOR (AL1.CTRY_CD @{pipeline().parameters.p_IPPF_RULES_COUNTRIES} AND '@{pipeline().parameters.p_IPPF_RULES_INST}'='CDT - '||'@{pipeline().parameters.p_IPPF_RULES_GEO_NAME}')\nFETCH FIRST 250 ROWS ONLY)    \n     \nWITH UR",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S8P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "V161S10P1",
+				"description": "Copy_of_ALLEGRO_PROJECT_HEADER",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "V161S8P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "Db2Source",
+						"query": {
+							"value": "SELECT\n T1.WBS_NUM AS PROJ_WBS_NUM\n ,T1.SHORT_DESC AS PROJ_NM\n ,T1.PLAN_STRT_DT AS PROJ_PLANNED_STRT_DT\n ,T1.PLAN_CMPLN_DT AS PROJ_PLANNED_END_DT\n ,CASE WHEN T1.PRFT_CNTR_CD ='' THEN '-1' ELSE T1.PRFT_CNTR_CD END AS PRFT_CNTR_CD\n ,' ' AS COST_CNTR_CD\n ,T1.APPL_NUM AS APPL_NUM\n ,T1.APPL_NM AS APPL_NM\n ,T1.FUNCTL_AREA_CD AS FUNCTL_AREA_CD\n ,T1.CNTL_PROJ_CD AS CNTL_AREA_CD\n ,T1.PROJ_PROF_CD AS PROJ_PROF_CD\n ,T1.PROJ_CRNCY_CD AS PROJ_CRNCY_CD\n ,T2.PROJ_TYP_CD AS PROJ_TYP_CD\n ,T1.SAP_CMPNY_CD AS CMPNY_CD\n ,T1.CHRG_CTRY_CD AS CHRG_CTRY_CD\n ,T1.WBS_ID AS PROJ_ID\n ,'BH' AS APPL_IND \nFROM BLUEPP.WBS_PROJ_HEADER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T1\nINNER JOIN BMSIW.COMPANY_REF_@{pipeline().parameters.p_IPPF_RULES_VIEW} SC ON SC.SAP_COMPANY_CD = T1.SAP_CMPNY_CD @{pipeline().parameters.p_IPPF_RULES_COMPANY_COND}\nLEFT JOIN BLUEPP.WBS_ELEMENT_MASTER_@{pipeline().parameters.p_IPPF_RULES_VIEW} T2 ON\nT1.WBS_ID = T2.WBS_ID\nWHERE CAST(T1.CHRG_CTRY_CD AS CHAR(3)) @{pipeline().parameters.p_IPPF_RULES_COUNTRIES_BH}",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sourceIPPF_RULES_BMSIWSERV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sourceCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_fileName": "V161S10P1.csv",
+							"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT"
+						}
+					}
+				]
+			},
+			{
+				"name": "Transformation",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "V161S10P1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+						"type": "DataFlowReference",
+						"parameters": {
+							"p_IPPF_RULES_SCHEME": {
+								"value": "'@{pipeline().parameters.p_IPPF_RULES_SCHEME}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"V161S0P2": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S0P2.csv"
+							},
+							"V161S5P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S5P1.csv"
+							},
+							"V161S5P2": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S5P2.csv"
+							},
+							"V161S8P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S8P1.csv"
+							},
+							"V161S10P1": {
+								"p_folder": "LIPPFD0005_PROJECT_HEADER_LOAD_INTGRT",
+								"p_fileName": "V161S10P1.csv"
+							},
+							"V161S6": {
+								"p_schema": {
+									"value": "@{pipeline().parameters.p_IPPF_RULES_SCHEME}",
+									"type": "Expression"
+								},
+								"p_table": "PROJECT_HEADER_LOAD"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "ir-azure-DataFlow",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None"
+				}
+			}
+		],
+		"parameters": {
+			"p_IPPF_RULES_COMPANY_COND": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_CONTR_STATUS": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_COUNTRIES": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_COUNTRIES_BH": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_COUNTRIES_MIGR": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_DIVISIONS": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_GEO": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_GEO_NAME": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_INST": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_RGN_LVL1_CD": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_SCHEME": {
+				"type": "String"
+			},
+			"p_IPPF_RULES_VIEW": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-13T11:15:44Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,175 @@
+{
+	"name": "df_LIPPFD0040_country_person_code_xref_INTGRT",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourceFile",
+						"type": "DatasetReference"
+					},
+					"name": "V30S1P3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourceFile",
+						"type": "DatasetReference"
+					},
+					"name": "V30S9P1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sinkIPPF_RULES_IPPFDBSERV",
+						"type": "DatasetReference"
+					},
+					"name": "V30S14",
+					"description": "INS"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sinkIPPF_RULES_IPPFDBSERV",
+						"type": "DatasetReference"
+					},
+					"name": "V30S16",
+					"description": "DLT"
+				}
+			],
+			"transformations": [
+				{
+					"name": "V30S8P1",
+					"description": "DSLink20"
+				},
+				{
+					"name": "V30S9P2Derive",
+					"description": "DSLink31"
+				},
+				{
+					"name": "V30S9P2",
+					"description": "DSLink31"
+				},
+				{
+					"name": "V30S13P1Join",
+					"description": "Change_Capture_32"
+				},
+				{
+					"name": "V30S13P1Derive",
+					"description": "DSLink36"
+				},
+				{
+					"name": "V30S13P1",
+					"description": "DSLink36"
+				},
+				{
+					"name": "V30S14P1Constraint",
+					"description": "Transf2"
+				},
+				{
+					"name": "V30S14P1",
+					"description": "insert"
+				},
+				{
+					"name": "V30S16P1Constraint",
+					"description": "Transf2"
+				},
+				{
+					"name": "V30S16P1",
+					"description": "delete"
+				},
+				{
+					"name": "V30S16AlterRow"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CTRY_CD as string,",
+				"          PRSNL_SYS_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V30S1P3",
+				"source(output(",
+				"          CTRY_CD as string,",
+				"          PRSNL_SYS_CD as string,",
+				"          HASH_CD as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     maxColumns: 200) ~> V30S9P1",
+				"V30S1P3 select(mapColumn(",
+				"          CTRY_CD,",
+				"          PRSNL_SYS_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V30S8P1",
+				"V30S8P1 derive(HASH_CD = md5(columns() )) ~> V30S9P2Derive",
+				"V30S9P2Derive select(mapColumn(",
+				"          CTRY_CD,",
+				"          PRSNL_SYS_CD,",
+				"          HASH_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V30S9P2",
+				"V30S9P1, V30S9P2 join(V30S9P1@PRSNL_SYS_CD == V30S9P2@PRSNL_SYS_CD",
+				"     && V30S9P1@CTRY_CD == V30S9P2@CTRY_CD,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> V30S13P1Join",
+				"V30S13P1Join derive(CHANGE_CODE = case(isNull(V30S9P1@PRSNL_SYS_CD) ,2,case(isNull(V30S9P2@PRSNL_SYS_CD) ,1,case(notEquals(V30S9P1@HASH_CD,V30S9P2@HASH_CD),3,0)))) ~> V30S13P1Derive",
+				"V30S13P1Derive select(mapColumn(",
+				"          CTRY_CD = V30S9P2@CTRY_CD,",
+				"          PRSNL_SYS_CD = V30S9P2@PRSNL_SYS_CD,",
+				"          HASH_CD = V30S9P2@HASH_CD,",
+				"          CHANGE_CODE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V30S13P1",
+				"V30S13P1 filter(CHANGE_CODE == 1) ~> V30S14P1Constraint",
+				"V30S14P1Constraint select(mapColumn(",
+				"          CTRY_CD,",
+				"          PRSNL_SYS_CD,",
+				"          HASH_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V30S14P1",
+				"V30S13P1 filter(CHANGE_CODE == 2) ~> V30S16P1Constraint",
+				"V30S16P1Constraint select(mapColumn(",
+				"          CTRY_CD,",
+				"          PRSNL_SYS_CD,",
+				"          HASH_CD",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> V30S16P1",
+				"V30S16P1 alterRow(deleteIf(true())) ~> V30S16AlterRow",
+				"V30S14P1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V30S14",
+				"V30S16AlterRow sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:true,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     keys:['PRSNL_SYS_CD','CTRY_CD','HASH_CD'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> V30S16"
+			]
+		}
+	}
+}

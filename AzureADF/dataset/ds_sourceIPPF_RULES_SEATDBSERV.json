@@ -1,0 +1,12 @@
+{
+	"name": "ds_sourceIPPF_RULES_SEATDBSERV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_ippfdb2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Db2Table"
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
